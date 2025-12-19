@@ -1,0 +1,27 @@
+{
+    "name": "v-edfinance",
+    "private": true,
+    "packageManager": "pnpm@9.15.0",
+    "scripts": {
+        "build": "turbo run build",
+        "dev": "turbo run dev",
+        "lint": "turbo run lint",
+        "test:orchestrate": "node scripts/e2b-e2e-orchestrator.js",
+        "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    },
+    "devDependencies": {
+        "@e2b/code-interpreter": "^2.3.3",
+        "@playwright/test": "^1.57.0",
+        "dotenv": "^17.2.3",
+        "prettier": "latest",
+        "turbo": "latest"
+    },
+    "workspaces": [
+        "apps/*",
+        "packages/*"
+    ],
+    "dependencies": {
+        "react": "18.3.1",
+        "react-dom": "18.3.1"
+    }
+}

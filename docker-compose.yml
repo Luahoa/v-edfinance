@@ -1,0 +1,41 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: vedfinance-api
+    ports:
+      - "3000:3000"
+    environment:
+      # Strategy B: Connect to local postgres container
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/vedfinance?schema=public&connection_limit=5"
+      # Bootstrap credentials here. Operational settings in DB.
+    depends_on:
+      postgres:
+        condition: service_started
+    restart: unless-stopped
+    networks:
+      - vedfinance-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: vedfinance-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vedfinance
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vedfinance-network
+
+volumes:
+  postgres_data:
+
+
+networks:
+  vedfinance-network:
+    driver: bridge

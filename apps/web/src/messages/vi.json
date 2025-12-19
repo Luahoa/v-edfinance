@@ -1,0 +1,151 @@
+{
+  "Auth": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "submit": "Xác nhận",
+    "noAccount": "Chưa có tài khoản?",
+    "hasAccount": "Đã có tài khoản?"
+  },
+  "Common": {
+    "loading": "Đang tải...",
+    "error": "Đã có lỗi xảy ra",
+    "home": "Trang chủ",
+    "retry": "Thử lại"
+  },
+  "Index": {
+    "title": "Chào mừng đến V-EdFinance",
+    "description": "Nâng cao kiến thức tài chính với học tập cá nhân hóa bằng AI",
+    "getStarted": "Bắt đầu ngay"
+  },
+  "Courses": {
+    "title": "Tất cả khóa học",
+    "noCourses": "Chưa có khóa học nào",
+    "startLearning": "Bắt đầu học",
+    "viewCourse": "Xem chi tiết",
+    "free": "Miễn phí",
+    "level": "Cấp độ"
+  },
+  "Navigation": {
+    "home": "Trang chủ",
+    "courses": "Khóa học",
+    "dashboard": "Bảng điều khiển",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "leaderboard": "Xếp hạng",
+    "store": "Cửa hàng",
+    "simulation": "Giả lập"
+  },
+  "Dashboard": {
+    "title": "Bảng điều khiển",
+    "welcome": "Chào mừng trở lại",
+    "progress": "Tiến độ học tập",
+    "courses": "Khóa học của tôi",
+    "aiMentor": "Trợ lý AI",
+    "aiWelcome": "Hỏi tôi bất cứ điều gì về tài chính!",
+    "aiPlaceholder": "Nhập câu hỏi...",
+    "aiError": "Xin lỗi, tôi gặp lỗi khi xử lý câu hỏi của bạn.",
+    "badges": "Huy hiệu",
+    "points": "Điểm tích lũy",
+    "enrolledCourses": "Khóa học đã đăng ký",
+    "completedLessons": "Bài học đã hoàn thành",
+    "currentLearning": "Khóa học đang học",
+    "interactiveChecklist": "Danh sách kiểm tra tương tác"
+  },
+  "Checklist": {
+    "title": "Danh sách kiểm tra tương tác",
+    "congratulations": "Chúc mừng",
+    "rewardEarned": "Bạn đã hoàn thành '{title}' và nhận được 50 điểm!",
+    "noActiveChecklists": "Không có danh sách kiểm tra nào hoạt động",
+    "taskCompleted": "Nhiệm vụ đã hoàn thành",
+    "taskPending": "Nhiệm vụ đang chờ"
+    },
+    "Gamification": {
+    "achievementUnlocked": "Đã mở khóa thành tựu!",
+    "streakTitle": "Chuỗi {days} ngày!",
+    "streakLost": "Bạn đã mất chuỗi! Hãy bắt đầu lại ngay hôm nay.",
+    "pointsEarned": "+{points} điểm",
+    "close": "Đóng",
+    "viewAllAchievements": "Xem tất cả thành tựu"
+    },
+    "Leaderboard": {
+      "title": "Bảng xếp hạng",
+      "points": "Theo điểm số",
+      "streaks": "Theo chuỗi ngày",
+      "rank": "Hạng",
+      "user": "Người dùng",
+      "value": "Giá trị",
+      "pointsSuffix": "điểm",
+      "daysSuffix": "ngày"
+    },
+    "Store": {
+      "title": "Cửa hàng vật phẩm",
+      "balance": "Số dư của bạn: {points} điểm",
+      "buy": "Mua",
+      "insufficientPoints": "Không đủ điểm",
+      "purchaseSuccess": "Mua hàng thành công!",
+      "items": {
+        "streak-freeze": {
+          "name": "Đóng băng chuỗi",
+          "description": "Giữ cho chuỗi ngày học của bạn không bị mất nếu bạn lỡ một ngày."
+        }
+      }
+    },
+    "Simulation": {
+      "title": "Hệ sinh thái giả lập",
+      "trade": {
+        "title": "Giao dịch ảo",
+        "balance": "Số dư: {amount} Lúa Coin",
+        "buy": "Mua",
+        "sell": "Bán",
+        "portfolio": "Danh mục tài sản"
+      },
+      "life": {
+        "title": "Kịch bản cuộc đời",
+        "start": "Bắt đầu hành trình",
+        "age": "Tuổi: {age}",
+        "job": "Công việc: {job}"
+      },
+      "budget": {
+        "title": "Cuộc chiến ngân sách",
+        "rule": "Quy tắc 50/30/20",
+        "needs": "Nhu cầu (50%)",
+        "wants": "Mong muốn (30%)",
+        "savings": "Tiết kiệm (20%)"
+      },
+      "commitment": {
+        "title": "Công cụ cam kết",
+        "lock": "Khóa quỹ tiết kiệm",
+        "penalty": "Phạt 10% nếu rút sớm",
+        "withdraw": "Rút tiền",
+        "locked": "Đã khóa: {amount}"
+      }
+    },
+    "Social": {
+      "feed": "Bảng tin cộng đồng",
+      "emptyFeed": "Chưa có hoạt động nào trong cộng đồng của bạn.",
+      "buddySystem": "Hệ thống Buddy",
+      "noGroups": "Bạn chưa tham gia nhóm học tập nào.",
+      "createGroup": "Tạo nhóm mới",
+      "joinGroup": "Tham gia nhóm",
+      "recommendations": "Gợi ý cho bạn",
+      "groupDetails": "Chi tiết nhóm",
+      "members": "Thành viên",
+      "challenges": "Thử thách",
+      "createChallenge": "Tạo thử thách",
+      "points": "Điểm nhóm",
+      "streak": "Chuỗi nhóm",
+      "types": {
+        "LEARNING": "Học tập",
+        "SAVING": "Tiết kiệm",
+        "INVESTING": "Đầu tư"
+      },
+      "postTypes": {
+        "ACHIEVEMENT": "Thành tựu",
+        "MILESTONE": "Cột mốc",
+        "NUDGE": "Nhắc nhở",
+        "DISCUSSION": "Thảo luận"
+      }
+    }
+  }

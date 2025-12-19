@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  api-test:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: vedfinance-api-test
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres-test:5432/vedfinance_test?schema=public"
+      E2B_API_KEY: "${E2B_API_KEY}"
+      NODE_ENV: test
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+    networks:
+      - test-network
+
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: vedfinance-postgres-test
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: vedfinance_test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  test-runner:
+    image: mcr.microsoft.com/playwright:v1.49.1-noble
+    container_name: vedfinance-test-runner
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@postgres-test:5432/vedfinance_test?schema=public"
+      E2B_API_KEY: "${E2B_API_KEY}"
+      BASE_URL: "http://api-test:3000"
+    depends_on:
+      postgres-test:
+        condition: service_healthy
+    entrypoint: /bin/bash -c "npm install -g pnpm && pnpm install --no-frozen-lockfile && npx prisma migrate dev --schema=apps/api/prisma/schema.prisma && pnpm --filter api test:e2e massive-stress.e2e-spec.ts && pnpm --filter api test:e2e social-stress.e2e-spec.ts"
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

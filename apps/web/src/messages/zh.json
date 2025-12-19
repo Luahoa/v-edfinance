@@ -1,0 +1,133 @@
+{
+  "Auth": {
+    "login": "登录",
+    "register": "注册",
+    "email": "电子邮件",
+    "password": "密码",
+    "submit": "提交",
+    "noAccount": "还没有账号？",
+    "hasAccount": "已有账号？"
+  },
+  "Common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "home": "首页",
+    "retry": "重试"
+  },
+  "Index": {
+    "title": "欢迎来到 V-EdFinance",
+    "description": "通过AI个性化学习掌握金融知识",
+    "getStarted": "开始使用"
+  },
+  "Courses": {
+    "title": "所有课程",
+    "noCourses": "暂无课程",
+    "startLearning": "开始学习",
+    "viewCourse": "查看详情",
+    "free": "免费",
+    "level": "等级"
+  },
+  "Navigation": {
+    "home": "首页",
+    "courses": "课程",
+    "dashboard": "仪表盘",
+    "login": "登录",
+    "register": "注册",
+    "leaderboard": "排行榜",
+    "store": "商城",
+    "simulation": "模拟"
+  },
+  "Dashboard": {
+    "title": "仪表盘",
+    "welcome": "欢迎回来",
+    "progress": "学习进度",
+    "courses": "我的课程",
+    "aiMentor": "AI 导师",
+    "aiWelcome": "随时向我提问关于金融的问题！",
+    "aiPlaceholder": "输入问题...",
+    "aiError": "抱歉，处理您的问题时发生错误。",
+    "badges": "勋章",
+    "points": "总积分",
+    "enrolledCourses": "已注册课程",
+    "completedLessons": "已完成课程",
+    "currentLearning": "正在学习",
+    "interactiveChecklist": "互动清单"
+  },
+  "Checklist": {
+    "title": "互动清单",
+    "congratulations": "恭喜",
+    "rewardEarned": "您已完成 '{title}' 并获得 50 积分！",
+    "noActiveChecklists": "暂无活跃清单",
+    "taskCompleted": "任务已完成",
+    "taskPending": "任务待办"
+    },
+    "Gamification": {
+    "achievementUnlocked": "获得成就！",
+    "streakTitle": "连续 {days} 天！",
+    "streakLost": "您失去了连续记录！今天重新开始吧。",
+    "pointsEarned": "+{points} 积分",
+    "close": "关闭",
+    "viewAllAchievements": "查看所有成就"
+    },
+    "Leaderboard": {
+      "title": "排行榜",
+      "points": "按积分",
+      "streaks": "按连续天数",
+      "rank": "排名",
+      "user": "用户",
+      "value": "数值",
+      "pointsSuffix": "分",
+      "daysSuffix": "天"
+    },
+    "Store": {
+      "title": "积分商城",
+      "balance": "您的余额：{points} 积分",
+      "buy": "购买",
+      "insufficientPoints": "积分不足",
+      "purchaseSuccess": "购买成功！",
+      "items": {
+        "streak-freeze": {
+          "name": "连胜冻结",
+          "description": "即使您错过一天，也可以保持连胜记录。"
+        }
+      }
+    },
+    "Simulation": {
+      "title": "模拟生态系统",
+      "trade": {
+        "title": "虚拟交易",
+        "balance": "余额：{amount} 稻谷币",
+        "buy": "买入",
+        "sell": "卖出",
+        "portfolio": "资产组合"
+      },
+      "life": {
+        "title": "生活剧本",
+        "start": "开启旅程",
+        "age": "年龄：{age}",
+        "job": "工作：{job}"
+      },
+      "budget": {
+        "title": "预算之战",
+        "rule": "50/30/20 法则",
+        "needs": "必需 (50%)",
+        "wants": "想要 (30%)",
+        "savings": "储蓄 (20%)"
+      },
+      "commitment": {
+        "title": "承诺工具",
+        "lock": "锁定储蓄",
+        "penalty": "提前支取罚款 10%",
+        "withdraw": "支取",
+        "locked": "已锁定：{amount}"
+      }
+    },
+    "Social": {
+      "feed": "社区动态",
+      "emptyFeed": "您的社区暂无动态。",
+      "buddySystem": "心理学伴学系统",
+      "noGroups": "您尚未加入任何学习小组。",
+      "createGroup": "创建新小组",
+      "joinGroup": "加入小组"
+    }
+  }

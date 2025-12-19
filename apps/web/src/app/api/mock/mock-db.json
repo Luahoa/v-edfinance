@@ -1,0 +1,42 @@
+{
+  "GET": {
+    "users/dashboard-stats": {
+      "points": 1250,
+      "streak": 7,
+      "nextLevel": 2000,
+      "rank": "Silver"
+    },
+    "store/items": [
+      {
+        "id": "streak-freeze",
+        "name": {
+          "vi": "Đóng băng chuỗi",
+          "en": "Streak Freeze",
+          "zh": "连胜冻结"
+        },
+        "description": {
+          "vi": "Mô tả",
+          "en": "Desc",
+          "zh": "描述"
+        },
+        "price": 100
+      }
+    ],
+    "social/feed": [],
+    "social/recommendations": [],
+    "checklists": []
+  },
+  "POST": {
+    "auth/register": {
+      "user": {
+        "id": "test-user",
+        "email": "test@example.com"
+      },
+      "token": "mock-token"
+    },
+    "ai/threads": {
+      "id": "thread-1",
+      "title": "Test Thread"
+    }
+  }
+}
