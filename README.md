@@ -22,6 +22,14 @@
 
 ---
 
+## 🛡️ CI/CD & Testing
+[![CI](https://github.com/Luahoa/v-edfinance/actions/workflows/ci.yml/badge.svg)](https://github.com/Luahoa/v-edfinance/actions/workflows/ci.yml)
+- **Track 1 (Unit):** 100% Core Gamification Logic (AVA/Jest)
+- **Track 2 (DevOps):** File Structure & Docker Health Checks (Bats)
+- **Track 3 (Performance):** Stress Testing Payloads Ready (Vegeta)
+
+---
+
 ## 🚀 Quick Start
 
 ```bash
