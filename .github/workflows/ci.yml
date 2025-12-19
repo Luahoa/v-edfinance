@@ -1,0 +1,57 @@
+name: V-EdFinance CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  unit-tests:
+    name: Track 1: AVA (Jest) Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install
+        
+      - name: Run Unit Tests
+        run: pnpm --filter api test apps/api/src/common/gamification-pure.spec.ts
+
+  devops-checks:
+    name: Track 2: Bats DevOps Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Bats
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bats
+          
+      - name: Run Structure Tests
+        run: bats tests/devops/structure.bats
+
+  load-tests:
+    name: Track 3: Vegeta Load Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Vegeta
+        run: |
+          wget https://github.com/tsenart/vegeta/releases/download/v12.11.1/vegeta_12.11.1_linux_amd64.tar.gz
+          tar xf vegeta_12.11.1_linux_amd64.tar.gz
+          sudo mv vegeta /usr/local/bin/
+          
+      - name: Run Mock Vegeta Test (Validation only)
+        run: echo "Vegeta installed. Ready for production stress testing."

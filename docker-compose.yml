@@ -6,6 +6,12 @@ services:
     container_name: vedfinance-api
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     environment:
       # Strategy B: Connect to local postgres container
       DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/vedfinance?schema=public&connection_limit=5"
@@ -21,6 +27,11 @@ services:
     image: postgres:15-alpine
     container_name: vedfinance-postgres
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

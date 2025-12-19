@@ -1,0 +1,8 @@
+# Usage: 
+# scripts/tests/vegeta/vegeta attack -duration=5s -rate=10 -targets=tests/vegeta/courses.targets | scripts/tests/vegeta/vegeta report
+
+GET http://localhost:3001/api/courses
+Accept: application/json
+
+GET http://localhost:3001/api/courses/search?q=chứng%20khoán
+Accept: application/json

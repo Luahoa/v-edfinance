@@ -1,0 +1,6 @@
+# Usage:
+# scripts/tests/vegeta/vegeta attack -duration=5s -rate=10 -targets=tests/vegeta/auth.targets | scripts/tests/vegeta/vegeta report
+
+POST http://localhost:3001/api/auth/login
+Content-Type: application/json
+@tests/vegeta/login.json

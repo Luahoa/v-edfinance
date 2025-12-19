@@ -1,0 +1,30 @@
+{
+  "events": [
+    {
+      "userId": "user-uuid-1",
+      "action": "LESSON_COMPLETED",
+      "points": 10,
+      "metadata": { "lessonId": "lesson-1" }
+    },
+    {
+      "userId": "user-uuid-1",
+      "action": "QUIZ_PASSED",
+      "points": 20,
+      "metadata": { "quizId": "quiz-1", "score": 90 }
+    },
+    {
+      "userId": "user-uuid-2",
+      "action": "DAILY_LOGIN",
+      "points": 5,
+      "metadata": { "platform": "web" }
+    }
+  ],
+  "load_test_config": {
+    "duration": "1m",
+    "rate": 50,
+    "slas": {
+      "p95_latency": 500,
+      "error_rate_max": 0.01
+    }
+  }
+}

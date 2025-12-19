@@ -12,7 +12,9 @@
     "devDependencies": {
         "@e2b/code-interpreter": "^2.3.3",
         "@playwright/test": "^1.57.0",
+        "ava": "^6.4.1",
         "dotenv": "^17.2.3",
+        "jest-coverage-badges": "^1.1.2",
         "prettier": "latest",
         "turbo": "latest"
     },
