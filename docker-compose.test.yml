@@ -46,7 +46,7 @@ services:
     depends_on:
       postgres-test:
         condition: service_healthy
-    entrypoint: /bin/bash -c "npm install -g pnpm && pnpm install --no-frozen-lockfile && npx prisma migrate dev --schema=apps/api/prisma/schema.prisma && pnpm --filter api test:e2e massive-stress.e2e-spec.ts && pnpm --filter api test:e2e social-stress.e2e-spec.ts"
+    entrypoint: /bin/bash -c "npm install -g pnpm@9.15.0 && pnpm install && npx prisma@5.22.0 migrate deploy --schema=apps/api/prisma/schema.prisma && pnpm --filter api test:e2e test/persona-simulation.e2e-spec.ts"
     networks:
       - test-network
 
