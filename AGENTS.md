@@ -54,11 +54,13 @@ npx prisma generate        # Generate Prisma client
 npx prisma studio          # Open Prisma Studio
 ```
 
-### Testing
+### Testing & Quality
 ```bash
-pnpm test                  # Run all tests
-pnpm --filter web test     # Run frontend tests
-pnpm --filter api test     # Run backend tests
+pnpm test                  # Run all tests (Vitest)
+pnpm --filter api test:ava # Run lightweight standalone tests (AVA)
+npx bats scripts/tests/bats # Run shell script verification (Bats)
+# Vegeta Stress Testing
+cd scripts/tests/vegeta && run-stress-test.bat
 ```
 
 ### Beads Task Management
