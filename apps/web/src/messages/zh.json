@@ -4,6 +4,7 @@
     "register": "注册",
     "email": "电子邮件",
     "password": "密码",
+    "name": "姓名",
     "submit": "提交",
     "noAccount": "还没有账号？",
     "hasAccount": "已有账号？"
@@ -35,7 +36,10 @@
     "register": "注册",
     "leaderboard": "排行榜",
     "store": "商城",
-    "simulation": "模拟"
+    "simulation": "模拟",
+    "settings": "设置",
+    "profile": "个人资料",
+    "logout": "退出登录"
   },
   "Dashboard": {
     "title": "仪表盘",

@@ -5,6 +5,9 @@ import { useTranslations } from 'next-intl';
 import { useRouter, Link } from '@/i18n/routing';
 import { useAuthStore } from '@/store/useAuthStore';
 import Cookies from 'js-cookie';
+import Button from '@/components/atoms/Button';
+import Input from '@/components/atoms/Input';
+import { motion } from 'framer-motion';
 
 export default function LoginPage() {
   const t = useTranslations('Auth');
@@ -31,12 +34,8 @@ export default function LoginPage() {
       const data = await response.json();
       
       if (response.ok) {
-        // 1. Set state in Zustand
         setAuth(data.user, data.access_token);
-        
-        // 2. Set Cookie for Middleware (server-side)
-        Cookies.set('token', data.access_token, { expires: 7 }); // 7 days
-        
+        Cookies.set('token', data.access_token, { expires: 7 });
         router.push('/dashboard');
       } else {
         setError(data.message || 'Login failed');
@@ -49,48 +48,60 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-      <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg dark:bg-zinc-900">
-        <h2 className="text-center text-3xl font-bold">{t('login')}</h2>
-        {error && <p className="text-center text-sm text-red-500">{error}</p>}
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium">{t('email')}</label>
-              <input
-                type="email"
-                required
-                className="mt-1 w-full rounded-md border p-2 dark:bg-zinc-800"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium">{t('password')}</label>
-              <input
-                type="password"
-                required
-                className="mt-1 w-full rounded-md border p-2 dark:bg-zinc-800"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-md bg-blue-600 py-2 font-semibold text-white hover:bg-blue-700 disabled:bg-blue-300"
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-4 dark:bg-black">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-xl dark:border dark:border-zinc-800 dark:bg-zinc-900/50 dark:backdrop-blur-xl"
+      >
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+            {t('login')}
+          </h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            {t('noAccount')}{' '}
+            <Link href="/register" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+              {t('register')}
+            </Link>
+          </p>
+        </div>
+
+        {error && (
+          <motion.div 
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-500 dark:bg-red-900/20 dark:text-red-400"
           >
-            {loading ? '...' : t('login')}
-          </button>
+            {error}
+          </motion.div>
+        )}
+
+        <form className="space-y-4" onSubmit={handleLogin}>
+          <Input
+            label={t('email')}
+            type="email"
+            placeholder="name@example.com"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            label={t('password')}
+            type="password"
+            placeholder="••••••••"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={loading}
+          >
+            {t('login')}
+          </Button>
         </form>
-        <p className="text-center text-sm">
-          {t('noAccount')}{' '}
-          <Link href="/register" className="text-blue-600 hover:underline">
-            {t('register')}
-          </Link>
-        </p>
-      </div>
+      </motion.div>
     </div>
   );
 }

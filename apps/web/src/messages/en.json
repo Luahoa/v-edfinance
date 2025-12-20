@@ -36,7 +36,10 @@
     "register": "Register",
     "leaderboard": "Leaderboard",
     "store": "Store",
-    "simulation": "Simulation"
+    "simulation": "Simulation",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout"
   },
   "Dashboard": {
     "title": "Dashboard",

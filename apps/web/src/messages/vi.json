@@ -36,7 +36,10 @@
     "register": "Đăng ký",
     "leaderboard": "Xếp hạng",
     "store": "Cửa hàng",
-    "simulation": "Giả lập"
+    "simulation": "Giả lập",
+    "settings": "Cài đặt",
+    "profile": "Trang cá nhân",
+    "logout": "Đăng xuất"
   },
   "Dashboard": {
     "title": "Bảng điều khiển",

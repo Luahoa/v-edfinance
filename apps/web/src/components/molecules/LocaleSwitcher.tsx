@@ -1,17 +1,15 @@
 'use client';
 
 import { useLocale } from 'next-intl';
-import { useRouter, usePathname, routing } from '@/i18n/routing';
+import { routing } from '@/i18n/routing';
 import { Globe } from 'lucide-react';
 
 export default function LocaleSwitcher() {
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
 
   const changeLocale = (newLocale: string) => {
     const segments = window.location.pathname.split('/');
-    if (routing.locales.includes(segments[1] as any)) {
+    if (routing.locales.includes(segments[1] as 'vi' | 'en' | 'zh')) {
       segments[1] = newLocale;
       window.location.assign(segments.join('/'));
     } else {
