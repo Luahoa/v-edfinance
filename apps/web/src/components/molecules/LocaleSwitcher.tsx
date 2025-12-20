@@ -20,10 +20,11 @@ export default function LocaleSwitcher() {
       <select 
         value={locale}
         onChange={(e) => changeLocale(e.target.value)}
+        data-testid="lang-switcher"
         className="bg-transparent focus:outline-none cursor-pointer uppercase"
       >
         {routing.locales.map((loc) => (
-          <option key={loc} value={loc}>
+          <option key={loc} value={loc} data-testid={`lang-option-${loc}`}>
             {loc}
           </option>
         ))}

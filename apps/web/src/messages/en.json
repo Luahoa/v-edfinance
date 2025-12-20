@@ -4,6 +4,7 @@
     "register": "Register",
     "email": "Email",
     "password": "Password",
+    "name": "Full Name",
     "submit": "Submit",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?"

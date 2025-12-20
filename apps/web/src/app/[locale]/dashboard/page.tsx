@@ -1,79 +1,59 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import AiMentor from '@/components/AiMentor';
 import InteractiveChecklist from '@/components/organisms/InteractiveChecklist';
 import { SocialFeed } from '@/components/organisms/SocialFeed';
 import { BuddyRecommendations } from '@/components/molecules/BuddyRecommendations';
-import { BookOpen, TrendingUp, Award, Zap, ListTodo, Users } from 'lucide-react';
-import { cookies } from 'next/headers';
-import type { DashboardStats, Post as SocialPostType } from '@/types';
+import { BookOpen, TrendingUp, Award, Zap, ListTodo, Users, Loader2 } from 'lucide-react';
+import { useAuthStore } from '@/store/useAuthStore';
+import type { DashboardStats, Post as SocialPostType, BuddyGroup } from '@/types';
 
-async function getDashboardStats(): Promise<DashboardStats | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+export default function Dashboard() {
+  const t = useTranslations('Dashboard');
+  const ts = useTranslations('Social');
+  const { token } = useAuthStore();
   
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/users/dashboard-stats`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      next: { revalidate: 60 }, // Cache for 1 minute
-    });
-    
-    if (!res.ok) return null;
-    return res.json();
-  } catch (err) {
-    console.error('Fetch dashboard stats error:', err);
-    return null;
-  }
-}
+  const [stats, setStats] = useState<(DashboardStats & { streak?: number }) | null>(null);
+  const [feedPosts, setFeedPosts] = useState<SocialPostType[]>([]);
+  const [recommendations, setRecommendations] = useState<BuddyGroup[]>([]);
+  const [loading, setLoading] = useState(true);
 
-async function getSocialFeed(): Promise<SocialPostType[]> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/social/feed?limit=5`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      next: { revalidate: 30 },
-    });
-    
-    if (!res.ok) return [];
-    return res.json();
-  } catch (err) {
-    console.error('Fetch social feed error:', err);
-    return [];
-  }
-}
+  useEffect(() => {
+    if (!token) return;
 
-async function getBuddyRecommendations(): Promise<BuddyGroup[]> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/social/recommendations`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      next: { revalidate: 300 }, // Recommend logic can be cached longer
-    });
-    
-    if (!res.ok) return [];
-    return res.json();
-  } catch (err) {
-    console.error('Fetch recommendations error:', err);
-    return [];
-  }
-}
+    const fetchData = async () => {
+      setLoading(true);
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      
+      try {
+        const [statsRes, feedRes, recsRes] = await Promise.all([
+          fetch(`${API_URL}/users/dashboard-stats`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_URL}/social/feed?limit=5`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_URL}/social/recommendations`, { headers: { Authorization: `Bearer ${token}` } })
+        ]);
 
-export default async function Dashboard({ params }: { params: Promise<{ locale: string }> }) {
-  await params;
-  const t = await getTranslations('Dashboard');
-  const ts = await getTranslations('Social');
-  const stats = await getDashboardStats();
-  const feedPosts = await getSocialFeed();
-  const recommendations = await getBuddyRecommendations();
+        if (statsRes.ok) setStats(await statsRes.json());
+        if (feedRes.ok) setFeedPosts(await feedRes.json());
+        if (recsRes.ok) setRecommendations(await recsRes.json());
+      } catch (err) {
+        console.error('Fetch dashboard data error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [token]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
+        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black p-6 text-zinc-900 dark:text-zinc-100">

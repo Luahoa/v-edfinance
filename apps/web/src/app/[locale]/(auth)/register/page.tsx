@@ -24,12 +24,20 @@ export default function RegisterPage() {
       const response = await fetch(`${apiUrl}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({
+          email,
+          password,
+          name: {
+            vi: name,
+            en: name,
+            zh: name,
+          },
+        }),
       });
 
       if (response.ok) {
         console.log('Registration successful, redirecting...');
-        router.push('/login');
+        router.push('/onboarding');
       } else {
         const data = await response.json();
         setError(data.message || 'Registration failed');
@@ -49,10 +57,11 @@ export default function RegisterPage() {
         <form className="mt-8 space-y-6" onSubmit={handleRegister}>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium">Name</label>
+              <label className="block text-sm font-medium">{t('name')}</label>
               <input
                 type="text"
                 required
+                data-testid="register-name"
                 className="mt-1 w-full rounded-md border p-2 dark:bg-zinc-800"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -63,6 +72,7 @@ export default function RegisterPage() {
               <input
                 type="email"
                 required
+                data-testid="register-email"
                 className="mt-1 w-full rounded-md border p-2 dark:bg-zinc-800"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -73,6 +83,7 @@ export default function RegisterPage() {
               <input
                 type="password"
                 required
+                data-testid="register-password"
                 className="mt-1 w-full rounded-md border p-2 dark:bg-zinc-800"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -80,9 +91,9 @@ export default function RegisterPage() {
             </div>
           </div>
           <button
-            type="button"
+            type="submit"
             disabled={loading}
-            onClick={handleRegister}
+            data-testid="register-submit"
             className="w-full rounded-md bg-blue-600 py-2 font-semibold text-white hover:bg-blue-700 disabled:bg-blue-300"
           >
             {loading ? '...' : t('register')}

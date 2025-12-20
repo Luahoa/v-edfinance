@@ -5,25 +5,58 @@
     "scripts": {
         "build": "turbo run build",
         "dev": "turbo run dev",
-        "lint": "turbo run lint",
+        "lint": "biome check .",
+        "format": "biome format --write .",
+        "check": "biome check --write .",
+        "test": "vitest",
+        "test:ui": "vitest --ui",
+        "test:coverage": "vitest --coverage",
         "test:orchestrate": "node scripts/e2b-e2e-orchestrator.js",
-        "format": "prettier --write \"**/*.{ts,tsx,md}\""
+        "bench:auth": "autocannon -c 100 -d 30 http://localhost:3001/api/auth/health",
+        "bench:api": "autocannon -c 100 -d 30 http://localhost:3001/api/health",
+        "monitoring:start": "docker compose -f docker-compose.monitoring.yml up -d",
+        "monitoring:stop": "docker compose -f docker-compose.monitoring.yml down"
     },
     "devDependencies": {
+        "@biomejs/biome": "^1.9.4",
         "@e2b/code-interpreter": "^2.3.3",
         "@playwright/test": "^1.57.0",
+        "@types/bcrypt": "^6.0.0",
+        "@types/node": "^25.0.3",
+        "@vitest/coverage-v8": "^2.1.9",
+        "@vitest/ui": "^2.1.9",
+        "autocannon": "^7.15.0",
         "ava": "^6.4.1",
+        "bcrypt": "^6.0.0",
         "dotenv": "^17.2.3",
         "jest-coverage-badges": "^1.1.2",
+        "msw": "^2.6.8",
         "prettier": "latest",
-        "turbo": "latest"
+        "ts-node": "^10.9.2",
+        "turbo": "latest",
+        "typescript": "^5.9.3",
+        "vitest": "^2.1.9"
+    },
+    "ava": {
+        "extensions": [
+            "ts"
+        ],
+        "require": [
+            "ts-node/register/transpile-only"
+        ]
     },
     "workspaces": [
         "apps/*",
         "packages/*"
     ],
     "dependencies": {
+        "@uppy/aws-s3-multipart": "^4.1.2",
+        "@uppy/core": "^4.1.2",
+        "@uppy/dashboard": "^4.1.2",
+        "@uppy/react": "^4.1.2",
+        "@uppy/tus": "^4.1.2",
         "react": "18.3.1",
-        "react-dom": "18.3.1"
+        "react-dom": "18.3.1",
+        "unstorage": "^1.13.1"
     }
 }

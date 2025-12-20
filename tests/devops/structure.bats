@@ -26,7 +26,7 @@ setup() {
 }
 
 @test "Prisma schema exists" {
-    [ -f "$PROJECT_ROOT/prisma/schema.prisma" ]
+    [ -f "$PROJECT_ROOT/apps/api/prisma/schema.prisma" ]
 }
 
 @test "I18n locale files exist" {
