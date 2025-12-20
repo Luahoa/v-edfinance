@@ -59,7 +59,11 @@
     "enrolledCourses": "Khóa học đã đăng ký",
     "completedLessons": "Bài học đã hoàn thành",
     "currentLearning": "Khóa học đang học",
-    "interactiveChecklist": "Danh sách kiểm tra tương tác"
+    "interactiveChecklist": "Danh sách kiểm tra tương tác",
+    "continueLearning": "Tiếp tục học",
+    "setGoal": "Đặt mục tiêu",
+    "viewPortfolio": "Danh mục đầu tư",
+    "askAi": "Hỏi AI Mentor"
   },
   "Checklist": {
     "title": "Danh sách kiểm tra tương tác",

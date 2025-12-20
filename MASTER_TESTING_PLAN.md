@@ -32,6 +32,25 @@ This document serves as the unified testing strategy for the V-EdFinance platfor
 - [ ] Production hardening (Rate limiting, Budget monitoring)
 - [ ] Final compliance check (OWASP Top 10)
 
+## 🛠️ Hybrid Testing Architecture (VPS + E2B)
+
+### 1. Role Assignment
+- **VPS (103.54.153.248)**: 
+    - **Staging Environment**: Real-world deployment (API: port 3000, Web: port 3001).
+    - **Persistence**: PostgreSQL + Redis containers managed by Dokploy.
+    - **Beads CLI**: Task & Issue tracking for bugs discovered during testing.
+- **E2B (20 Concurrent Sandboxes)**: 
+    - **Load Generators**: Each sandbox runs `autocannon` or `k6` to simulate high traffic.
+    - **E2E Agents**: Headless Playwright workers testing the staging URL.
+    - **Distributed Testing**: 160 vCPUs & 160GB RAM total capacity for massive stress tests.
+
+### 2. Execution Flow
+1. **Trigger**: Developer runs `pnpm e2b:stress` from local machine.
+2. **Provision**: E2B Orchestrator spawns sandboxes.
+3. **Attack**: Sandboxes hit VPS IP/Port directly (Bypassing heavy monitoring if needed).
+4. **Collect**: Results aggregated from all sandboxes and saved to `STRESS_TEST_REPORT.md`.
+5. **Report**: Any failures generate a `Beads` issue automatically via `bd create`.
+
 ## 🛠️ Tool Roles
 | Tool | Purpose | Coverage Target |
 |---|---|---|

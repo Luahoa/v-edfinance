@@ -59,7 +59,11 @@
     "enrolledCourses": "已注册课程",
     "completedLessons": "已完成课程",
     "currentLearning": "正在学习",
-    "interactiveChecklist": "互动清单"
+    "interactiveChecklist": "互动清单",
+    "continueLearning": "继续学习",
+    "setGoal": "设定目标",
+    "viewPortfolio": "投资组合",
+    "askAi": "咨询 AI 导师"
   },
   "Checklist": {
     "title": "互动清单",

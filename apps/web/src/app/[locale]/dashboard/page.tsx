@@ -6,19 +6,34 @@ import AiMentor from '@/components/AiMentor';
 import InteractiveChecklist from '@/components/organisms/InteractiveChecklist';
 import { SocialFeed } from '@/components/organisms/SocialFeed';
 import { BuddyRecommendations } from '@/components/molecules/BuddyRecommendations';
+import QuickActions from '@/components/molecules/QuickActions';
 import { BookOpen, TrendingUp, Award, Zap, ListTodo, Users, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import type { DashboardStats, Post as SocialPostType, BuddyGroup } from '@/types';
 
 export default function Dashboard() {
   const t = useTranslations('Dashboard');
   const ts = useTranslations('Social');
   const { token } = useAuthStore();
+  const { trackEvent } = useAnalytics();
   
   const [stats, setStats] = useState<(DashboardStats & { streak?: number }) | null>(null);
   const [feedPosts, setFeedPosts] = useState<SocialPostType[]>([]);
   const [recommendations, setRecommendations] = useState<BuddyGroup[]>([]);
   const [loading, setLoading] = useState(true);
+  const [startTime] = useState(Date.now());
+
+  useEffect(() => {
+    // Track page view
+    trackEvent('VIEW_DASHBOARD', 'PAGE_VIEW');
+
+    // Cleanup for time spent tracking
+    return () => {
+      const duration = Date.now() - startTime;
+      trackEvent('LEAVE_DASHBOARD', 'PAGE_VIEW', { duration }, duration);
+    };
+  }, []);
 
   useEffect(() => {
     // Wait for hydration if using zustand persist
@@ -74,6 +89,8 @@ export default function Dashboard() {
       <div className="mx-auto max-w-6xl">
         <h1 className="text-2xl font-bold mb-8">{t('welcome')}!</h1>
         
+        <QuickActions />
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard icon={<BookOpen className="text-blue-600" />} title={t('enrolledCourses')} value={stats?.enrolledCoursesCount || 0} />
           <StatCard icon={<TrendingUp className="text-green-600" />} title={t('completedLessons')} value={stats?.completedLessonsCount || 0} />

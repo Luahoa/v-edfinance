@@ -59,7 +59,11 @@
     "enrolledCourses": "Enrolled Courses",
     "completedLessons": "Completed Lessons",
     "currentLearning": "Current Learning",
-    "interactiveChecklist": "Interactive Checklist"
+    "interactiveChecklist": "Interactive Checklist",
+    "continueLearning": "Continue Learning",
+    "setGoal": "Set Goal",
+    "viewPortfolio": "Portfolio",
+    "askAi": "Ask AI Mentor"
   },
   "Checklist": {
     "title": "Interactive Checklist",

@@ -14,6 +14,7 @@ export default defineConfig({
         '**/.next/**',
         'apps/web/e2e/**',
         'apps/web/tests/e2e/**',
+        'beads/**',
       ],
       coverage: {
           provider: 'v8',

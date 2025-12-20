@@ -13,6 +13,20 @@
 
 ## Frequently Used Commands
 
+### Hybrid Testing (VPS + E2B)
+```bash
+# Start Stress Test from E2B to VPS
+pnpm ts-node scripts/e2b-stress-orchestrator.ts --target http://103.54.153.248:3000
+
+# Run E2E Tests on Staging
+pnpm playwright test --config playwright.config.ts --baseUrl http://103.54.153.248:3001
+```
+
+**Môi trường Staging (VPS):**
+- **Dokploy Dashboard**: [http://103.54.153.248:3000](http://103.54.153.248:3000)
+- **API Staging**: [http://103.54.153.248:3001](http://103.54.153.248:3001)
+- **Web Staging**: [http://103.54.153.248:3002](http://103.54.153.248:3002)
+
 ### Development
 ```bash
 pnpm dev                    # Start all apps in dev mode
