@@ -10,8 +10,13 @@ export default function LocaleSwitcher() {
   const pathname = usePathname();
 
   const changeLocale = (newLocale: string) => {
-    // next-intl handling: use current pathname but change locale
-    router.replace(pathname, { locale: newLocale as 'vi' | 'en' | 'zh' });
+    const segments = window.location.pathname.split('/');
+    if (routing.locales.includes(segments[1] as any)) {
+      segments[1] = newLocale;
+      window.location.assign(segments.join('/'));
+    } else {
+      window.location.assign(`/${newLocale}${window.location.pathname}`);
+    }
   };
 
   return (

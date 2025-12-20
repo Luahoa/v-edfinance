@@ -1,0 +1,56 @@
+# Exclude from Docker build context
+node_modules
+npm-debug.log
+.next
+.git
+.github
+.vscode
+*.md
+!README.md
+dist
+build
+coverage
+.env*.local
+.DS_Store
+*.pem
+.turbo
+test-results
+playwright-report
+*.log
+
+# Documentation
+docs
+*.md
+LICENSE
+
+# Tests
+tests
+__tests__
+*.test.*
+*.spec.*
+*.ava.*
+playwright.config.ts
+vitest.config.ts
+
+# CI/CD
+.github
+.gitlab-ci.yml
+azure-pipelines.yml
+
+# Development files
+.prettierrc
+.eslintrc*
+.editorconfig
+biome.json
+
+# Monitoring (exclude from app builds)
+docker-compose.monitoring.yml
+docker-compose.test.yml
+monitoring
+
+# Scripts
+scripts/tests
+templates
+
+# Batch files
+*.bat

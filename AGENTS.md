@@ -47,6 +47,48 @@ pnpm --filter web test     # Run frontend tests
 pnpm --filter api test     # Run backend tests
 ```
 
+### Beads Task Management
+```bash
+# Daily Status Report
+.\scripts\beads-daily-status.ps1
+
+# Quick Commands (store in $BD)
+$BD = "$env:USERPROFILE\go\bin\bd.exe"
+
+# Morning routine
+& $BD sync                              # Sync with team
+& $BD stats                             # View statistics
+& $BD ready --json                      # See tasks ready to work
+& $BD doctor                            # Check system health (Daily)
+& $BD list --status open --priority 0,1 # High priority tasks
+
+# During work
+& $BD update ved-XXX --status in_progress  # Claim task
+& $BD comment ved-XXX "Progress update..."  # Add progress note
+& $BD create "Task title" -t task -p 2 --json  # Create new task
+
+# Completing work
+& $BD close ved-XXX --reason "Completed: ..."  # Close task
+& $BD sync                                     # Share with team
+```
+
+**Workflow Tự động hóa với Agent:**
+1. **Trigger**: Khi Agent bắt đầu session, chạy `bd ready` để xác định task.
+2. **Execution**: Thực hiện code, commit kèm `(ved-XXX)`.
+3. **Validation**: Chạy `bd doctor` định kỳ mỗi 1 tiếng hoặc trước khi `git push` để đảm bảo không có issue bị treo hoặc sai lệch dependency.
+4. **Conclusion**: `bd close` và `bd sync`.
+
+**Task Management Principles:**
+- 📝 **All work tracked in Beads** - No TODO comments in code
+- 🔄 **Sync twice daily** - Morning + afternoon to stay in sync
+- 🎯 **Granular tasks** - Epic (2-4 weeks) → Feature (3-7 days) → Task (4-8 hours)
+- 🔗 **Link dependencies** - Use `--deps blocks:ved-XXX` or `discovered-from:ved-XXX`
+- ✅ **Close with context** - Always explain what was done in `--reason`
+
+**Quick Reference:**
+- See [`BEADS_STRATEGY.md`](file:///c:/Users/luaho/.gemini/antigravity/brain/c584e8d2-3ee8-43a6-bf19-1885bd8abffb/beads_strategy.md) for comprehensive guide
+- See [`BEADS_GUIDE.md`](file:///c:/Users/luaho/Demo%20project/v-edfinance/BEADS_GUIDE.md) for CLI reference
+
 ---
 
 ## Code Style Preferences
@@ -226,3 +268,45 @@ Since this project is 100% Agent-coded, follow these rules to prevent "Hallucina
 - **Graceful UI Recovery**: `GlobalErrorBoundary` catches React crashes, displays the `ErrorId`, and allows a single-click state reset.
 
 ---
+
+### 6. Zero-Debt Engineering Rule
+- **Issue First**: Luôn kiểm tra và giải quyết các issue tồn đọng trong Beads (BD) trước khi phát triển tính năng mới.
+- **Strict Testing**: Chỉ chuyển task sang trạng thái `completed` sau khi tất cả các bài kiểm tra (Unit/Integration/E2E) liên quan đã Pass.
+- **No Expansion with Debt**: Không cho phép dự án phình to (feature creep) khi các lỗi cũ chưa được xử lý triệt để.
+
+---
+
+### 7. Zero-Debt Protocol (Agent-to-Main)
+**All development must follow the "Fix First, Feature Second" rule:**
+- **Issue Audit:** Check `bd ready` for pending bugs/debt.
+- **Verification:** Run `bd doctor` to ensure system health.
+- **Quality Gate:** Pass all tests before closing any task.
+- **Persistence:** Work is NOT done until `git push` succeeds.
+
+---
+
+## Landing the Plane (Session Completion)
+
+**When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
+
+**MANDATORY WORKFLOW:**
+
+1. **File issues for remaining work** - Create issues for anything that needs follow-up
+2. **Run quality gates** (if code changed) - Tests, linters, builds
+3. **Update issue status** - Close finished work, update in-progress items
+4. **PUSH TO REMOTE** - This is MANDATORY:
+   ```bash
+   git pull --rebase
+   bd sync
+   git push
+   git status  # MUST show "up to date with origin"
+   ```
+5. **Clean up** - Clear stashes, prune remote branches
+6. **Verify** - All changes committed AND pushed
+7. **Hand off** - Provide context for next session
+
+**CRITICAL RULES:**
+- Work is NOT complete until `git push` succeeds
+- NEVER stop before pushing - that leaves work stranded locally
+- NEVER say "ready to push when you are" - YOU must push
+- If push fails, resolve and retry until it succeeds

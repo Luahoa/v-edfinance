@@ -2,6 +2,14 @@
 
 **EdTech Platform for Financial Education**
 
+## 🛡️ Zero-Debt Engineering
+This project follows a strict **"Fix First, Feature Second"** protocol:
+1. **Issue Check:** Use `bd ready` to identify pending tasks/bugs.
+2. **Quality Audit:** Run `bd doctor` to ensure environment and dependency health.
+3. **Verified Completion:** No task is closed without passing full test suites.
+
+---
+
 ## 📚 Documentation
 
 ### Getting Started

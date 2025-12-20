@@ -1,0 +1,165 @@
+version: "1.0"
+
+# Dokploy Configuration for V-EdFinance
+# Manages Development and Staging environments on single VPS
+
+name: v-edfinance
+domain: dokploy.v-edfinance.com
+
+# PostgreSQL - Shared for dev/staging
+postgres:
+  serviceName: postgres
+  image: postgres:15-alpine
+  ports:
+    - "5432:5432"
+  volumes:
+    - postgres_data:/var/lib/postgresql/data
+  environment:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    POSTGRES_DB: vedfinance
+  resources:
+    memory: 512m
+    cpus: 0.5
+
+# Redis - Shared cache
+redis:
+  serviceName: redis
+  image: redis:7-alpine
+  ports:
+    - "6379:6379"
+  resources:
+    memory: 256m
+    cpus: 0.25
+
+# Development Environment
+applications:
+  - name: api-dev
+    github:
+      repository: luaho/v-edfinance
+      branch: develop
+      path: /
+    buildType: dockerfile
+    dockerfile: apps/api/Dockerfile
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/vedfinance_dev?schema=public
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET_DEV}
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+    port: 3000
+    domain: api-dev.v-edfinance.com
+    healthCheck:
+      path: /api/health
+      interval: 30
+    resources:
+      memory: 512m
+      cpus: 0.5
+    replicas: 1
+
+  - name: web-dev
+    github:
+      repository: luaho/v-edfinance
+      branch: develop
+      path: /
+    buildType: dockerfile
+    dockerfile: apps/web/Dockerfile
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=https://api-dev.v-edfinance.com
+    port: 3000
+    domain: dev.v-edfinance.com
+    healthCheck:
+      path: /
+      interval: 30
+    resources:
+      memory: 512m
+      cpus: 0.5
+    replicas: 1
+
+  # Staging Environment
+  - name: api-staging
+    github:
+      repository: luaho/v-edfinance
+      branch: staging
+      path: /
+    buildType: dockerfile
+    dockerfile: apps/api/Dockerfile
+    environment:
+      - NODE_ENV=staging
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/vedfinance_staging?schema=public
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET_STAGING}
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME}
+    port: 3000
+    domain: api-staging.v-edfinance.com
+    healthCheck:
+      path: /api/health
+      interval: 30
+    resources:
+      memory: 768m
+      cpus: 0.75
+    replicas: 1
+
+  - name: web-staging
+    github:
+      repository: luaho/v-edfinance
+      branch: staging
+      path: /
+    buildType: dockerfile
+    dockerfile: apps/web/Dockerfile
+    environment:
+      - NODE_ENV=staging
+      - NEXT_PUBLIC_API_URL=https://api-staging.v-edfinance.com
+    port: 3000
+    domain: staging.v-edfinance.com
+    healthCheck:
+      path: /
+      interval: 30
+    resources:
+      memory: 768m
+      cpus: 0.75
+    replicas: 1
+
+# Monitoring
+monitoring:
+  - name: uptime-kuma
+    image: louislam/uptime-kuma:1
+    port: 3001
+    domain: monitoring.v-edfinance.com
+    volumes:
+      - uptime_data:/app/data
+    resources:
+      memory: 256m
+      cpus: 0.25
+
+volumes:
+  postgres_data:
+  uptime_data:
+
+# Auto-deploy on push
+autoDeployment:
+  enabled: true
+  branches:
+    - develop  # Auto-deploy dev
+    - staging  # Auto-deploy staging
+
+# SSL Configuration
+ssl:
+  enabled: true
+  provider: letsencrypt
+  email: admin@v-edfinance.com
+
+# Backups
+backups:
+  enabled: true
+  schedule: "0 3 * * *"  # Daily at 3 AM
+  retention: 7  # Keep 7 days
+  databases:
+    - postgres

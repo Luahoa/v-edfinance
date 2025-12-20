@@ -1,12 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter, Link } from '@/i18n/routing';
+import LocaleSwitcher from '@/components/molecules/LocaleSwitcher';
+import { useAuthStore } from '@/store/useAuthStore';
+import Cookies from 'js-cookie';
 
 export default function RegisterPage() {
   const t = useTranslations('Auth');
   const router = useRouter();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -35,11 +39,24 @@ export default function RegisterPage() {
         }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        console.log('Registration successful, redirecting...');
+        console.log('Registration successful, setting auth and redirecting...');
+        
+        // 1. Set state in Zustand
+        if (data.user) {
+          setAuth(data.user, data.access_token);
+        } else {
+          // If register returns tokens but user is separate or implicitly in tokens
+          setAuth({ id: data.userId, email, role: 'USER' } as any, data.access_token);
+        }
+        
+        // 2. Set Cookie for Middleware
+        Cookies.set('token', data.access_token, { expires: 7 });
+        
         router.push('/onboarding');
       } else {
-        const data = await response.json();
         setError(data.message || 'Registration failed');
       }
     } catch {
@@ -50,7 +67,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black relative">
+      <div className="absolute right-4 top-4">
+        <LocaleSwitcher />
+      </div>
       <div className="w-full max-w-md space-y-8 rounded-xl bg-white p-8 shadow-lg dark:bg-zinc-900">
         <h2 className="text-center text-3xl font-bold">{t('register')}</h2>
         {error && <p className="text-center text-sm text-red-500">{error}</p>}

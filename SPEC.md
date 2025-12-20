@@ -238,6 +238,15 @@ Before starting a complex new feature (estimated > 2 hours), issue this prompt t
 
 ---
 
+### 10.5 Zero-Debt Engineering Protocol (MANDATORY)
+To ensure the project remains stable as it grows:
+1.  **Beads First:** ALWAYS check `bd ready` for pending issues/bugs before starting any new feature.
+2.  **Resolution before Expansion:** Fix all critical bugs and technical debt (identified by `bd doctor`) before adding new lines of feature code.
+3.  **Strict Testing Gate:** A task is NOT closed until all relevant Unit, Integration, and E2E tests pass.
+4.  **No Ghost Code:** Do not commit commented-out code or unused files.
+
+---
+
 ## 11. Long-term Governance / Quản trị Dự án / 长期治理
 
 ### 11.1 Observability & Monitoring

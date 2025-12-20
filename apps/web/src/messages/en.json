@@ -148,5 +148,23 @@
         "NUDGE": "Nudge",
         "DISCUSSION": "Discussion"
       }
+    },
+    "Onboarding": {
+      "title": "Welcome to your financial journey",
+      "description": "Let's set up your profile to personalize your learning experience.",
+      "step1Title": "Step 1: Your Knowledge",
+      "step2Title": "Step 2: Investment Goals",
+      "step3Title": "Step 3: Risk Tolerance",
+      "beginner": "Beginner",
+      "experienced": "Experienced",
+      "expert": "Expert",
+      "longTerm": "Long-term",
+      "shortTerm": "Short-term",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "back": "Back",
+      "next": "Next",
+      "complete": "Complete"
     }
   }

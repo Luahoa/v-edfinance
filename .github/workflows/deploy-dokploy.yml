@@ -1,0 +1,102 @@
+name: Deploy to Dokploy Staging
+
+on:
+  push:
+    branches:
+      - develop
+      - staging
+  workflow_dispatch:
+
+env:
+  DOKPLOY_URL: https://dokploy.v-edfinance.com
+  
+jobs:
+  deploy:
+    name: Deploy to ${{ github.ref_name }} environment
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.ref_name }}" == "develop" ]; then
+            echo "environment=development" >> $GITHUB_OUTPUT
+            echo "domain=dev.v-edfinance.com" >> $GITHUB_OUTPUT
+          else
+            echo "environment=staging" >> $GITHUB_OUTPUT
+            echo "domain=staging.v-edfinance.com" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Trigger Dokploy Deployment
+        run: |
+          echo "🚀 Deploying to ${{ steps.env.outputs.environment }}..."
+          
+          # Dokploy will automatically pull from GitHub via webhook
+          # Or use Dokploy API if configured
+          
+          curl -X POST "${{ env.DOKPLOY_URL }}/api/deploy" \
+            -H "Authorization: Bearer ${{ secrets.DOKPLOY_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "project": "v-edfinance",
+              "environment": "${{ steps.env.outputs.environment }}",
+              "branch": "${{ github.ref_name }}"
+            }'
+      
+      - name: Wait for deployment
+        run: |
+          echo "⏳ Waiting for deployment to complete..."
+          sleep 30
+      
+      - name: Health Check
+        run: |
+          echo "🏥 Running health check..."
+          
+          MAX_RETRIES=10
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if curl -f -s -o /dev/null https://api-${{ steps.env.outputs.environment }}.v-edfinance.com/api/health; then
+              echo "✅ API is healthy!"
+              exit 0
+            fi
+            
+            echo "⏳ Waiting for API to be ready... ($(($RETRY_COUNT + 1))/$MAX_RETRIES)"
+            sleep 10
+            RETRY_COUNT=$(($RETRY_COUNT + 1))
+          done
+          
+          echo "❌ Health check failed after $MAX_RETRIES attempts"
+          exit 1
+      
+      - name: Notify Discord
+        if: always()
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            COLOR=3066993
+            TITLE="✅ Deployment Successful"
+          else
+            COLOR=15158332
+            TITLE="❌ Deployment Failed"
+          fi
+          
+          curl -H "Content-Type: application/json" \
+            -d "{
+              \"embeds\": [{
+                \"title\": \"${TITLE}\",
+                \"color\": ${COLOR},
+                \"fields\": [
+                  {\"name\": \"Environment\", \"value\": \"${{ steps.env.outputs.environment }}\", \"inline\": true},
+                  {\"name\": \"Branch\", \"value\": \"${{ github.ref_name }}\", \"inline\": true},
+                  {\"name\": \"Commit\", \"value\": \"[\`${GITHUB_SHA:0:7}\`](https://github.com/${{ github.repository }}/commit/${{ github.sha }})\", \"inline\": true},
+                  {\"name\": \"URL\", \"value\": \"https://${{ steps.env.outputs.domain }}\"}
+                ],
+                \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+              }]
+            }" \
+            "$DISCORD_WEBHOOK" || echo "Discord notification skipped"

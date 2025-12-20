@@ -148,5 +148,23 @@
         "NUDGE": "Nhắc nhở",
         "DISCUSSION": "Thảo luận"
       }
+    },
+    "Onboarding": {
+      "title": "Chào mừng bạn đến với hành trình tài chính",
+      "description": "Hãy cùng thiết lập hồ sơ để cá nhân hóa trải nghiệm học tập của bạn.",
+      "step1Title": "Bước 1: Kiến thức của bạn",
+      "step2Title": "Bước 2: Mục tiêu đầu tư",
+      "step3Title": "Bước 3: Mức độ rủi ro",
+      "beginner": "Mới bắt đầu",
+      "experienced": "Đã có kinh nghiệm",
+      "expert": "Chuyên gia",
+      "longTerm": "Dài hạn",
+      "shortTerm": "Ngắn hạn",
+      "low": "Thấp",
+      "medium": "Trung bình",
+      "high": "Cao",
+      "back": "Quay lại",
+      "next": "Tiếp theo",
+      "complete": "Hoàn tất"
     }
   }

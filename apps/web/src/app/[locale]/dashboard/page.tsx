@@ -21,6 +21,20 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Wait for hydration if using zustand persist
+    const checkAuth = async () => {
+      if (!token) {
+        // Give it a moment to hydrate from localStorage
+        await new Promise(resolve => setTimeout(resolve, 500));
+        if (!useAuthStore.getState().token) {
+          console.log('No token found in Dashboard, redirecting...');
+          setLoading(false); // Stop loading to show "Welcome" which might be handled by middleware anyway
+          return;
+        }
+      }
+    };
+    checkAuth();
+
     if (!token) return;
 
     const fetchData = async () => {
@@ -64,7 +78,12 @@ export default function Dashboard() {
           <StatCard icon={<BookOpen className="text-blue-600" />} title={t('enrolledCourses')} value={stats?.enrolledCoursesCount || 0} />
           <StatCard icon={<TrendingUp className="text-green-600" />} title={t('completedLessons')} value={stats?.completedLessonsCount || 0} />
           <StatCard icon={<Zap className="text-purple-600" />} title={t('points')} value={stats?.points || 0} />
-          <StatCard icon={<Award className="text-yellow-600" />} title="Streak" value={stats?.streak || 0} />
+          <StatCard 
+            icon={<Award className="text-yellow-600" />} 
+            title="Streak" 
+            value={stats?.streak || 0} 
+            testId="streak-counter"
+          />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -96,9 +115,9 @@ export default function Dashboard() {
   );
 }
 
-function StatCard({ icon, title, value }: { icon: React.ReactNode; title: string; value: string | number }) {
+function StatCard({ icon, title, value, testId }: { icon: React.ReactNode; title: string; value: string | number; testId?: string }) {
   return (
-    <div className="rounded-xl border bg-white p-6 shadow-sm dark:bg-zinc-900 dark:border-zinc-800">
+    <div className="rounded-xl border bg-white p-6 shadow-sm dark:bg-zinc-900 dark:border-zinc-800" data-testid={testId}>
       <div className="flex items-center gap-4">
         <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">{icon}</div>
         <div>

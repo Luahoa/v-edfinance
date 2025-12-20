@@ -19,20 +19,20 @@
   - [x] User CRUD operations
   - [x] Dashboard statistics calculation
   - [x] Investment Profile management
-- [ ] **Auth Controller** (Integration)
+- [x] **Auth Controller** (Integration)
   - [x] Basic unit tests
-  - [ ] Request validation (DTOs)
-  - [ ] Guard application tests
+  - [x] Request validation (DTOs)
+  - [x] Guard application tests
 
 ## 📚 Learning Content & Progress (Priority 2)
 - [x] **CoursesService**
   - [x] JSONB localized content handling
   - [x] Slug generation & validation
-- [ ] **LessonsService**
-  - [ ] Content retrieval & sequencing
-- [ ] **ProgressService**
-  - [ ] Percent completion calculation
-  - [ ] Achievement trigger points
+- [x] **LessonsService**
+  - [x] Content retrieval & sequencing
+- [x] **ProgressService**
+  - [x] Percent completion calculation
+  - [x] Achievement trigger points
 
 ## 🎮 Gamification & Store (Priority 3)
 - [x] **StoreService**
@@ -40,19 +40,19 @@
   - [x] Streak Freeze purchase logic
 - [x] **StreakService**
   - [x] Streak calculation & updates
-- [ ] **GamificationService**
-  - [ ] Badge awarding logic
-  - [ ] Points logging & audit trail
+- [x] **GamificationService**
+  - [x] Badge awarding logic
+  - [x] Points logging & audit trail
 
 ## 🤖 AI & Behavioral (Priority 4)
-- [ ] **AIService (Gemini)**
-  - [ ] Prompt construction validation
-  - [ ] Fallback handling on API failure
-- [ ] **NudgeEngine**
-  - [ ] Logic for triggering notifications
-- [ ] **AnalyticsService**
-  - [ ] Event aggregation logic
-  - [ ] Predictive modeling validation
+- [x] **AIService (Gemini)**
+  - [x] Prompt construction validation
+  - [x] Fallback handling on API failure
+- [x] **NudgeEngine**
+  - [x] Logic for triggering notifications
+- [x] **AnalyticsService**
+  - [x] Event aggregation logic
+  - [x] Predictive modeling validation
 
 ## 🚀 E2E Journeys (Playwright)
 - [x] Auth: Registration & Onboarding

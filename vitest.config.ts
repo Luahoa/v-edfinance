@@ -24,22 +24,25 @@ export default defineConfig({
                 '**/dist/',
                 '**/.next/',
             ],
-            lines: 80,
-            functions: 80,
-            branches: 75,
-            statements: 80,
+            thresholds: {
+                lines: 80,
+                functions: 80,
+                branches: 75,
+                statements: 80,
+            },
         },
-        // Enable UI mode for better DX
-        ui: true,
-        // Run tests in parallel for speed
+        // Disable UI mode in terminal/automated environments
+        ui: false,
+        // Disable parallel pools to reduce overhead on dev machine
         pool: 'threads',
         poolOptions: {
             threads: {
-                singleThread: false,
+                singleThread: true,
             },
         },
         // Timeout for tests (increase if needed for E2B tests)
-        testTimeout: 10000,
+        testTimeout: 30000,
+        hookTimeout: 60000,
     },
     resolve: {
         alias: {

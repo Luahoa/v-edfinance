@@ -1,0 +1,171 @@
+# Kamal Production Deployment Configuration
+# Service: V-EdFinance Platform
+# Documentation: https://kamal-deploy.org
+
+service: v-edfinance
+image: ghcr.io/luaho/v-edfinance
+
+# Docker Registry
+registry:
+  server: ghcr.io
+  username: luaho
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+# Servers Configuration
+servers:
+  web:
+    hosts:
+      - 192.168.1.10  # Replace with your production VPS IP
+    labels:
+      traefik.http.routers.web.rule: Host(`v-edfinance.com`) || Host(`www.v-edfinance.com`)
+      traefik.http.routers.web.tls: true
+      traefik.http.routers.web.tls.certresolver: letsencrypt
+    options:
+      network: "private"
+    
+  api:
+    hosts:
+      - 192.168.1.10  # Same server initially
+    labels:
+      traefik.http.routers.api.rule: Host(`api.v-edfinance.com`)
+      traefik.http.routers.api.tls: true
+      traefik.http.routers.api.tls.certresolver: letsencrypt
+    cmd: node apps/api/dist/main
+    options:
+      network: "private"
+
+# Traefik Configuration (Reverse Proxy & Load Balancer)
+traefik:
+  options:
+    publish:
+      - "443:443"
+      - "80:80"
+    volume:
+      - "/letsencrypt:/letsencrypt"
+    network: "private"
+  args:
+    entryPoints.web.address: ":80"
+    entryPoints.websecure.address: ":443"
+    entryPoints.web.http.redirections.entryPoint.to: websecure
+    entryPoints.web.http.redirections.entryPoint.scheme: https
+    certificatesResolvers.letsencrypt.acme.email: "admin@v-edfinance.com"
+    certificatesResolvers.letsencrypt.acme.storage: "/letsencrypt/acme.json"
+    certificatesResolvers.letsencrypt.acme.httpchallenge.entrypoint: web
+
+# Accessories (PostgreSQL, Redis)
+accessories:
+  postgres:
+    image: postgres:15-alpine
+    host: 192.168.1.11  # Separate database server
+    port: 5432
+    env:
+      clear:
+        POSTGRES_USER: postgres
+        POSTGRES_DB: vedfinance_production
+      secret:
+        - POSTGRES_PASSWORD
+    directories:
+      - data:/var/lib/postgresql/data
+    options:
+      network: "private"
+
+  redis:
+    image: redis:7-alpine
+    host: 192.168.1.11  # Same database server
+    port: 6379
+    directories:
+      - data:/data
+    options:
+      network: "private"
+
+  # Monitoring
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    host: 192.168.1.11
+    port: 3001
+    directories:
+      - data:/app/data
+    options:
+      network: "private"
+
+# Environment Variables
+env:
+  clear:
+    NODE_ENV: production
+    PORT: 3000
+    # Public vars
+    NEXT_PUBLIC_API_URL: https://api.v-edfinance.com
+  secret:
+    # Database
+    - DATABASE_URL
+    # JWT
+    - JWT_SECRET
+    - JWT_REFRESH_SECRET
+    # R2 Storage
+    - R2_ACCOUNT_ID
+    - R2_ACCESS_KEY_ID
+    - R2_SECRET_ACCESS_KEY
+    - R2_BUCKET_NAME
+    # Google AI
+    - GOOGLE_AI_API_KEY
+    # Redis
+    - REDIS_URL
+
+# Health Check
+healthcheck:
+  path: /api/health
+  port: 3000
+  max_attempts: 10
+  interval: 10s
+
+# Build Configuration
+builder:
+  multiarch: false
+  cache:
+    type: registry
+    options: mode=max
+
+# Asset Bridging (for Next.js static files)
+asset_path: /app/apps/web/.next/static
+
+# SSH Configuration
+ssh:
+  user: root
+  proxy: ~  # Use proxy if needed
+  log_level: debug
+
+# Volumes
+volumes:
+  - "v-edfinance-storage:/app/storage"
+
+# Retention Policy
+retain_containers: 5
+
+# Logging
+logging:
+  driver: json-file
+  options:
+    max-size: "100m"
+    max-file: "3"
+
+# Pre-deployment Hooks
+hooks:
+  pre-connect:
+    - command: echo "Starting deployment..."
+  
+  pre-build:
+    - command: echo "Building Docker images..."
+  
+  pre-deploy:
+    - command: echo "Running database migrations..."
+    - path: .kamal/hooks/pre-deploy.sh
+  
+  post-deploy:
+    - command: echo "Deployment complete! 🚀"
+    - path: .kamal/hooks/post-deploy.sh
+
+# Booting Strategy
+boot:
+  limit: 10  # Boot 10 containers at once max
+  wait: 2    # Wait 2 seconds between boots
