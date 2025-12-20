@@ -72,110 +72,110 @@
     "noActiveChecklists": "No active checklists",
     "taskCompleted": "Task completed",
     "taskPending": "Task pending"
-    },
-    "Gamification": {
+  },
+  "Gamification": {
     "achievementUnlocked": "Achievement Unlocked!",
     "streakTitle": "{days} Day Streak!",
     "streakLost": "You lost your streak! Start again today.",
     "pointsEarned": "+{points} points",
     "close": "Close",
     "viewAllAchievements": "View All Achievements"
-    },
-    "Leaderboard": {
-      "title": "Leaderboard",
-      "points": "By Points",
-      "streaks": "By Streak",
-      "rank": "Rank",
-      "user": "User",
-      "value": "Value",
-      "pointsSuffix": "pts",
-      "daysSuffix": "days"
-    },
-    "Store": {
-      "title": "Point Store",
-      "balance": "Your balance: {points} points",
-      "buy": "Buy",
-      "insufficientPoints": "Insufficient points",
-      "purchaseSuccess": "Purchase successful!",
-      "items": {
-        "streak-freeze": {
-          "name": "Streak Freeze",
-          "description": "Keep your streak alive even if you miss a day."
-        }
+  },
+  "Leaderboard": {
+    "title": "Leaderboard",
+    "points": "By Points",
+    "streaks": "By Streak",
+    "rank": "Rank",
+    "user": "User",
+    "value": "Value",
+    "pointsSuffix": "pts",
+    "daysSuffix": "days"
+  },
+  "Store": {
+    "title": "Point Store",
+    "balance": "Your balance: {points} points",
+    "buy": "Buy",
+    "insufficientPoints": "Insufficient points",
+    "purchaseSuccess": "Purchase successful!",
+    "items": {
+      "streak-freeze": {
+        "name": "Streak Freeze",
+        "description": "Keep your streak alive even if you miss a day."
       }
-    },
-    "Simulation": {
-      "title": "Simulation Ecosystem",
-      "trade": {
-        "title": "Virtual Trading",
-        "balance": "Balance: {amount} Lua Coin",
-        "buy": "Buy",
-        "sell": "Sell",
-        "portfolio": "Portfolio"
-      },
-      "life": {
-        "title": "Life Scenarios",
-        "start": "Start Journey",
-        "age": "Age: {age}",
-        "job": "Job: {job}"
-      },
-      "budget": {
-        "title": "Budgeting War",
-        "rule": "50/30/20 Rule",
-        "needs": "Needs (50%)",
-        "wants": "Wants (30%)",
-        "savings": "Savings (20%)"
-      },
-      "commitment": {
-        "title": "Commitment Devices",
-        "lock": "Lock Savings",
-        "penalty": "10% Early Withdrawal Penalty",
-        "withdraw": "Withdraw",
-        "locked": "Locked: {amount}"
-      }
-    },
-    "Social": {
-      "feed": "Community Feed",
-      "emptyFeed": "No activities in your community yet.",
-      "buddySystem": "Buddy System",
-      "noGroups": "You haven't joined any learning groups yet.",
-      "createGroup": "Create Group",
-      "joinGroup": "Join Group",
-      "recommendations": "Recommended for you",
-      "groupDetails": "Group Details",
-      "members": "Members",
-      "challenges": "Challenges",
-      "createChallenge": "Create Challenge",
-      "points": "Group Points",
-      "streak": "Group Streak",
-      "types": {
-        "LEARNING": "Learning",
-        "SAVING": "Saving",
-        "INVESTING": "Investing"
-      },
-      "postTypes": {
-        "ACHIEVEMENT": "Achievement",
-        "MILESTONE": "Milestone",
-        "NUDGE": "Nudge",
-        "DISCUSSION": "Discussion"
-      }
-    },
-    "Onboarding": {
-      "title": "Welcome to your financial journey",
-      "description": "Let's set up your profile to personalize your learning experience.",
-      "step1Title": "Step 1: Your Knowledge",
-      "step2Title": "Step 2: Investment Goals",
-      "step3Title": "Step 3: Risk Tolerance",
-      "beginner": "Beginner",
-      "experienced": "Experienced",
-      "expert": "Expert",
-      "longTerm": "Long-term",
-      "shortTerm": "Short-term",
-      "low": "Low",
-      "medium": "Medium",
-      "high": "High",
-      "back": "Back",
-      "next": "Next",
-      "complete": "Complete"
     }
+  },
+  "Simulation": {
+    "title": "Simulation Ecosystem",
+    "trade": {
+      "title": "Virtual Trading",
+      "balance": "Balance: {amount} Lua Coin",
+      "buy": "Buy",
+      "sell": "Sell",
+      "portfolio": "Portfolio"
+    },
+    "life": {
+      "title": "Life Scenarios",
+      "start": "Start Journey",
+      "age": "Age: {age}",
+      "job": "Job: {job}"
+    },
+    "budget": {
+      "title": "Budgeting War",
+      "rule": "50/30/20 Rule",
+      "needs": "Needs (50%)",
+      "wants": "Wants (30%)",
+      "savings": "Savings (20%)"
+    },
+    "commitment": {
+      "title": "Commitment Devices",
+      "lock": "Lock Savings",
+      "penalty": "10% Early Withdrawal Penalty",
+      "withdraw": "Withdraw",
+      "locked": "Locked: {amount}"
+    }
+  },
+  "Social": {
+    "feed": "Community Feed",
+    "emptyFeed": "No activities in your community yet.",
+    "buddySystem": "Buddy System",
+    "noGroups": "You haven't joined any learning groups yet.",
+    "createGroup": "Create Group",
+    "joinGroup": "Join Group",
+    "recommendations": "Recommended for you",
+    "groupDetails": "Group Details",
+    "members": "Members",
+    "challenges": "Challenges",
+    "createChallenge": "Create Challenge",
+    "points": "Group Points",
+    "streak": "Group Streak",
+    "types": {
+      "LEARNING": "Learning",
+      "SAVING": "Saving",
+      "INVESTING": "Investing"
+    },
+    "postTypes": {
+      "ACHIEVEMENT": "Achievement",
+      "MILESTONE": "Milestone",
+      "NUDGE": "Nudge",
+      "DISCUSSION": "Discussion"
+    }
+  },
+  "Onboarding": {
+    "title": "Welcome to your financial journey",
+    "description": "Let's set up your profile to personalize your learning experience.",
+    "step1Title": "Step 1: Your Knowledge",
+    "step2Title": "Step 2: Investment Goals",
+    "step3Title": "Step 3: Risk Tolerance",
+    "beginner": "Beginner",
+    "experienced": "Experienced",
+    "expert": "Expert",
+    "longTerm": "Long-term",
+    "shortTerm": "Short-term",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "back": "Back",
+    "next": "Next",
+    "complete": "Complete"
   }
+}

@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as bcrypt from 'bcrypt';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuthService } from '../../apps/api/src/auth/auth.service';
 
 // Mock bcrypt
@@ -40,40 +40,27 @@ const mockPrisma = {
 let authService: AuthService;
 
 beforeEach(() => {
-  authService = new AuthService(
-    mockUsersService as any,
-    mockJwtService as any,
-    mockPrisma as any
-  );
+  authService = new AuthService(mockUsersService as any, mockJwtService as any, mockPrisma as any);
   vi.clearAllMocks();
 });
 
 describe('AuthService', () => {
   describe('validateUser', () => {
     it('should return user for valid credentials', async () => {
-      const result = await authService.validateUser(
-        'exists@example.com',
-        'password123'
-      );
+      const result = await authService.validateUser('exists@example.com', 'password123');
 
       expect(result).toBeTruthy();
       expect(result?.email).toBe('exists@example.com');
     });
 
     it('should return null for non-existent user', async () => {
-      const result = await authService.validateUser(
-        'nonexistent@example.com',
-        'password123'
-      );
+      const result = await authService.validateUser('nonexistent@example.com', 'password123');
 
       expect(result).toBeNull();
     });
 
     it('should return null for wrong password', async () => {
-      const result = await authService.validateUser(
-        'exists@example.com',
-        'wrongpassword'
-      );
+      const result = await authService.validateUser('exists@example.com', 'wrongpassword');
 
       expect(result).toBeNull();
     });
@@ -81,11 +68,7 @@ describe('AuthService', () => {
 
   describe('generateTokens', () => {
     it('should create secure tokens', async () => {
-      const tokens = await authService.generateTokens(
-        '1',
-        'test@example.com',
-        'USER'
-      );
+      const tokens = await authService.generateTokens('1', 'test@example.com', 'USER');
 
       expect(tokens.access_token).toBeTruthy();
       expect(tokens.refresh_token).toBeTruthy();

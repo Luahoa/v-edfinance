@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
 dotenv.config(); // Call immediately at the top
 
+import { join } from 'node:path';
 import { Sandbox } from '@e2b/code-interpreter';
-import { join } from 'path';
 
 async function testE2BConnection() {
   console.log('🚀 Testing E2B Connection...');

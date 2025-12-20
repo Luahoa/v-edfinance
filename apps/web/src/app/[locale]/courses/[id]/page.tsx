@@ -1,14 +1,18 @@
-import { PlayCircle, FileText } from 'lucide-react';
+import type { Course, Lesson } from '@/types';
+import { FileText, PlayCircle } from 'lucide-react';
 import Link from 'next/link';
-import { Course, Lesson } from '@/types';
 
 async function getCourse(id: string): Promise<Course | null> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`, { cache: 'no-store' });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`, {
+    cache: 'no-store',
+  });
   if (!res.ok) return null;
   return res.json();
 }
 
-export default async function CourseDetailPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
+export default async function CourseDetailPage({
+  params,
+}: { params: Promise<{ id: string; locale: string }> }) {
   const { id, locale } = await params;
   const course = await getCourse(id);
 
@@ -23,7 +27,9 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
             {course.description.vi || course.description.en}
           </p>
           <div className="mt-8 flex items-center gap-6 text-sm">
-            <span className="flex items-center gap-1"><PlayCircle className="h-4 w-4"/> {course.lessons.length} Bài học</span>
+            <span className="flex items-center gap-1">
+              <PlayCircle className="h-4 w-4" /> {course.lessons.length} Bài học
+            </span>
             <span className="font-semibold text-blue-400">{course.level}</span>
           </div>
         </div>
@@ -33,7 +39,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         <h2 className="text-2xl font-bold mb-6">Nội dung khóa học</h2>
         <div className="divide-y rounded-xl border">
           {course.lessons.map((lesson: Lesson, index: number) => (
-            <Link 
+            <Link
               key={lesson.id}
               href={`/${locale}/courses/${id}/lessons/${lesson.id}`}
               className="flex items-center justify-between p-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
@@ -45,7 +51,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                   <p className="text-xs text-zinc-500 uppercase">{lesson.type}</p>
                 </div>
               </div>
-              {lesson.type === 'VIDEO' ? <PlayCircle className="h-5 w-5 text-zinc-400"/> : <FileText className="h-5 w-5 text-zinc-400"/>}
+              {lesson.type === 'VIDEO' ? (
+                <PlayCircle className="h-5 w-5 text-zinc-400" />
+              ) : (
+                <FileText className="h-5 w-5 text-zinc-400" />
+              )}
             </Link>
           ))}
         </div>

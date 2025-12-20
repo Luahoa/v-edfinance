@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { generateTestUser, registerUser, assertUserIsLoggedIn } from '../../helpers/test-utils';
+import { expect, test } from '@playwright/test';
+import { assertUserIsLoggedIn, generateTestUser, registerUser } from '../../helpers/test-utils';
 
 test.describe('Courses: Browse & Enrollment Flow', () => {
   test('Browse and enroll in a course', async ({ page }) => {
@@ -30,7 +30,9 @@ test.describe('Courses: Browse & Enrollment Flow', () => {
     if (await enrollBtn.isVisible()) {
       await enrollBtn.click();
       // Expect redirect to lesson or enrollment success message
-      await expect(page.locator('[data-testid="lesson-content"]').or(page.locator('text=Đã đăng ký'))).toBeVisible();
+      await expect(
+        page.locator('[data-testid="lesson-content"]').or(page.locator('text=Đã đăng ký'))
+      ).toBeVisible();
     }
   });
 

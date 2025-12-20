@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { useTranslations } from 'next-intl';
-import { BookOpen, TrendingUp, Award, Zap, ListTodo, Users, Loader2 } from 'lucide-react';
-import { useAuthStore } from '@/store/useAuthStore';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import type { DashboardStats, Post as SocialPostType, BuddyGroup } from '@/types';
+import { useAuthStore } from '@/store/useAuthStore';
+import type { BuddyGroup, DashboardStats, Post as SocialPostType } from '@/types';
+import { Award, BookOpen, ListTodo, Loader2, TrendingUp, Users, Zap } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 
 const AiMentor = dynamic(() => import('@/components/AiMentor'), {
   loading: () => <div className="h-32 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
@@ -14,26 +14,33 @@ const AiMentor = dynamic(() => import('@/components/AiMentor'), {
 const InteractiveChecklist = dynamic(() => import('@/components/organisms/InteractiveChecklist'), {
   ssr: false,
   loading: () => <div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
-  });
-  const SocialFeed = dynamic(() => import('@/components/organisms/SocialFeed').then(mod => mod.SocialFeed), {
-  loading: () => <div className="h-96 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
-  });
-  const BuddyRecommendations = dynamic(() => import('@/components/molecules/BuddyRecommendations').then(mod => mod.BuddyRecommendations), {
-  loading: () => <div className="h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
-  });
-  const QuickActions = dynamic(() => import('@/components/molecules/QuickActions'), {
+});
+const SocialFeed = dynamic(
+  () => import('@/components/organisms/SocialFeed').then((mod) => mod.SocialFeed),
+  {
+    loading: () => <div className="h-96 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  }
+);
+const BuddyRecommendations = dynamic(
+  () =>
+    import('@/components/molecules/BuddyRecommendations').then((mod) => mod.BuddyRecommendations),
+  {
+    loading: () => <div className="h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  }
+);
+const QuickActions = dynamic(() => import('@/components/molecules/QuickActions'), {
   loading: () => <div className="h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
-  });
-  const NudgeBanner = dynamic(() => import('@/components/molecules/NudgeBanner'), {
+});
+const NudgeBanner = dynamic(() => import('@/components/molecules/NudgeBanner'), {
   loading: () => <div className="h-20 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
-  });
+});
 
 export default function Dashboard() {
   const t = useTranslations('Dashboard');
   const ts = useTranslations('Social');
   const { token } = useAuthStore();
   const { trackEvent } = useAnalytics();
-  
+
   const [stats, setStats] = useState<(DashboardStats & { streak?: number }) | null>(null);
   const [feedPosts, setFeedPosts] = useState<SocialPostType[]>([]);
   const [recommendations, setRecommendations] = useState<BuddyGroup[]>([]);
@@ -56,7 +63,7 @@ export default function Dashboard() {
     const checkAuth = async () => {
       if (!token) {
         // Give it a moment to hydrate from localStorage
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
         if (!useAuthStore.getState().token) {
           console.log('No token found in Dashboard, redirecting...');
           setLoading(false); // Stop loading to show "Welcome" which might be handled by middleware anyway
@@ -71,12 +78,18 @@ export default function Dashboard() {
     const fetchData = async () => {
       setLoading(true);
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-      
+
       try {
         const [statsRes, feedRes, recsRes] = await Promise.all([
-          fetch(`${API_URL}/users/dashboard-stats`, { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(`${API_URL}/social/feed?limit=5`, { headers: { Authorization: `Bearer ${token}` } }),
-          fetch(`${API_URL}/social/recommendations`, { headers: { Authorization: `Bearer ${token}` } })
+          fetch(`${API_URL}/users/dashboard-stats`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_URL}/social/feed?limit=5`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${API_URL}/social/recommendations`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
         ]);
 
         if (statsRes.ok) setStats(await statsRes.json());
@@ -104,18 +117,30 @@ export default function Dashboard() {
     <div className="min-h-screen bg-zinc-50 dark:bg-black p-6 text-zinc-900 dark:text-zinc-100">
       <div className="mx-auto max-w-6xl">
         <h1 className="text-2xl font-bold mb-8">{t('welcome')}!</h1>
-        
+
         <NudgeBanner />
         <QuickActions />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatCard icon={<BookOpen className="text-blue-600" />} title={t('enrolledCourses')} value={stats?.enrolledCoursesCount || 0} />
-          <StatCard icon={<TrendingUp className="text-green-600" />} title={t('completedLessons')} value={stats?.completedLessonsCount || 0} />
-          <StatCard icon={<Zap className="text-purple-600" />} title={t('points')} value={stats?.points || 0} />
-          <StatCard 
-            icon={<Award className="text-yellow-600" />} 
-            title="Streak" 
-            value={stats?.streak || 0} 
+          <StatCard
+            icon={<BookOpen className="text-blue-600" />}
+            title={t('enrolledCourses')}
+            value={stats?.enrolledCoursesCount || 0}
+          />
+          <StatCard
+            icon={<TrendingUp className="text-green-600" />}
+            title={t('completedLessons')}
+            value={stats?.completedLessonsCount || 0}
+          />
+          <StatCard
+            icon={<Zap className="text-purple-600" />}
+            title={t('points')}
+            value={stats?.points || 0}
+          />
+          <StatCard
+            icon={<Award className="text-yellow-600" />}
+            title="Streak"
+            value={stats?.streak || 0}
             testId="streak-counter"
           />
         </div>
@@ -149,9 +174,22 @@ export default function Dashboard() {
   );
 }
 
-function StatCard({ icon, title, value, testId }: { icon: React.ReactNode; title: string; value: string | number; testId?: string }) {
+const StatCard = dynamic(() => Promise.resolve(StatCardComponent), {
+  ssr: true,
+  loading: () => <div className="h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+});
+
+function StatCardComponent({
+  icon,
+  title,
+  value,
+  testId,
+}: { icon: React.ReactNode; title: string; value: string | number; testId?: string }) {
   return (
-    <div className="rounded-xl border bg-white p-6 shadow-sm dark:bg-zinc-900 dark:border-zinc-800" data-testid={testId}>
+    <div
+      className="rounded-xl border bg-white p-6 shadow-sm dark:bg-zinc-900 dark:border-zinc-800"
+      data-testid={testId}
+    >
       <div className="flex items-center gap-4">
         <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">{icon}</div>
         <div>

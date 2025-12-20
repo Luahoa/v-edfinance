@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Course Enrollment & Learning Flow', () => {
   const TEST_USER = {
@@ -45,7 +45,7 @@ test.describe('Course Enrollment & Learning Flow', () => {
 
     // 6. Kiểm tra trang bài học
     await expect(page).toHaveURL(/.*lessons\/[a-zA-Z0-9-]+/);
-    
+
     // 7. Hoàn thành bài học (giả định có nút "Hoàn thành")
     const completeButton = page.locator('button:has-text("Hoàn thành")');
     if (await completeButton.isVisible()) {

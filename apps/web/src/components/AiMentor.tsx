@@ -1,32 +1,44 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useTranslations } from 'next-intl';
-import { Send, Bot, Loader2, MessageSquare, Plus, ExternalLink, Play, ClipboardCheck } from 'lucide-react';
-import { useAuthStore } from '@/store/useAuthStore';
-import { ChatThread, ChatMessage } from '@/types/chat';
-import ReactMarkdown from 'react-markdown';
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { useAuthStore } from '@/store/useAuthStore';
+import type { ChatMessage, ChatThread } from '@/types/chat';
+import {
+  Bot,
+  ClipboardCheck,
+  ExternalLink,
+  Loader2,
+  MessageSquare,
+  Play,
+  Plus,
+  Send,
+} from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 export default function AiMentor() {
   const t = useTranslations('Dashboard');
   const { token } = useAuthStore();
   const { trackEvent } = useAnalytics();
-  
+
   const [threads, setThreads] = useState<ChatThread[]>([]);
   const [currentThread, setCurrentThread] = useState<ChatThread | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const fetchThreads = useCallback(async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/ai/threads`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/ai/threads`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await res.json();
       setThreads(data);
     } catch (e) {
@@ -34,17 +46,23 @@ export default function AiMentor() {
     }
   }, [token]);
 
-  const fetchMessages = useCallback(async (threadId: string) => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/ai/threads/${threadId}/messages`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
-      setMessages(data);
-    } catch (e) {
-      console.error(e);
-    }
-  }, [token]);
+  const fetchMessages = useCallback(
+    async (threadId: string) => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/ai/threads/${threadId}/messages`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const data = await res.json();
+        setMessages(data);
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [token]
+  );
 
   useEffect(() => {
     if (token) {
@@ -66,14 +84,17 @@ export default function AiMentor() {
 
   const createNewThread = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/ai/threads`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title: `Hội thoại mới ${new Date().toLocaleTimeString()}` }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/ai/threads`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ title: `Hội thoại mới ${new Date().toLocaleTimeString()}` }),
+        }
+      );
       const newThread = await res.json();
       setThreads([newThread, ...threads]);
       setCurrentThread(newThread);
@@ -89,21 +110,24 @@ export default function AiMentor() {
     const userPrompt = input;
     setInput('');
     setIsLoading(true);
-    
+
     // Track analytics
     trackEvent('SEND_CHAT_MESSAGE', { threadId: currentThread.id });
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/ai/threads/${currentThread.id}/chat`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ prompt: userPrompt }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/ai/threads/${currentThread.id}/chat`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ prompt: userPrompt }),
+        }
+      );
       await res.json();
-      
+
       // Refresh messages to include user message and AI response
       await fetchMessages(currentThread.id);
     } catch (error) {
@@ -121,7 +145,7 @@ export default function AiMentor() {
           <Bot className="h-5 w-5 text-blue-600" />
           <span>{currentThread ? currentThread.title : t('aiMentor')}</span>
         </div>
-        <button 
+        <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800"
         >
@@ -134,7 +158,7 @@ export default function AiMentor() {
         {isSidebarOpen && (
           <div className="absolute inset-0 z-10 flex flex-col bg-white dark:bg-zinc-950 sm:relative sm:w-64 sm:border-r dark:border-zinc-800">
             <div className="p-4">
-              <button 
+              <button
                 onClick={createNewThread}
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700"
               >
@@ -151,13 +175,15 @@ export default function AiMentor() {
                     setIsSidebarOpen(false);
                   }}
                   className={`w-full rounded-lg p-3 text-left text-sm transition-colors ${
-                    currentThread?.id === thread.id 
-                      ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20' 
+                    currentThread?.id === thread.id
+                      ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20'
                       : 'hover:bg-zinc-100 dark:hover:bg-zinc-900'
                   }`}
                 >
                   <p className="font-medium truncate">{thread.title}</p>
-                  <p className="text-xs text-zinc-500">{new Date(thread.updatedAt).toLocaleDateString()}</p>
+                  <p className="text-xs text-zinc-500">
+                    {new Date(thread.updatedAt).toLocaleDateString()}
+                  </p>
                 </button>
               ))}
             </div>
@@ -173,7 +199,7 @@ export default function AiMentor() {
                   <Bot className="h-12 w-12 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-semibold">{t('aiWelcome')}</h3>
-                <button 
+                <button
                   onClick={createNewThread}
                   className="rounded-lg border border-blue-600 px-6 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50"
                 >
@@ -186,12 +212,17 @@ export default function AiMentor() {
               </div>
             ) : (
               messages.map((m) => (
-                <div key={m.id} className={`flex ${m.role === 'USER' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`flex max-w-[85%] gap-2 rounded-2xl p-4 ${
-                    m.role === 'USER' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-100'
-                  }`}>
+                <div
+                  key={m.id}
+                  className={`flex ${m.role === 'USER' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`flex max-w-[85%] gap-2 rounded-2xl p-4 ${
+                      m.role === 'USER'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-100'
+                    }`}
+                  >
                     {m.role === 'ASSISTANT' && <Bot className="h-5 w-5 shrink-0 mt-1" />}
                     <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed">
                       <ReactMarkdown>{m.content}</ReactMarkdown>
@@ -201,9 +232,15 @@ export default function AiMentor() {
                       <div className="mt-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
                         <div className="flex items-center gap-3">
                           <div className="rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20">
-                            {m.metadata.type === 'COURSE_LINK' && <Play className="h-5 w-5 text-blue-600" />}
-                            {m.metadata.type === 'QUIZ' && <ClipboardCheck className="h-5 w-5 text-blue-600" />}
-                            {m.metadata.type === 'UPDATE_PROFILE' && <ExternalLink className="h-5 w-5 text-blue-600" />}
+                            {m.metadata.type === 'COURSE_LINK' && (
+                              <Play className="h-5 w-5 text-blue-600" />
+                            )}
+                            {m.metadata.type === 'QUIZ' && (
+                              <ClipboardCheck className="h-5 w-5 text-blue-600" />
+                            )}
+                            {m.metadata.type === 'UPDATE_PROFILE' && (
+                              <ExternalLink className="h-5 w-5 text-blue-600" />
+                            )}
                           </div>
                           <div className="flex-1">
                             <p className="text-sm font-bold text-zinc-900 dark:text-white">
@@ -212,12 +249,17 @@ export default function AiMentor() {
                           </div>
                           <button
                             onClick={() => {
-                              trackEvent('CLICK_ACTION_CARD', { 
-                                type: m.metadata?.type, 
-                                threadId: currentThread.id 
+                              trackEvent('CLICK_ACTION_CARD', {
+                                type: m.metadata?.type,
+                                threadId: currentThread.id,
                               });
                               // Handle action based on type
-                              if (m.metadata?.type === 'COURSE_LINK' && m.metadata.payload && typeof m.metadata.payload === 'object' && 'id' in m.metadata.payload) {
+                              if (
+                                m.metadata?.type === 'COURSE_LINK' &&
+                                m.metadata.payload &&
+                                typeof m.metadata.payload === 'object' &&
+                                'id' in m.metadata.payload
+                              ) {
                                 window.location.href = `/${(m.metadata.payload as { id: string }).id}`;
                               }
                             }}

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
-import { SocialPostCard } from '../molecules/SocialPostCard';
-import { io } from 'socket.io-client';
 import type { Post } from '@/types';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
+import { io } from 'socket.io-client';
+import { SocialPostCard } from '../molecules/SocialPostCard';
 
 export const SocialFeed = ({ initialPosts = [] }: { initialPosts?: Post[] }) => {
   const t = useTranslations('Social');
@@ -36,7 +36,7 @@ export const SocialFeed = ({ initialPosts = [] }: { initialPosts?: Post[] }) => 
   return (
     <div className="w-full max-w-2xl mx-auto">
       <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-        <span className="w-2 h-6 bg-blue-600 rounded-full"></span>
+        <span className="w-2 h-6 bg-blue-600 rounded-full" />
         {t('feed')}
       </h3>
       <div className="space-y-4">

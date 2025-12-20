@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 interface LessonPlayerProps {
   lesson: {
@@ -19,8 +19,8 @@ export default function LessonPlayer({ lesson, locale, onComplete }: LessonPlaye
   const t = useTranslations('lessons');
   const [completed, setCompleted] = useState(false);
 
-  const localizedTitle = lesson.title[locale] || lesson.title['vi'];
-  const localizedContent = lesson.content[locale] || lesson.content['vi'];
+  const localizedTitle = lesson.title[locale] || lesson.title.vi;
+  const localizedContent = lesson.content[locale] || lesson.content.vi;
 
   const handleComplete = () => {
     setCompleted(true);
@@ -30,7 +30,7 @@ export default function LessonPlayer({ lesson, locale, onComplete }: LessonPlaye
   return (
     <div className="lesson-player">
       <h1>{localizedTitle}</h1>
-      
+
       {lesson.type === 'VIDEO' && (
         <video controls onEnded={handleComplete}>
           <source src={getVideoUrl(lesson.videoKey, locale)} type="video/mp4" />
@@ -41,14 +41,12 @@ export default function LessonPlayer({ lesson, locale, onComplete }: LessonPlaye
         <div className="content" dangerouslySetInnerHTML={{ __html: localizedContent }} />
       )}
 
-      {!completed && (
-        <button onClick={handleComplete}>{t('markAsComplete')}</button>
-      )}
+      {!completed && <button onClick={handleComplete}>{t('markAsComplete')}</button>}
     </div>
   );
 }
 
 function getVideoUrl(videoKey: any, locale: string): string {
   if (typeof videoKey === 'string') return `/videos/${videoKey}`;
-  return `/videos/${videoKey[locale] || videoKey['vi']}`;
+  return `/videos/${videoKey[locale] || videoKey.vi}`;
 }

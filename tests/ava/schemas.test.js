@@ -31,7 +31,7 @@ test('USER_METADATA: valid full', (t) => {
   const valid = {
     displayName: 'John',
     avatar: 'https://example.com/a.png',
-    preferences: { theme: 'dark' }
+    preferences: { theme: 'dark' },
   };
   const result = SchemaRegistry.USER_METADATA.safeParse(valid);
   t.true(result.success);
@@ -45,10 +45,10 @@ test('USER_METADATA: invalid avatar URL', (t) => {
 
 // --- BEHAVIOR_LOG_PAYLOAD Tests ---
 test('BEHAVIOR_LOG_PAYLOAD: valid data', (t) => {
-  const valid = { 
-    isMock: true, 
+  const valid = {
+    isMock: true,
     generatedAt: new Date().toISOString(),
-    action: 'CLICK'
+    action: 'CLICK',
   };
   const result = SchemaRegistry.BEHAVIOR_LOG_PAYLOAD.safeParse(valid);
   t.true(result.success);
@@ -75,11 +75,11 @@ test('CHAT_MESSAGE_METADATA: valid TEXT type', (t) => {
 });
 
 test('CHAT_MESSAGE_METADATA: valid ACTION_CARD with suggestions', (t) => {
-  const valid = { 
-    type: 'ACTION_CARD', 
-    hasActionCard: true, 
+  const valid = {
+    type: 'ACTION_CARD',
+    hasActionCard: true,
     suggestions: ['Option 1', 'Option 2'],
-    customField: 'allowed via passthrough'
+    customField: 'allowed via passthrough',
   };
   const result = SchemaRegistry.CHAT_MESSAGE_METADATA.safeParse(valid);
   t.true(result.success);

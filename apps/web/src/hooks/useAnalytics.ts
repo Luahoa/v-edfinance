@@ -8,8 +8,8 @@ export const useAnalytics = () => {
   const pathname = usePathname();
 
   const trackEvent = async (
-    eventType: string, 
-    actionCategory: string = 'GENERAL',
+    eventType: string,
+    actionCategory = 'GENERAL',
     payload: Record<string, unknown> = {},
     duration?: number
   ) => {
@@ -18,10 +18,10 @@ export const useAnalytics = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
-          sessionId: 'session-' + (user?.id || 'guest'),
+          sessionId: `session-${user?.id || 'guest'}`,
           path: pathname,
           eventType,
           actionCategory,

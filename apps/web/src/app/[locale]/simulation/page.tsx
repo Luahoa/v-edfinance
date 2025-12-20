@@ -1,15 +1,15 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
-import { useState, useEffect } from 'react';
-import { TrendingUp, Heart, Wallet, ShieldAlert, BarChart3, Lock } from 'lucide-react';
-import { api } from '@/lib/api-client';
 import { Link } from '@/i18n/routing';
+import { api } from '@/lib/api-client';
+import { BarChart3, Heart, Lock, ShieldAlert, TrendingUp, Wallet } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useEffect, useState } from 'react';
 
 export default function SimulationPage() {
   const t = useTranslations('Simulation');
   const locale = useTranslations().locale;
-  
+
   const [portfolio, setPortfolio] = useState<{ balance: number } | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -43,11 +43,13 @@ export default function SimulationPage() {
           </div>
           <h3 className="text-xl font-bold mb-2">{t('trade.title')}</h3>
           <p className="text-zinc-500 text-sm mb-4">Trade stocks & crypto with virtual currency.</p>
-          <div className="text-blue-600 font-bold">{t('trade.balance', { amount: portfolio?.balance?.toLocaleString() || '0' })}</div>
+          <div className="text-blue-600 font-bold">
+            {t('trade.balance', { amount: portfolio?.balance?.toLocaleString() || '0' })}
+          </div>
         </div>
 
         {/* Sim-Life Card */}
-        <Link 
+        <Link
           href={`/${locale}/simulation/life`}
           className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 hover:border-red-500 transition-all cursor-pointer group flex flex-col"
         >
@@ -57,7 +59,9 @@ export default function SimulationPage() {
           <h3 className="text-xl font-bold mb-2">{t('life.title')}</h3>
           <p className="text-zinc-500 text-sm mb-4">Navigate through life events and decisions.</p>
           <div className="mt-auto">
-            <span className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold inline-block">{t('life.start')}</span>
+            <span className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-bold inline-block">
+              {t('life.start')}
+            </span>
           </div>
         </Link>
 
@@ -82,7 +86,9 @@ export default function SimulationPage() {
           </div>
           <h3 className="text-xl font-bold mb-2">Stress Test</h3>
           <p className="text-zinc-500 text-sm mb-4">Can your plan survive a financial crisis?</p>
-          <div className="text-orange-600 text-xs font-bold uppercase tracking-wider">High Difficulty</div>
+          <div className="text-orange-600 text-xs font-bold uppercase tracking-wider">
+            High Difficulty
+          </div>
         </div>
       </div>
 
@@ -93,13 +99,18 @@ export default function SimulationPage() {
             <h2 className="text-2xl font-bold mb-2 flex items-center gap-2">
               <Lock size={24} /> {t('commitment.title')}
             </h2>
-            <p className="text-blue-100 mb-6">Lock your virtual funds for a goal. Build discipline and earn bonus points, but beware of the penalty!</p>
+            <p className="text-blue-100 mb-6">
+              Lock your virtual funds for a goal. Build discipline and earn bonus points, but beware
+              of the penalty!
+            </p>
             <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-50 transition-colors">
               {t('commitment.lock')}
             </button>
           </div>
           <div className="bg-blue-500/50 backdrop-blur-md p-6 rounded-2xl border border-blue-400/30 w-full md:w-auto">
-            <div className="text-sm text-blue-100 mb-2 uppercase font-bold tracking-widest">{t('commitment.penalty')}</div>
+            <div className="text-sm text-blue-100 mb-2 uppercase font-bold tracking-widest">
+              {t('commitment.penalty')}
+            </div>
             <div className="text-4xl font-bold">-10%</div>
             <div className="text-xs text-blue-200 mt-2">Applied on early withdrawal</div>
           </div>

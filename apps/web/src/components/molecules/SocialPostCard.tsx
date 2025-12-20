@@ -1,10 +1,10 @@
 'use client';
 
-import { useTranslations, useLocale } from 'next-intl';
-import { BuddyAvatar } from '../atoms/BuddyAvatar';
-import { formatDistanceToNow } from 'date-fns';
-import { vi, enUS, zhCN } from 'date-fns/locale';
 import type { Post } from '@/types';
+import { formatDistanceToNow } from 'date-fns';
+import { enUS, vi, zhCN } from 'date-fns/locale';
+import { useLocale, useTranslations } from 'next-intl';
+import { BuddyAvatar } from '../atoms/BuddyAvatar';
 
 interface SocialPostCardProps {
   post: Post;
@@ -37,19 +37,22 @@ export const SocialPostCard = ({ post }: SocialPostCardProps) => {
           </span>
         </div>
         <div className="ml-auto">
-           <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase ${
-             post.type === 'ACHIEVEMENT' ? 'bg-yellow-100 text-yellow-700' :
-             post.type === 'MILESTONE' ? 'bg-green-100 text-green-700' :
-             post.type === 'NUDGE' ? 'bg-red-100 text-red-700' :
-             'bg-blue-100 text-blue-700'
-           }`}>
-             {t(`postTypes.${post.type}`)}
-           </span>
+          <span
+            className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase ${
+              post.type === 'ACHIEVEMENT'
+                ? 'bg-yellow-100 text-yellow-700'
+                : post.type === 'MILESTONE'
+                  ? 'bg-green-100 text-green-700'
+                  : post.type === 'NUDGE'
+                    ? 'bg-red-100 text-red-700'
+                    : 'bg-blue-100 text-blue-700'
+            }`}
+          >
+            {t(`postTypes.${post.type}`)}
+          </span>
         </div>
       </div>
-      <p className="text-gray-700 text-sm whitespace-pre-wrap">
-        {translatedContent}
-      </p>
+      <p className="text-gray-700 text-sm whitespace-pre-wrap">{translatedContent}</p>
     </div>
   );
 };

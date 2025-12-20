@@ -1,11 +1,11 @@
+import { join } from 'node:path';
 import { Sandbox } from '@e2b/code-interpreter';
 import * as dotenv from 'dotenv';
-import { join } from 'path';
 
 dotenv.config();
 
 const CONCURRENT_SANDBOXES = 2; // Test with 2 sandboxes first
-const TARGET_URL = 'https://httpbin.org/get'; 
+const TARGET_URL = 'https://httpbin.org/get';
 const DURATION = '10s';
 const RATE = 50; // Requests per second per sandbox
 
@@ -24,13 +24,11 @@ async function runDistributedLoad() {
       tar -zxvf vegeta_12.12.0_linux_amd64.tar.gz &&
       sudo mv vegeta /usr/local/bin/
     `;
-    await Promise.all(
-      sandboxes.map(sb => sb.commands.run(setupCmd))
-    );
+    await Promise.all(sandboxes.map((sb) => sb.commands.run(setupCmd)));
 
     console.log('⚡ Launching simultaneous attacks...');
     const startTime = Date.now();
-    
+
     const results = await Promise.all(
       sandboxes.map(async (sb, index) => {
         console.log(`[Sandbox ${index}] Attacking...`);
@@ -48,11 +46,10 @@ async function runDistributedLoad() {
       console.log(`\n--- Result from Sandbox ${i} ---`);
       console.log(res);
     });
-
   } catch (error) {
     console.error('❌ Load test failed:', error);
   } finally {
-    await Promise.all(sandboxes.map(sb => sb.kill()));
+    await Promise.all(sandboxes.map((sb) => sb.kill()));
     console.log('🏁 All sandboxes closed.');
   }
 }

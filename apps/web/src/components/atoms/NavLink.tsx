@@ -2,7 +2,7 @@
 
 import { Link } from '@/i18n/routing';
 import { usePathname } from '@/i18n/routing';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 
 interface NavLinkProps {
   href: string;
@@ -15,8 +15,8 @@ export default function NavLink({ href, children, icon }: NavLinkProps) {
   const isActive = pathname === href;
 
   return (
-    <Link 
-      href={href} 
+    <Link
+      href={href}
       className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-blue-600 ${
         isActive ? 'text-blue-600' : 'text-zinc-600 dark:text-zinc-400'
       }`}

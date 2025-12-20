@@ -12,9 +12,10 @@ export const useGamificationStore = create<GamificationState>()(
   persist(
     (set, get) => ({
       celebrations: [],
-      addCelebration: (id) => set((state) => ({ 
-        celebrations: [...state.celebrations, id] 
-      })),
+      addCelebration: (id) =>
+        set((state) => ({
+          celebrations: [...state.celebrations, id],
+        })),
       hasCelebrated: (id) => get().celebrations.includes(id),
       clearCelebrations: () => set({ celebrations: [] }),
     }),

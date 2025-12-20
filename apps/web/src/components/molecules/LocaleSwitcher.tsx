@@ -1,8 +1,8 @@
 'use client';
 
-import { useLocale } from 'next-intl';
 import { routing } from '@/i18n/routing';
 import { Globe } from 'lucide-react';
+import { useLocale } from 'next-intl';
 
 export default function LocaleSwitcher() {
   const locale = useLocale();
@@ -20,7 +20,7 @@ export default function LocaleSwitcher() {
   return (
     <div className="flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium">
       <Globe className="h-3 w-3" />
-      <select 
+      <select
         value={locale}
         onChange={(e) => changeLocale(e.target.value)}
         data-testid="lang-switcher"

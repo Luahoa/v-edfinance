@@ -1,0 +1,14 @@
+Requests      [total, rate, throughput]         100, 10.14, 0.00
+Duration      [total, attack, wait]             9.865s, 9.864s, 1.018ms
+Latencies     [min, mean, 50, 90, 95, 99, max]  508.5µs, 193.632ms, 2.647ms, 945.491ms, 1.158s, 1.833s, 1.881s
+Bytes In      [total, mean]                     0, 0.00
+Bytes Out     [total, mean]                     0, 0.00
+Success       [ratio]                           0.00%
+Status Codes  [code:count]                      0:100  
+Error Set:
+Get "http://localhost:3001/api/health": dial tcp 0.0.0.0:0->127.0.0.1:3001: connectex: No connection could be made because the target machine actively refused it.
+Get "http://localhost:3001/api/courses": dial tcp 0.0.0.0:0->[::1]:3001: connectex: No connection could be made because the target machine actively refused it.
+Get "http://localhost:3001/api/health": dial tcp 0.0.0.0:0->[::1]:3001: connectex: No connection could be made because the target machine actively refused it.
+Get "http://localhost:3001/api/auth/profile": dial tcp 0.0.0.0:0->127.0.0.1:3001: connectex: No connection could be made because the target machine actively refused it.
+Get "http://localhost:3001/api/courses": dial tcp 0.0.0.0:0->127.0.0.1:3001: connectex: No connection could be made because the target machine actively refused it.
+Get "http://localhost:3001/api/auth/profile": dial tcp 0.0.0.0:0->[::1]:3001: connectex: No connection could be made because the target machine actively refused it.

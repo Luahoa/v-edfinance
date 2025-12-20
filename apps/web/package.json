@@ -1,40 +1,40 @@
 {
-    "name": "web",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "eslint",
-        "test": "playwright test"
-    },
-    "dependencies": {
-        "date-fns": "^4.1.0",
-        "esbuild": "0.27.2",
-        "framer-motion": "^12.23.26",
-        "js-cookie": "^3.0.5",
-        "lucide-react": "^0.471.0",
-        "minimist": "1.2.8",
-        "next": "16.1.0",
-        "next-font": "^1.2.0",
-        "next-intl": "^3.26.3",
-        "react": "18.3.1",
-        "react-dom": "18.3.1",
-        "react-markdown": "^10.1.0",
-        "socket.io-client": "^4.8.1",
-        "zustand": "^5.0.2"
-    },
-    "devDependencies": {
-        "@playwright/test": "^1.57.0",
-        "@tailwindcss/postcss": "^4",
-        "@types/js-cookie": "^3.0.6",
-        "@types/node": "^20",
-        "@types/react": "^18.3.12",
-        "@types/react-dom": "^18.3.1",
-        "eslint": "^9",
-        "eslint-config-next": "15.4.7",
-        "tailwindcss": "^4",
-        "typescript": "^5"
-    }
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "playwright test"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0",
+    "esbuild": "0.27.2",
+    "framer-motion": "^12.23.26",
+    "js-cookie": "^3.0.5",
+    "lucide-react": "^0.471.0",
+    "minimist": "1.2.8",
+    "next": "16.1.0",
+    "next-font": "^1.2.0",
+    "next-intl": "^3.26.3",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-markdown": "^10.1.0",
+    "socket.io-client": "^4.8.1",
+    "zustand": "^5.0.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.7",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
 }

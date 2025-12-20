@@ -1,21 +1,21 @@
-import {NextIntlClientProvider} from 'next-intl';
-import {getMessages} from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import "./../globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
-import Header from "@/components/organisms/Header";
-import Footer from "@/components/organisms/Footer";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import './../globals.css';
 import { GlobalErrorBoundary } from '@/components/atoms/GlobalErrorBoundary';
+import Footer from '@/components/organisms/Footer';
+import Header from '@/components/organisms/Header';
+import { Geist, Geist_Mono } from 'next/font/google';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export function generateStaticParams() {
@@ -27,10 +27,10 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }) {
-  const {locale} = await params;
-  
+  const { locale } = await params;
+
   if (!routing.locales.includes(locale as 'vi' | 'en' | 'zh')) {
     notFound();
   }
@@ -39,13 +39,13 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+      >
         <NextIntlClientProvider messages={messages}>
           <GlobalErrorBoundary>
             <Header />
-            <main className="flex-grow">
-              {children}
-            </main>
+            <main className="flex-grow">{children}</main>
             <Footer />
           </GlobalErrorBoundary>
         </NextIntlClientProvider>

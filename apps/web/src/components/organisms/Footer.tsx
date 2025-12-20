@@ -16,32 +16,50 @@ export default function Footer() {
               Empowering financial literacy through personalized AI-powered learning experiences.
             </p>
           </div>
-          
+
           <div>
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Platform</h3>
             <ul className="mt-4 space-y-2 text-sm text-zinc-500 dark:text-zinc-400">
-              <li><Link href="/courses" className="hover:text-blue-600 transition-colors">Courses</Link></li>
-              <li><Link href="/dashboard" className="hover:text-blue-600 transition-colors">Dashboard</Link></li>
-              <li><Link href="/about" className="hover:text-blue-600 transition-colors">About Us</Link></li>
+              <li>
+                <Link href="/courses" className="hover:text-blue-600 transition-colors">
+                  Courses
+                </Link>
+              </li>
+              <li>
+                <Link href="/dashboard" className="hover:text-blue-600 transition-colors">
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-blue-600 transition-colors">
+                  About Us
+                </Link>
+              </li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">Legal</h3>
             <ul className="mt-4 space-y-2 text-sm text-zinc-500 dark:text-zinc-400">
-              <li><Link href="/privacy" className="hover:text-blue-600 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="hover:text-blue-600 transition-colors">Terms of Service</Link></li>
+              <li>
+                <Link href="/privacy" className="hover:text-blue-600 transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-blue-600 transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
-        
+
         <div className="mt-12 border-t pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
             © {year} V-EdFinance (Lúa Hóa). All rights reserved.
           </p>
-          <div className="flex gap-6">
-            {/* Social links placeholder */}
-          </div>
+          <div className="flex gap-6">{/* Social links placeholder */}</div>
         </div>
       </div>
     </footer>

@@ -72,74 +72,74 @@
     "noActiveChecklists": "暂无活跃清单",
     "taskCompleted": "任务已完成",
     "taskPending": "任务待办"
-    },
-    "Gamification": {
+  },
+  "Gamification": {
     "achievementUnlocked": "获得成就！",
     "streakTitle": "连续 {days} 天！",
     "streakLost": "您失去了连续记录！今天重新开始吧。",
     "pointsEarned": "+{points} 积分",
     "close": "关闭",
     "viewAllAchievements": "查看所有成就"
-    },
-    "Leaderboard": {
-      "title": "排行榜",
-      "points": "按积分",
-      "streaks": "按连续天数",
-      "rank": "排名",
-      "user": "用户",
-      "value": "数值",
-      "pointsSuffix": "分",
-      "daysSuffix": "天"
-    },
-    "Store": {
-      "title": "积分商城",
-      "balance": "您的余额：{points} 积分",
-      "buy": "购买",
-      "insufficientPoints": "积分不足",
-      "purchaseSuccess": "购买成功！",
-      "items": {
-        "streak-freeze": {
-          "name": "连胜冻结",
-          "description": "即使您错过一天，也可以保持连胜记录。"
-        }
+  },
+  "Leaderboard": {
+    "title": "排行榜",
+    "points": "按积分",
+    "streaks": "按连续天数",
+    "rank": "排名",
+    "user": "用户",
+    "value": "数值",
+    "pointsSuffix": "分",
+    "daysSuffix": "天"
+  },
+  "Store": {
+    "title": "积分商城",
+    "balance": "您的余额：{points} 积分",
+    "buy": "购买",
+    "insufficientPoints": "积分不足",
+    "purchaseSuccess": "购买成功！",
+    "items": {
+      "streak-freeze": {
+        "name": "连胜冻结",
+        "description": "即使您错过一天，也可以保持连胜记录。"
       }
-    },
-    "Simulation": {
-      "title": "模拟生态系统",
-      "trade": {
-        "title": "虚拟交易",
-        "balance": "余额：{amount} 稻谷币",
-        "buy": "买入",
-        "sell": "卖出",
-        "portfolio": "资产组合"
-      },
-      "life": {
-        "title": "生活剧本",
-        "start": "开启旅程",
-        "age": "年龄：{age}",
-        "job": "工作：{job}"
-      },
-      "budget": {
-        "title": "预算之战",
-        "rule": "50/30/20 法则",
-        "needs": "必需 (50%)",
-        "wants": "想要 (30%)",
-        "savings": "储蓄 (20%)"
-      },
-      "commitment": {
-        "title": "承诺工具",
-        "lock": "锁定储蓄",
-        "penalty": "提前支取罚款 10%",
-        "withdraw": "支取",
-        "locked": "已锁定：{amount}"
-      }
-    },
-    "Social": {
-      "feed": "社区动态",
-      "emptyFeed": "您的社区暂无动态。",
-      "buddySystem": "心理学伴学系统",
-      "noGroups": "您尚未加入任何学习小组。",
-      "createGroup": "创建新小组",
-      "joinGroup": "加入小组"
     }
+  },
+  "Simulation": {
+    "title": "模拟生态系统",
+    "trade": {
+      "title": "虚拟交易",
+      "balance": "余额：{amount} 稻谷币",
+      "buy": "买入",
+      "sell": "卖出",
+      "portfolio": "资产组合"
+    },
+    "life": {
+      "title": "生活剧本",
+      "start": "开启旅程",
+      "age": "年龄：{age}",
+      "job": "工作：{job}"
+    },
+    "budget": {
+      "title": "预算之战",
+      "rule": "50/30/20 法则",
+      "needs": "必需 (50%)",
+      "wants": "想要 (30%)",
+      "savings": "储蓄 (20%)"
+    },
+    "commitment": {
+      "title": "承诺工具",
+      "lock": "锁定储蓄",
+      "penalty": "提前支取罚款 10%",
+      "withdraw": "支取",
+      "locked": "已锁定：{amount}"
+    }
+  },
+  "Social": {
+    "feed": "社区动态",
+    "emptyFeed": "您的社区暂无动态。",
+    "buddySystem": "心理学伴学系统",
+    "noGroups": "您尚未加入任何学习小组。",
+    "createGroup": "创建新小组",
+    "joinGroup": "加入小组"
   }
+}

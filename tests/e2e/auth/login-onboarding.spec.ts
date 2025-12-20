@@ -1,5 +1,10 @@
-import { test, expect } from '@playwright/test';
-import { generateTestUser, registerUser, completeOnboarding, assertUserIsLoggedIn } from '../../helpers/test-utils';
+import { expect, test } from '@playwright/test';
+import {
+  assertUserIsLoggedIn,
+  completeOnboarding,
+  generateTestUser,
+  registerUser,
+} from '../../helpers/test-utils';
 
 test.describe('Auth: Registration & Onboarding Flow', () => {
   const locales = ['vi', 'en', 'zh'];
@@ -7,10 +12,10 @@ test.describe('Auth: Registration & Onboarding Flow', () => {
   for (const locale of locales) {
     test(`[${locale}] Full flow: Register -> Onboarding -> Dashboard`, async ({ page }) => {
       const user = generateTestUser();
-      
+
       // 1. Registration
       await registerUser(page, user, locale);
-      
+
       // Handle potential success redirect or direct to onboarding
       await expect(page).toHaveURL(new RegExp(`.*(${locale}/onboarding|${locale}/dashboard)`));
 
@@ -21,7 +26,7 @@ test.describe('Auth: Registration & Onboarding Flow', () => {
 
       // 3. Verification
       await assertUserIsLoggedIn(page);
-      
+
       // Verify gamification init (Badge/Points)
       // Note: This assumes UI elements exist for these
       const points = page.locator('[data-testid="user-points"]');
@@ -33,28 +38,38 @@ test.describe('Auth: Registration & Onboarding Flow', () => {
 
   test('Registration validation errors', async ({ page }) => {
     await page.goto('/vi/register');
-    const submitBtn = page.locator('button').filter({ hasText: /Đăng ký/i }).first();
-    
+    const submitBtn = page
+      .locator('button')
+      .filter({ hasText: /Đăng ký/i })
+      .first();
+
     // Empty submit
     await submitBtn.click();
-    
+
     // Expect error messages (localized)
-    await expect(page.locator('text=Email không hợp lệ').or(page.locator('text=Bắt buộc'))).toBeVisible();
+    await expect(
+      page.locator('text=Email không hợp lệ').or(page.locator('text=Bắt buộc'))
+    ).toBeVisible();
   });
 
   test('Reject duplicate email', async ({ page }) => {
     // This assumes we have a way to know a duplicate email or use a fixed one known to exist
-    const duplicateEmail = 'test@example.com'; 
+    const duplicateEmail = 'test@example.com';
     await page.goto('/vi/register');
     await page.fill('input[type="text"]', 'Duplicate User');
     await page.fill('input[type="email"]', duplicateEmail);
     await page.fill('input[type="password"]', 'Password123!');
-    
-    const submitBtn = page.locator('button').filter({ hasText: /Đăng ký/i }).first();
+
+    const submitBtn = page
+      .locator('button')
+      .filter({ hasText: /Đăng ký/i })
+      .first();
     await submitBtn.click();
-    
+
     // Error message for duplicate email
-    await expect(page.locator('text=Email đã tồn tại').or(page.locator('text=already exists'))).toBeVisible();
+    await expect(
+      page.locator('text=Email đã tồn tại').or(page.locator('text=already exists'))
+    ).toBeVisible();
   });
 });
 
@@ -65,7 +80,7 @@ test.describe('Auth: Login Flow', () => {
     await page.fill('[data-testid="login-email-input"]', 'test@example.com');
     await page.fill('[data-testid="login-password-input"]', 'password123');
     await page.click('[data-testid="login-submit-btn"]');
-    
+
     await expect(page).toHaveURL(/\/vi\/dashboard/);
     await assertUserIsLoggedIn(page);
   });
@@ -75,8 +90,10 @@ test.describe('Auth: Login Flow', () => {
     await page.fill('[data-testid="login-email-input"]', 'wrong@example.com');
     await page.fill('[data-testid="login-password-input"]', 'wrongpass');
     await page.click('[data-testid="login-submit-btn"]');
-    
-    await expect(page.locator('text=Thông tin đăng nhập không chính xác').or(page.locator('text=Invalid'))).toBeVisible();
+
+    await expect(
+      page.locator('text=Thông tin đăng nhập không chính xác').or(page.locator('text=Invalid'))
+    ).toBeVisible();
   });
 
   test('Redirect to login for protected routes', async ({ page }) => {

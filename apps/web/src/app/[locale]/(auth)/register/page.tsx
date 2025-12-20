@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { useRouter, Link } from '@/i18n/routing';
-import LocaleSwitcher from '@/components/molecules/LocaleSwitcher';
-import { useAuthStore } from '@/store/useAuthStore';
-import Cookies from 'js-cookie';
 import Button from '@/components/atoms/Button';
 import Input from '@/components/atoms/Input';
+import LocaleSwitcher from '@/components/molecules/LocaleSwitcher';
+import { Link, useRouter } from '@/i18n/routing';
+import { useAuthStore } from '@/store/useAuthStore';
 import { motion } from 'framer-motion';
+import Cookies from 'js-cookie';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 export default function RegisterPage() {
   const t = useTranslations('Auth');
@@ -47,7 +47,10 @@ export default function RegisterPage() {
         if (data.user) {
           setAuth(data.user, data.access_token);
         } else {
-          setAuth({ id: data.userId, email, role: 'USER' } as { id: string; email: string; role: string }, data.access_token);
+          setAuth(
+            { id: data.userId, email, role: 'USER' } as { id: string; email: string; role: string },
+            data.access_token
+          );
         }
         Cookies.set('token', data.access_token, { expires: 7 });
         router.push('/onboarding');
@@ -66,8 +69,8 @@ export default function RegisterPage() {
       <div className="absolute right-4 top-4">
         <LocaleSwitcher />
       </div>
-      
-      <motion.div 
+
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-xl dark:border dark:border-zinc-800 dark:bg-zinc-900/50 dark:backdrop-blur-xl"
@@ -78,14 +81,17 @@ export default function RegisterPage() {
           </h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400">
             {t('hasAccount')}{' '}
-            <Link href="/login" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+            <Link
+              href="/login"
+              className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400"
+            >
               {t('login')}
             </Link>
           </p>
         </div>
 
         {error && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             className="rounded-lg bg-red-50 p-3 text-sm font-medium text-red-500 dark:bg-red-900/20 dark:text-red-400"

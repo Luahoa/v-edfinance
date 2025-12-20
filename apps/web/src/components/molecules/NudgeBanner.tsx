@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Info, TrendingUp, Users, X, Zap } from 'lucide-react';
 import { useLocale } from 'next-intl';
-import { Info, X, Zap, Users, TrendingUp } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 interface Nudge {
   type: string;
@@ -29,7 +29,7 @@ export default function NudgeBanner() {
       try {
         const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
         const res = await fetch(`${API_URL}/nudge/dashboard`, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (res.ok) {
           const data = await res.json();
@@ -52,28 +52,30 @@ export default function NudgeBanner() {
 
   const getIcon = (type: string) => {
     switch (type) {
-      case 'SOCIAL_PROOF': 
+      case 'SOCIAL_PROOF':
         return <Users className="text-blue-500" size={20} />;
-      case 'LOSS_AVERSION': 
+      case 'LOSS_AVERSION':
         return <Zap className="text-amber-500" size={20} />;
-      case 'GOAL_GRADIENT': 
+      case 'GOAL_GRADIENT':
         return <TrendingUp className="text-green-500" size={20} />;
-      default: 
+      default:
         return <Info className="text-zinc-500" size={20} />;
     }
   };
 
   return (
     <AnimatePresence>
-      <motion.div 
+      <motion.div
         initial={{ height: 0, opacity: 0 }}
         animate={{ height: 'auto', opacity: 1 }}
         exit={{ height: 0, opacity: 0 }}
         className="mb-6 overflow-hidden"
       >
-        <div className={`flex items-center justify-between p-4 rounded-xl border bg-white shadow-sm dark:bg-zinc-900 dark:border-zinc-800 border-l-4 ${
-          currentNudge.priority === 'HIGH' ? 'border-l-amber-500' : 'border-l-blue-500'
-        }`}>
+        <div
+          className={`flex items-center justify-between p-4 rounded-xl border bg-white shadow-sm dark:bg-zinc-900 dark:border-zinc-800 border-l-4 ${
+            currentNudge.priority === 'HIGH' ? 'border-l-amber-500' : 'border-l-blue-500'
+          }`}
+        >
           <div className="flex items-center gap-4">
             <div className="p-2 rounded-full bg-zinc-50 dark:bg-zinc-800">
               {getIcon(currentNudge.type)}
@@ -82,7 +84,10 @@ export default function NudgeBanner() {
               <p className="text-sm font-medium">{currentNudge.message[locale]}</p>
             </div>
           </div>
-          <button onClick={() => setVisible(false)} className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full">
+          <button
+            onClick={() => setVisible(false)}
+            className="p-1 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-full"
+          >
             <X size={16} className="text-zinc-400" />
           </button>
         </div>

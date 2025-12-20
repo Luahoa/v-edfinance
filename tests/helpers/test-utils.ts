@@ -1,4 +1,4 @@
-import { expect, Page } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 export function generateTestUser() {
   const timestamp = Date.now();
@@ -10,7 +10,7 @@ export function generateTestUser() {
   };
 }
 
-export async function loginViaUI(page: Page, email: string, password: string, locale: string = 'vi') {
+export async function loginViaUI(page: Page, email: string, password: string, locale = 'vi') {
   await page.goto(`/${locale}/login`);
   await page.fill('[data-testid="login-email-input"]', email);
   await page.fill('[data-testid="login-password-input"]', password);
@@ -18,13 +18,20 @@ export async function loginViaUI(page: Page, email: string, password: string, lo
   await page.waitForURL(`**/${locale}/dashboard`);
 }
 
-export async function registerUser(page: Page, user: ReturnType<typeof generateTestUser>, locale: string = 'vi') {
+export async function registerUser(
+  page: Page,
+  user: ReturnType<typeof generateTestUser>,
+  locale = 'vi'
+) {
   await page.goto(`/${locale}/register`);
   await page.fill('input[type="text"]', user.name);
   await page.fill('input[type="email"]', user.email);
   await page.fill('input[type="password"]', user.password);
-  
-  const submitBtn = page.locator('button').filter({ hasText: /Đăng ký|Register|注册/i }).first();
+
+  const submitBtn = page
+    .locator('button')
+    .filter({ hasText: /Đăng ký|Register|注册/i })
+    .first();
   await submitBtn.click();
 }
 
@@ -44,5 +51,7 @@ export async function waitForToast(page: Page, text: string | RegExp) {
 }
 
 export async function assertUserIsLoggedIn(page: Page) {
-  await expect(page.locator('[data-testid="user-profile-btn"], [data-testid="logout-btn"]')).toBeVisible();
+  await expect(
+    page.locator('[data-testid="user-profile-btn"], [data-testid="logout-btn"]')
+  ).toBeVisible();
 }

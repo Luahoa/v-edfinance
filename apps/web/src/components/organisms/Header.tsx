@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
-import { Menu, Bell, User, LogOut, ChevronRight } from 'lucide-react';
 import LocaleSwitcher from '@/components/molecules/LocaleSwitcher';
+import { usePathname, useRouter } from '@/i18n/routing';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useRouter, usePathname } from '@/i18n/routing';
-import Cookies from 'js-cookie';
-import Sidebar from './Sidebar';
 import { AnimatePresence, motion } from 'framer-motion';
+import Cookies from 'js-cookie';
+import { Bell, ChevronRight, LogOut, Menu, User } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useState } from 'react';
+import Sidebar from './Sidebar';
 
 export default function Header() {
   const t = useTranslations('Navigation');
@@ -26,11 +26,11 @@ export default function Header() {
 
   // Simple Breadcrumbs logic
   const pathSegments = pathname.split('/').filter(Boolean);
-  
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-zinc-200 bg-white/80 px-4 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-900/80 lg:px-6">
       <div className="flex items-center gap-4">
-        <button 
+        <button
           onClick={() => setIsMobileMenuOpen(true)}
           className="p-2 text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 lg:hidden rounded-lg"
         >
@@ -43,7 +43,13 @@ export default function Header() {
           {pathSegments.map((segment, index) => (
             <div key={index} className="flex items-center gap-2">
               <ChevronRight size={14} className="text-zinc-400" />
-              <span className={index === pathSegments.length - 1 ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-500'}>
+              <span
+                className={
+                  index === pathSegments.length - 1
+                    ? 'text-zinc-900 dark:text-zinc-100'
+                    : 'text-zinc-500'
+                }
+              >
                 {segment.charAt(0).toUpperCase() + segment.slice(1)}
               </span>
             </div>
@@ -53,14 +59,14 @@ export default function Header() {
 
       <div className="flex items-center gap-3 sm:gap-4">
         <LocaleSwitcher />
-        
+
         <button className="relative p-2 text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800 rounded-full transition-colors">
           <Bell size={20} />
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-red-500 border-2 border-white dark:border-zinc-900" />
         </button>
 
         <div className="relative">
-          <button 
+          <button
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
             className="flex items-center gap-2 rounded-full border border-zinc-200 p-1 pr-3 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800 transition-all"
           >
@@ -76,7 +82,7 @@ export default function Header() {
             {isUserMenuOpen && (
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setIsUserMenuOpen(false)} />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -87,7 +93,7 @@ export default function Header() {
                     {t('profile') || 'Profile'}
                   </button>
                   <hr className="my-1 border-zinc-200 dark:border-zinc-800" />
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/10 transition-all"
                   >
@@ -105,21 +111,24 @@ export default function Header() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            <motion.div 
+            <motion.div
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
               className="fixed inset-y-0 left-0 z-50 w-64 lg:hidden"
             >
-              <Sidebar className="h-full border-r border-zinc-200 dark:border-zinc-800 shadow-2xl" onClose={() => setIsMobileMenuOpen(false)} />
+              <Sidebar
+                className="h-full border-r border-zinc-200 dark:border-zinc-800 shadow-2xl"
+                onClose={() => setIsMobileMenuOpen(false)}
+              />
             </motion.div>
           </>
         )}

@@ -25,8 +25,8 @@ export default function CourseCard({
 }: CourseCardProps) {
   const t = useTranslations('courses');
 
-  const localizedTitle = title[locale] || title['vi'];
-  const localizedDesc = description[locale] || description['vi'];
+  const localizedTitle = title[locale] || title.vi;
+  const localizedDesc = description[locale] || description.vi;
 
   return (
     <Link href={`/${locale}/courses/${id}`}>

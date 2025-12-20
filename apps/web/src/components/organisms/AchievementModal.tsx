@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, X, Star, Zap } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Star, Trophy, X, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 interface AchievementModalProps {
@@ -30,7 +30,7 @@ export const AchievementModal = ({ isOpen, onClose, achievement }: AchievementMo
           >
             {/* Background Decoration */}
             <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-yellow-400 to-orange-500 opacity-20" />
-            
+
             <button
               onClick={onClose}
               className="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
@@ -55,14 +55,12 @@ export const AchievementModal = ({ isOpen, onClose, achievement }: AchievementMo
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 {t('achievementUnlocked')}
               </h2>
-              
+
               <h3 className="text-xl font-semibold text-yellow-600 dark:text-yellow-500 mb-4">
                 {achievement.name}
               </h3>
 
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
-                {achievement.description}
-              </p>
+              <p className="text-gray-600 dark:text-gray-400 mb-6">{achievement.description}</p>
 
               {achievement.points && (
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full font-bold mb-8">

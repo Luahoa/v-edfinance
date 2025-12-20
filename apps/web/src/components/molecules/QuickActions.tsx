@@ -1,9 +1,9 @@
 'use client';
 
-import { Play, MessageSquare, Target, Wallet } from 'lucide-react';
+import { useAnalytics } from '@/hooks/useAnalytics';
+import { MessageSquare, Play, Target, Wallet } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useAnalytics } from '@/hooks/useAnalytics';
 
 export default function QuickActions() {
   const t = useTranslations('Dashboard');
@@ -35,14 +35,14 @@ export default function QuickActions() {
       category: 'AI_MENTOR',
       onClick: () => {
         // AI Mentor trigger logic here
-      }
-    }
+      },
+    },
   ];
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {actions.map((action, idx) => (
-        <Link 
+        <Link
           key={idx}
           href={action.href}
           onClick={() => {
@@ -51,9 +51,7 @@ export default function QuickActions() {
           }}
           className="flex flex-col items-center justify-center p-4 rounded-xl border bg-white shadow-sm hover:shadow-md transition-all dark:bg-zinc-900 dark:border-zinc-800"
         >
-          <div className="mb-2 p-2 rounded-full bg-zinc-50 dark:bg-zinc-800">
-            {action.icon}
-          </div>
+          <div className="mb-2 p-2 rounded-full bg-zinc-50 dark:bg-zinc-800">{action.icon}</div>
           <span className="text-sm font-medium">{action.label}</span>
         </Link>
       ))}
