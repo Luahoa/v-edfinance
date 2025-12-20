@@ -31,6 +31,7 @@
         "dotenv": "^17.2.3",
         "jest-coverage-badges": "^1.1.2",
         "msw": "^2.6.8",
+        "minimist": "latest",
         "prettier": "latest",
         "ts-node": "^10.9.2",
         "turbo": "latest",

@@ -299,13 +299,91 @@ Use **Google Gemini 1.5 Pro** API.
 
 ## Future ADRs to Document
 
-- [ ] ADR-009: Testing Strategy (Jest + Playwright)
-- [ ] ADR-010: Authentication (JWT vs Session)
-- [ ] ADR-011: File Storage (Cloudflare R2)
+- [x] ADR-009: Testing Strategy (Jest + Playwright)
+- [x] ADR-010: Authentication (JWT vs Session)
+- [x] ADR-011: File Storage (Cloudflare R2)
 - [ ] ADR-012: Real-time Features (WebSockets vs SSE)
 - [ ] ADR-013: Analytics Platform (Mixpanel vs PostHog)
+- [x] ADR-014: Beads Task Management
 
 ---
+
+## ADR-011: File Storage (Cloudflare R2)
+
+**Date:** December 2025  
+**Status:** ✅ Accepted
+
+### Context
+Need scalable, cost-effective object storage for user-uploaded assets (avatars, course materials) that integrates well with Cloudflare ecosystem.
+
+### Decision
+Use **Cloudflare R2** with S3-compatible API.
+
+### Rationale
+- **Zero Egress Fees:** Significant cost savings for high-traffic assets.
+- **S3 Compatibility:** Easy integration with existing libraries (AWS SDK).
+- **Global Distribution:** Native integration with Cloudflare CDN.
+- **Unified Platform:** Management within the same dashboard as Frontend (Pages) and Tunnels.
+
+---
+
+## ADR-014: Beads Task Management
+
+**Date:** December 2025  
+### Status: ✅ Accepted
+
+### Context
+Need a robust, CLI-driven task management system that integrates with Agent-based development workflows.
+
+### Decision
+Implement **Beads (BD)** for granular task tracking and team synchronization.
+
+### Workflow
+1. `bd sync`: Pull latest team state.
+2. `bd ready`: Identify high-priority tasks.
+3. `bd update <id> --status in_progress`: Claim task.
+4. `bd close <id> --reason "..."`: Document completion.
+5. `bd sync`: Push updates.
+
+---
+
+## System Diagrams
+
+### High-Level Architecture
+```mermaid
+graph TD
+    User((User))
+    CFP[Cloudflare Pages - Next.js]
+    CFT[Cloudflare Tunnel]
+    VPS[Dokploy VPS]
+    API[NestJS API]
+    DB[(PostgreSQL)]
+    R2[Cloudflare R2]
+    Gemini[Google Gemini AI]
+
+    User --> CFP
+    CFP --> CFT
+    CFT --> API
+    API --> DB
+    API --> R2
+    API --> Gemini
+```
+
+### Authentication Flow
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant W as Web (Next.js)
+    participant A as API (NestJS)
+    participant D as DB (Prisma)
+
+    U->>W: Login Request
+    W->>A: POST /auth/login
+    A->>D: Verify Credentials
+    D-->>A: User Record
+    A-->>W: JWT Token
+    W->>U: Store Token & Redirect
+```
 
 ## How to Use This Document
 
