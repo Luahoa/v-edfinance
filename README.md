@@ -38,6 +38,19 @@ This project follows a strict **"Fix First, Feature Second"** protocol:
 
 ---
 
+## 📋 Prerequisites
+
+- **Node.js** 18+ or 20+
+- **pnpm** 9.15.0+ (⚠️ **REQUIRED** - Do NOT use npm or yarn)
+  ```bash
+  npm install -g pnpm@9.15.0
+  ```
+- **PostgreSQL** 15+ (for local development)
+
+📖 See [DEPENDENCY_MANAGEMENT.md](./docs/DEPENDENCY_MANAGEMENT.md) for detailed setup instructions.
+
+---
+
 ## 🚀 Quick Start
 
 ```bash

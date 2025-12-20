@@ -71,6 +71,11 @@ id_ed25519*
 *.dump
 backups/
 
+# Package Manager - Enforce pnpm only
+# We use pnpm-lock.yaml, NOT npm's package-lock.json
+package-lock.json
+npm-shrinkwrap.json
+
 # Docker
 docker-compose.override.yml
 .dockerignore.local
