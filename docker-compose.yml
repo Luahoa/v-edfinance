@@ -43,6 +43,20 @@ services:
     networks:
       - vedfinance-network
 
+  redis:
+    image: redis:7-alpine
+    container_name: vedfinance-redis
+    restart: always
+    ports:
+      - "6380:6379"
+    networks:
+      - vedfinance-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   postgres_data:
 
