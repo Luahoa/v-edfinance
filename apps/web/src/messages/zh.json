@@ -25,6 +25,10 @@
     "noCourses": "暂无课程",
     "startLearning": "开始学习",
     "viewCourse": "查看详情",
+    "backToCourse": "返回课程",
+    "prevLesson": "上一课",
+    "nextLesson": "下一课",
+    "markComplete": "完成学习",
     "free": "免费",
     "level": "等级"
   },

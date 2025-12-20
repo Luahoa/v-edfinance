@@ -25,6 +25,10 @@
     "noCourses": "No courses available",
     "startLearning": "Start Learning",
     "viewCourse": "View Details",
+    "backToCourse": "Back to Course",
+    "prevLesson": "Previous Lesson",
+    "nextLesson": "Next Lesson",
+    "markComplete": "Mark as Complete",
     "free": "Free",
     "level": "Level"
   },

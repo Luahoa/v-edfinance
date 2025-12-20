@@ -25,6 +25,10 @@
     "noCourses": "Chưa có khóa học nào",
     "startLearning": "Bắt đầu học",
     "viewCourse": "Xem chi tiết",
+    "backToCourse": "Quay lại khóa học",
+    "prevLesson": "Bài trước",
+    "nextLesson": "Bài tiếp",
+    "markComplete": "Hoàn thành bài học",
     "free": "Miễn phí",
     "level": "Cấp độ"
   },
