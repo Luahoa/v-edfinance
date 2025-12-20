@@ -7,6 +7,7 @@ import InteractiveChecklist from '@/components/organisms/InteractiveChecklist';
 import { SocialFeed } from '@/components/organisms/SocialFeed';
 import { BuddyRecommendations } from '@/components/molecules/BuddyRecommendations';
 import QuickActions from '@/components/molecules/QuickActions';
+import NudgeBanner from '@/components/molecules/NudgeBanner';
 import { BookOpen, TrendingUp, Award, Zap, ListTodo, Users, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -89,6 +90,7 @@ export default function Dashboard() {
       <div className="mx-auto max-w-6xl">
         <h1 className="text-2xl font-bold mb-8">{t('welcome')}!</h1>
         
+        <NudgeBanner />
         <QuickActions />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
