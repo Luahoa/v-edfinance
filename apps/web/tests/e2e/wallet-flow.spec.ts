@@ -8,6 +8,7 @@ test.describe('Wallet & Simulation Flow', () => {
 
   test.beforeEach(async ({ page }) => {
     // Login trước mỗi test
+    console.log('Using test user:', TEST_USER.email);
     await page.goto('/vi/login');
     // Thực tế có thể cần tạo user nếu chưa có, nhưng ở đây giả định login flow cơ bản
     // Lưu ý: Trong E2E thực tế, ta thường dùng global setup hoặc tạo user qua API

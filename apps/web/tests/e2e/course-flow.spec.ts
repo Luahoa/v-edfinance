@@ -8,7 +8,7 @@ test.describe('Course Enrollment & Learning Flow', () => {
 
   test.beforeAll(async ({ request }) => {
     // Đăng ký user test để dùng cho flow
-    await request.post('/api/auth/register', {
+    await request.post('http://localhost:3001/auth/register', {
       data: {
         email: TEST_USER.email,
         password: TEST_USER.password,
@@ -20,8 +20,8 @@ test.describe('Course Enrollment & Learning Flow', () => {
   test('should allow user to browse, enroll, and complete a lesson', async ({ page }) => {
     // 1. Login
     await page.goto('/vi/login');
-    await page.fill('input[name="email"]', TEST_USER.email);
-    await page.fill('input[name="password"]', TEST_USER.password);
+    await page.locator('input[type="email"]').fill(TEST_USER.email);
+    await page.locator('input[type="password"]').fill(TEST_USER.password);
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/.*dashboard/);
 

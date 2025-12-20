@@ -1,0 +1,70 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]: App
+      - generic [ref=e6]:
+        - img [ref=e7]
+        - generic [ref=e9]: Login
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - img [ref=e12]
+        - combobox [ref=e15] [cursor=pointer]:
+          - option "vi" [selected]
+          - option "en"
+          - option "zh"
+      - button [ref=e16]:
+        - img [ref=e17]
+      - button "U User" [ref=e22]:
+        - generic [ref=e23]: U
+        - generic [ref=e24]: User
+  - main [ref=e25]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - heading "Đăng nhập" [level=1] [ref=e29]
+        - paragraph [ref=e30]:
+          - text: Chưa có tài khoản?
+          - link "Đăng ký" [ref=e31] [cursor=pointer]:
+            - /url: /vi/register
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - text: Email
+          - textbox "name@example.com" [ref=e34]: student-1766242278512@example.com
+        - generic [ref=e35]:
+          - text: Mật khẩu
+          - textbox "••••••••" [ref=e36]: Password123!
+        - button "Đăng nhập" [ref=e37]
+  - contentinfo [ref=e38]:
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - link "V-EdFinance" [ref=e42] [cursor=pointer]:
+            - /url: /vi
+            - generic [ref=e44]: V-EdFinance
+          - paragraph [ref=e45]: Empowering financial literacy through personalized AI-powered learning experiences.
+        - generic [ref=e46]:
+          - heading "Platform" [level=3] [ref=e47]
+          - list [ref=e48]:
+            - listitem [ref=e49]:
+              - link "Courses" [ref=e50] [cursor=pointer]:
+                - /url: /vi/courses
+            - listitem [ref=e51]:
+              - link "Dashboard" [ref=e52] [cursor=pointer]:
+                - /url: /vi/dashboard
+            - listitem [ref=e53]:
+              - link "About Us" [ref=e54] [cursor=pointer]:
+                - /url: /vi/about
+        - generic [ref=e55]:
+          - heading "Legal" [level=3] [ref=e56]
+          - list [ref=e57]:
+            - listitem [ref=e58]:
+              - link "Privacy Policy" [ref=e59] [cursor=pointer]:
+                - /url: /vi/privacy
+            - listitem [ref=e60]:
+              - link "Terms of Service" [ref=e61] [cursor=pointer]:
+                - /url: /vi/terms
+      - paragraph [ref=e63]: © 2025 V-EdFinance (Lúa Hóa). All rights reserved.
+  - alert [ref=e64]
+```
