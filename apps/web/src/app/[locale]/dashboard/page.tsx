@@ -1,17 +1,32 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
-import AiMentor from '@/components/AiMentor';
-import InteractiveChecklist from '@/components/organisms/InteractiveChecklist';
-import { SocialFeed } from '@/components/organisms/SocialFeed';
-import { BuddyRecommendations } from '@/components/molecules/BuddyRecommendations';
-import QuickActions from '@/components/molecules/QuickActions';
-import NudgeBanner from '@/components/molecules/NudgeBanner';
 import { BookOpen, TrendingUp, Award, Zap, ListTodo, Users, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import type { DashboardStats, Post as SocialPostType, BuddyGroup } from '@/types';
+
+const AiMentor = dynamic(() => import('@/components/AiMentor'), {
+  loading: () => <div className=\"h-32 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
+});
+const InteractiveChecklist = dynamic(() => import('@/components/organisms/InteractiveChecklist'), {
+  ssr: false,
+  loading: () => <div className=\"h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
+});
+const SocialFeed = dynamic(() => import('@/components/organisms/SocialFeed').then(mod => mod.SocialFeed), {
+  loading: () => <div className=\"h-96 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
+});
+const BuddyRecommendations = dynamic(() => import('@/components/molecules/BuddyRecommendations').then(mod => mod.BuddyRecommendations), {
+  loading: () => <div className=\"h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
+});
+const QuickActions = dynamic(() => import('@/components/molecules/QuickActions'), {
+  loading: () => <div className=\"h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
+});
+const NudgeBanner = dynamic(() => import('@/components/molecules/NudgeBanner'), {
+  loading: () => <div className=\"h-20 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
+});
 
 export default function Dashboard() {
   const t = useTranslations('Dashboard');
