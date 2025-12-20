@@ -17,6 +17,12 @@
         "monitoring:start": "docker compose -f docker-compose.monitoring.yml up -d",
         "monitoring:stop": "docker compose -f docker-compose.monitoring.yml down"
     },
+    "pnpm": {
+        "overrides": {
+            "minimist": "1.2.8",
+            "esbuild": "0.25.0"
+        }
+    },
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
         "@e2b/code-interpreter": "^2.3.3",
@@ -29,9 +35,10 @@
         "ava": "^6.4.1",
         "bcrypt": "^6.0.0",
         "dotenv": "^17.2.3",
+        "esbuild": "0.27.2",
         "jest-coverage-badges": "^1.1.2",
+        "minimist": "1.2.8",
         "msw": "^2.6.8",
-        "minimist": "latest",
         "prettier": "latest",
         "ts-node": "^10.9.2",
         "turbo": "latest",
@@ -56,6 +63,7 @@
         "@uppy/dashboard": "^4.1.2",
         "@uppy/react": "^4.1.2",
         "@uppy/tus": "^4.1.2",
+        "next": "16.1.0",
         "react": "18.3.1",
         "react-dom": "18.3.1",
         "unstorage": "^1.13.1"

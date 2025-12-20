@@ -9,24 +9,24 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 import type { DashboardStats, Post as SocialPostType, BuddyGroup } from '@/types';
 
 const AiMentor = dynamic(() => import('@/components/AiMentor'), {
-  loading: () => <div className=\"h-32 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
+  loading: () => <div className="h-32 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
 });
 const InteractiveChecklist = dynamic(() => import('@/components/organisms/InteractiveChecklist'), {
   ssr: false,
-  loading: () => <div className=\"h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
-});
-const SocialFeed = dynamic(() => import('@/components/organisms/SocialFeed').then(mod => mod.SocialFeed), {
-  loading: () => <div className=\"h-96 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
-});
-const BuddyRecommendations = dynamic(() => import('@/components/molecules/BuddyRecommendations').then(mod => mod.BuddyRecommendations), {
-  loading: () => <div className=\"h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
-});
-const QuickActions = dynamic(() => import('@/components/molecules/QuickActions'), {
-  loading: () => <div className=\"h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
-});
-const NudgeBanner = dynamic(() => import('@/components/molecules/NudgeBanner'), {
-  loading: () => <div className=\"h-20 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl\" />,
-});
+  loading: () => <div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  });
+  const SocialFeed = dynamic(() => import('@/components/organisms/SocialFeed').then(mod => mod.SocialFeed), {
+  loading: () => <div className="h-96 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  });
+  const BuddyRecommendations = dynamic(() => import('@/components/molecules/BuddyRecommendations').then(mod => mod.BuddyRecommendations), {
+  loading: () => <div className="h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  });
+  const QuickActions = dynamic(() => import('@/components/molecules/QuickActions'), {
+  loading: () => <div className="h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  });
+  const NudgeBanner = dynamic(() => import('@/components/molecules/NudgeBanner'), {
+  loading: () => <div className="h-20 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  });
 
 export default function Dashboard() {
   const t = useTranslations('Dashboard');
@@ -49,7 +49,7 @@ export default function Dashboard() {
       const duration = Date.now() - startTime;
       trackEvent('LEAVE_DASHBOARD', 'PAGE_VIEW', { duration }, duration);
     };
-  }, []);
+  }, [startTime, trackEvent]);
 
   useEffect(() => {
     // Wait for hydration if using zustand persist

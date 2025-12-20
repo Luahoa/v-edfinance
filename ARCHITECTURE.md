@@ -305,45 +305,52 @@ Use **Google Gemini 1.5 Pro** API.
 - [ ] ADR-012: Real-time Features (WebSockets vs SSE)
 - [ ] ADR-013: Analytics Platform (Mixpanel vs PostHog)
 - [x] ADR-014: Beads Task Management
+- [x] ADR-015: R2 Integration Strategy
+- [x] ADR-016: Beads CI/CD Integration
 
 ---
 
 ## ADR-011: File Storage (Cloudflare R2)
+... [existing content] ...
+
+---
+
+## ADR-014: Beads Task Management
+... [existing content] ...
+
+---
+
+## ADR-015: R2 Integration Strategy
 
 **Date:** December 2025  
 **Status:** ✅ Accepted
 
 ### Context
-Need scalable, cost-effective object storage for user-uploaded assets (avatars, course materials) that integrates well with Cloudflare ecosystem.
+Need a standard way to handle large file uploads (course videos, high-res assets) avoiding server bottlenecks.
 
 ### Decision
-Use **Cloudflare R2** with S3-compatible API.
+Use **S3 Presigned URLs** via Cloudflare R2 for direct client-to-storage uploads.
 
 ### Rationale
-- **Zero Egress Fees:** Significant cost savings for high-traffic assets.
-- **S3 Compatibility:** Easy integration with existing libraries (AWS SDK).
-- **Global Distribution:** Native integration with Cloudflare CDN.
-- **Unified Platform:** Management within the same dashboard as Frontend (Pages) and Tunnels.
+- **Offload API**: Backend only generates signed URLs; heavy lifting is handled by Cloudflare.
+- **Security**: Expiring tokens ensure uploads are authorized.
 
 ---
 
-## ADR-014: Beads Task Management
+## ADR-016: Beads CI/CD Integration
 
 **Date:** December 2025  
-### Status: ✅ Accepted
+**Status:** ✅ Accepted
 
 ### Context
-Need a robust, CLI-driven task management system that integrates with Agent-based development workflows.
+Ensure task status reflects actual development progress automatically.
 
 ### Decision
-Implement **Beads (BD)** for granular task tracking and team synchronization.
+Integrate `bd` CLI into the development lifecycle via `AGENTS.md` protocols and git hooks.
 
-### Workflow
-1. `bd sync`: Pull latest team state.
-2. `bd ready`: Identify high-priority tasks.
-3. `bd update <id> --status in_progress`: Claim task.
-4. `bd close <id> --reason "..."`: Document completion.
-5. `bd sync`: Push updates.
+### Rationale
+- **Single Source of Truth**: Beads becomes the definitive state of the project.
+- **Agent Accountability**: Automated `bd doctor` checks ensure zero-debt engineering.
 
 ---
 
