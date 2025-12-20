@@ -197,28 +197,28 @@ export default function AiMentor() {
                       <ReactMarkdown>{m.content}</ReactMarkdown>
                     </div>
                     {/* Action Card Renderer */}
-                    {m.metadata && (m.metadata as { hasActionCard?: boolean }).hasActionCard && (
+                    {m.metadata?.hasActionCard && (
                       <div className="mt-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
                         <div className="flex items-center gap-3">
                           <div className="rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20">
-                            {(m.metadata as { type?: string }).type === 'COURSE_LINK' && <Play className="h-5 w-5 text-blue-600" />}
-                            {(m.metadata as { type?: string }).type === 'QUIZ' && <ClipboardCheck className="h-5 w-5 text-blue-600" />}
-                            {(m.metadata as { type?: string }).type === 'UPDATE_PROFILE' && <ExternalLink className="h-5 w-5 text-blue-600" />}
+                            {m.metadata.type === 'COURSE_LINK' && <Play className="h-5 w-5 text-blue-600" />}
+                            {m.metadata.type === 'QUIZ' && <ClipboardCheck className="h-5 w-5 text-blue-600" />}
+                            {m.metadata.type === 'UPDATE_PROFILE' && <ExternalLink className="h-5 w-5 text-blue-600" />}
                           </div>
                           <div className="flex-1">
                             <p className="text-sm font-bold text-zinc-900 dark:text-white">
-                              {(m.metadata as { label?: string }).label}
+                              {m.metadata.label}
                             </p>
                           </div>
                           <button
                             onClick={() => {
                               trackEvent('CLICK_ACTION_CARD', { 
-                                type: (m.metadata as { type?: string }).type, 
+                                type: m.metadata?.type, 
                                 threadId: currentThread.id 
                               });
                               // Handle action based on type
-                              if ((m.metadata as { type?: string }).type === 'COURSE_LINK') {
-                                window.location.href = `/${(m.metadata as { payload: { id: string } }).payload.id}`;
+                              if (m.metadata?.type === 'COURSE_LINK' && m.metadata.payload && typeof m.metadata.payload === 'object' && 'id' in m.metadata.payload) {
+                                window.location.href = `/${(m.metadata.payload as { id: string }).id}`;
                               }
                             }}
                             className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900"

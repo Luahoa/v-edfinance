@@ -1,14 +1,19 @@
 export type ChatRole = 'USER' | 'ASSISTANT' | 'SYSTEM';
 
+export interface ChatMessageMetadata {
+  type?: 'SOCRATIC' | 'COACH' | 'COURSE_LINK' | 'QUIZ' | 'UPDATE_PROFILE';
+  suggestions?: string[];
+  hasActionCard?: boolean;
+  label?: string;
+  payload?: unknown;
+}
+
 export interface ChatMessage {
   id: string;
   threadId: string;
   role: ChatRole;
   content: string;
-  metadata?: {
-    type?: 'SOCRATIC' | 'COACH';
-    suggestions?: string[];
-  };
+  metadata?: ChatMessageMetadata;
   createdAt: string;
 }
 
