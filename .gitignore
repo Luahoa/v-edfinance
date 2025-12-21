@@ -79,3 +79,9 @@ npm-shrinkwrap.json
 # Docker
 docker-compose.override.yml
 .dockerignore.local
+
+# Large binary files (DO NOT COMMIT)
+beads.exe
+go_installer.msi
+*.exe
+*.msi
