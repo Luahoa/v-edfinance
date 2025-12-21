@@ -8,7 +8,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     setupFiles: [path.resolve(__dirname, './tests/setup.ts')],
-    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)', '**/*.e2e-spec.ts'],
+    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     exclude: [
       '**/node_modules/**',
       'tests/**',
@@ -17,6 +17,9 @@ export default defineConfig({
       'apps/web/e2e/**',
       'apps/web/tests/e2e/**',
       'beads/**',
+      // Skip E2E and heavy integration tests for fast unit test runs
+      '**/*.e2e-spec.ts',
+      '**/integration/**',
     ],
     coverage: {
       provider: 'v8',
@@ -31,16 +34,22 @@ export default defineConfig({
     },
     // Disable UI mode in terminal/automated environments
     ui: false,
-    // Disable parallel pools to reduce overhead on dev machine
-    pool: 'threads',
+    // Use forks pool for stability (avoids thread memory issues on Windows)
+    pool: 'forks',
     poolOptions: {
-      threads: {
-        singleThread: true,
+      forks: {
+        singleFork: false,
+        maxForks: 2,
+        minForks: 1,
       },
     },
-    // Timeout for tests (increase if needed for E2B tests)
-    testTimeout: 30000,
-    hookTimeout: 60000,
+    // Reduced timeout for unit tests (faster failure detection)
+    testTimeout: 10000,
+    hookTimeout: 15000,
+    // Disable watch mode for CI
+    watch: false,
+    // Faster reporter
+    reporter: 'basic',
   },
   resolve: {
     alias: {

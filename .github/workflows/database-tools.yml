@@ -1,0 +1,150 @@
+name: Database Tools CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'apps/api/prisma/**'
+      - 'apps/api/src/database/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/api/prisma/**'
+
+jobs:
+  erd-generation:
+    name: Generate ERD
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate ERD
+        run: |
+          cd apps/api
+          npx prisma generate
+
+      - name: Upload ERD artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: erd-diagrams
+          path: apps/api/docs/erd.*
+
+      - name: Comment ERD on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            try {
+              const erdContent = fs.readFileSync('apps/api/docs/erd.md', 'utf8');
+              github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `## 📊 Database Schema Changes\n\n<details>\n<summary>View ERD</summary>\n\n${erdContent}\n\n</details>`
+              });
+            } catch (e) {
+              console.log('ERD file not found, skipping comment');
+            }
+
+  integration-tests:
+    name: Integration Tests with Seeded DB
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: vedfinance_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/vedfinance_test
+        run: |
+          cd apps/api
+          npx prisma migrate deploy
+
+      - name: Seed test data
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/vedfinance_test
+        run: |
+          cd apps/api
+          npx ts-node prisma/seeds/scenarios/test.seed.ts
+
+      - name: Run integration tests
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/vedfinance_test
+        run: |
+          cd apps/api
+          pnpm test:e2e
+
+  kysely-type-check:
+    name: Kysely Type Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate Kysely types
+        run: |
+          cd apps/api
+          npx prisma generate
+
+      - name: Type check
+        run: |
+          cd apps/api
+          pnpm tsc --noEmit
+
+      - name: Verify no type drift
+        run: |
+          git diff --exit-code apps/api/src/database/types.ts || \
+            (echo "❌ Kysely types are out of sync. Run 'npx prisma generate' and commit." && exit 1)
