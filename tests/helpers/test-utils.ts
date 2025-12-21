@@ -55,3 +55,19 @@ export async function assertUserIsLoggedIn(page: Page) {
     page.locator('[data-testid="user-profile-btn"], [data-testid="logout-btn"]')
   ).toBeVisible();
 }
+
+export async function loginAsAdmin(page: Page, locale = 'vi') {
+  await page.goto(`/${locale}/login`);
+  await page.fill('[data-testid="login-email-input"]', 'admin@v-edfinance.com');
+  await page.fill('[data-testid="login-password-input"]', 'Admin123!');
+  await page.click('[data-testid="login-submit-btn"]');
+  await page.waitForURL(`**/${locale}/admin/dashboard`, { timeout: 5000 });
+}
+
+export async function loginAsUser(page: Page, email: string, password: string, locale = 'vi') {
+  await page.goto(`/${locale}/login`);
+  await page.fill('[data-testid="login-email-input"]', email);
+  await page.fill('[data-testid="login-password-input"]', password);
+  await page.click('[data-testid="login-submit-btn"]');
+  await page.waitForURL(`**/${locale}/dashboard`, { timeout: 5000 });
+}
