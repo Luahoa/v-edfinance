@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   },
   // Standalone output for Docker deployment
   // Reduces image size from ~1GB to ~150MB
-  output: 'standalone',
+  // output: 'standalone', // Temporarily disabled to test build
   // Disable telemetry in production
   outputFileTracingIncludes: {
     '/': ['./public/**/*'],
