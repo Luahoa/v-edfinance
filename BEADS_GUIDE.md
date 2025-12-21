@@ -55,9 +55,9 @@ bd hooks install
 
 ## 📋 Các Lệnh Cơ Bản
 
-### Xem tasks sẵn sàng để làm
-
+### Context và Workflow
 ```bash
+bd prime                    # Context đầy đủ về workflow hiện tại
 bd ready                    # Xem tasks không có blocker
 bd ready --json             # Output JSON (cho AI agent)
 ```
@@ -199,8 +199,14 @@ bd merge ved-dup1 ved-dup2 --into ved-original --json
 # Xóa task
 bd delete ved-abc123
 
+# Kiểm tra hệ thống (health check)
+bd doctor
+
 # Web interface (cho người dùng)
 bd monitor --port 8080
+
+# Context đầy đủ về workflow (cho AI)
+bd prime
 ```
 
 ## 💡 Best Practices
@@ -223,7 +229,9 @@ bd monitor --port 8080
 
 ```bash
 # Workflow cơ bản
+bd prime                                         # Context đầy đủ về workflow hiện tại
 bd ready --json                                  # Xem tasks available
+bd doctor                                        # Health check hệ thống
 bd create "Title" --description="..." -p 1 --json    # Tạo task
 bd update ved-xxx --status in_progress --json   # Claim task
 bd close ved-xxx --reason "Done" --json         # Hoàn thành
