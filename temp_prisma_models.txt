@@ -1,0 +1,36 @@
+
+model ModerationLog {
+  id          String   @id @default(uuid())
+  userId      String
+  action      String   // WARN, MUTE, BAN, CONTENT_REMOVAL
+  reason      String
+  moderatorId String?
+  metadata    Json?    // Additional context
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  moderator   User?    @relation("moderator", fields: [moderatorId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  key         String   @unique  // Unique identifier for the achievement
+  name        Json     // Localized name
+  description Json     // Localized description
+  iconKey     String   // Asset storage key for icon
+  criteria    Json     // Achievement unlock criteria (JSON structure)
+  points      Int      @default(0)  // Points awarded for earning this achievement
+  tier        String   @default("BRONZE")  // BRONZE, SILVER, GOLD, PLATINUM
+  category    String   // LEARNING, SOCIAL, STREAK, FINANCIAL, etc.
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([tier])
+  @@index([isActive])
+}
+

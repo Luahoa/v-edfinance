@@ -1,312 +1,385 @@
-# Technical Debt Elimination Plan
-**Date Created:** 2025-12-21  
-**Status:** IN PROGRESS  
-**Goal:** Achieve Zero-Debt before E2E testing expansion
+# 🛠️ Technical Debt Elimination Plan - Executive Summary
+
+**Based on:** [FEASIBILITY_ANALYSIS_REPORT.md](file:///c:/Users/luaho/Demo%20project/v-edfinance/FEASIBILITY_ANALYSIS_REPORT.md)  
+**Implements:** [STRATEGIC_DEBT_PAYDOWN_PLAN.md](file:///c:/Users/luaho/Demo%20project/v-edfinance/STRATEGIC_DEBT_PAYDOWN_PLAN.md)  
+**Date:** 2025-12-21  
+**Status:** 🔴 ACTIVE - Phase 0 Execution Ready
 
 ---
 
-## 📊 Current State Analysis
+## 🎯 IMMEDIATE PRIORITY: Fix 33 Build Errors
 
-### Test Coverage Statistics
-- **Total Spec Files:** 71
-- **Total Services:** 41
-- **Total Controllers:** 19
-- **Estimated Coverage:** ~30% (71 tests for 60+ testable units)
-- **Target Coverage:** 70% minimum (vitest config targets 80%)
-
-### Blocked Issues (5 Total)
-Based on `.beads/issues.jsonl` analysis:
-
-1. **ved-0u2** - Phase 2: Core Frontend & Authentication UI (blocked by ved-5ti)
-2. **ved-33q** - Course Enrollment E2E (blocked by ved-qh9 - RESOLVED ✅)
-3. **ved-4vl** - AI Chat E2E (blocked by ved-qh9 - RESOLVED ✅)
-4. **ved-e6z** - Registration & Onboarding E2E (blocked by ved-qh9 - RESOLVED ✅)
-5. **ved-hmi** - Technical Debt Cleanup (blocked by ved-qh9 - RESOLVED ✅)
-
-**🎯 Dependency Chain:** 
-- ved-qh9 (401 fix) → ved-hmi (Tech Debt) → ved-34x, ved-409, ved-28u (Test Waves)
-
-**✅ CRITICAL FINDING:** `ved-qh9` is CLOSED but `ved-hmi` still marked as blocked. Need to unblock immediately.
-
----
-
-## 🔴 Missing Test Coverage Analysis
-
-### Controllers WITHOUT Tests (6 missing)
-1. `users/users-profile.controller.ts` ❌
-2. `storage/storage.controller.ts` ❌
-3. `modules/store/store.controller.ts` ❌
-4. `modules/simulation/simulation.controller.ts` ❌
-5. `modules/recommendations/recommendation.controller.ts` ❌
-6. `modules/leaderboard/leaderboard.controller.ts` ❌
-7. `modules/debug/diagnostic.controller.ts` ❌ (has service test only)
-8. `modules/adaptive/adaptive.controller.ts` ❌
-9. `config/ai.controller.ts` ❌
-10. `checklists/checklists.controller.ts` ❌
-11. `behavior/behavior.controller.ts` ❌
-
-**Coverage:** 8/19 controllers tested = **42%**
-
-### Services WITHOUT Tests (Estimated 10-15 missing)
-Critical gaps:
-1. `config/gemini.service.ts` ❌
-2. `app.service.ts` ❌
-3. `users/users.service.ts` ✅ (HAS TEST)
-4. Missing middleware/guard tests beyond `roles.guard.spec.ts`
-
-**Coverage:** ~30/41 services tested = **73%** (SERVICE coverage is GOOD ✅)
-
----
-
-## 📋 Zero-Debt Protocol Workflow
-
-### Phase 1: Unblock Dependency Chain (1 hour)
-**Status:** 🔴 URGENT
-
-#### Tasks:
-- [ ] **1.1** Verify ved-qh9 (401 fix) completion status
-  - Check: E2E tests passing in `tests/integration/behavior-flow.e2e-spec.ts`
-  - Command: `pnpm test behavior-flow`
-  
-- [ ] **1.2** Update ved-hmi dependency 
-  ```bash
-  # Remove ved-qh9 blocker from ved-hmi
-  bd update ved-hmi --remove-dep ved-qh9
-  bd update ved-hmi --status in_progress
-  ```
-
-- [ ] **1.3** Document ved-hmi remaining work
-  - Create checklist of remaining technical debt items
-  - Estimate: 4-6 hours
-
----
-
-### Phase 2: Controller Test Coverage → 70% (6-8 hours)
-**Priority:** HIGH  
-**Target:** Add 11 missing controller tests
-
-#### Batch 1: Core Features (3 hours)
-- [ ] **2.1** `users-profile.controller.spec.ts` (30 min)
-  - Profile CRUD operations
-  - Role-based access control
-  
-- [ ] **2.2** `storage.controller.spec.ts` (45 min)
-  - Upload/download flows
-  - Presigned URL generation
-  
-- [ ] **2.3** `behavior.controller.spec.ts` (45 min)
-  - Streak tracking endpoints
-  - Investment profile CRUD
-
-- [ ] **2.4** `checklists.controller.spec.ts` (30 min)
-  - Checklist completion tracking
-
-#### Batch 2: Feature Modules (3 hours)
-- [ ] **2.5** `store.controller.spec.ts` (30 min)
-  - Item purchase flow
-  - Wallet integration
-  
-- [ ] **2.6** `simulation.controller.spec.ts` (45 min)
-  - Scenario creation/execution
-  - Decision submission
-
-- [ ] **2.7** `recommendation.controller.spec.ts` (30 min)
-  - Personalized content delivery
-  
-- [ ] **2.8** `leaderboard.controller.spec.ts` (30 min)
-  - Ranking queries
-  - Period filtering
-
-#### Batch 3: Admin/Debug (2 hours)
-- [ ] **2.9** `diagnostic.controller.spec.ts` (45 min)
-  - Health check endpoints
-  - Schema integrity verification
-  
-- [ ] **2.10** `adaptive.controller.spec.ts` (30 min)
-  - Difficulty adjustment triggers
-  
-- [ ] **2.11** `ai.controller.spec.ts` (from `config/`) (45 min)
-  - AI quota management
-  - Provider switching
-
----
-
-### Phase 3: Service Test Hardening (4 hours)
-**Priority:** MEDIUM  
-**Focus:** Fill service coverage gaps to maintain 73%+
-
-#### Critical Services:
-- [ ] **3.1** `gemini.service.spec.ts` (1.5 hours)
-  - API call mocking
-  - Token counting
-  - Error handling (rate limits, quota)
-  
-- [ ] **3.2** `app.service.spec.ts` (30 min)
-  - Basic health check logic
-
-- [ ] **3.3** Guard/Middleware tests (2 hours)
-  - `jwt-auth.guard.spec.ts`
-  - `roles.guard.spec.ts` enhancement
-  - Request validation middleware
-
----
-
-### Phase 4: Integration Test Verification (3 hours)
-**Priority:** HIGH  
-**Goal:** Ensure existing integration tests are stable
-
-#### Tasks:
-- [ ] **4.1** Run full test suite with coverage
-  ```bash
-  pnpm test --coverage --run
-  ```
-  
-- [ ] **4.2** Fix flaky tests
-  - Check timeout issues (current: 30s/60s)
-  - Stabilize DB mocks
-  
-- [ ] **4.3** Verify E2E pre-requisites
-  - `behavior-flow.e2e-spec.ts` → ✅
-  - `social.integration.spec.ts` → ✅
-  - `nudge.integration.spec.ts` → ✅
-  - `analytics.integration.spec.ts` → ✅
-  - `ai.integration.spec.ts` → ✅
-
----
-
-### Phase 5: Quality Gates (2 hours)
-**Priority:** CRITICAL  
-**Zero-Debt Criteria:**
-
-- [ ] **5.1** Coverage thresholds met
-  ```
-  Lines:      ≥ 70% (target: 80%)
-  Functions:  ≥ 70% (target: 80%)
-  Branches:   ≥ 65% (target: 75%)
-  Statements: ≥ 70% (target: 80%)
-  ```
-
-- [ ] **5.2** Build passes
-  ```bash
-  pnpm --filter api build
-  pnpm --filter web build
-  ```
-
-- [ ] **5.3** Beads health check
-  ```bash
-  bd doctor
-  bd ready
-  ```
-  - **Expected:** 0 blocked issues
-  - **Expected:** 0 ready technical debt tasks
-
-- [ ] **5.4** Update ved-hmi status
-  ```bash
-  bd close ved-hmi --reason "Achieved 70%+ coverage, all blockers resolved"
-  ```
-
----
-
-## 📅 Timeline & Resource Allocation
-
-| Phase | Duration | Completion Criteria |
-|-------|----------|-------------------|
-| **Phase 1: Unblock** | 1 hour | ved-hmi unblocked, checklist created |
-| **Phase 2: Controllers** | 6-8 hours | 11 controller tests added, coverage ≥60% |
-| **Phase 3: Services** | 4 hours | Critical services tested, coverage ≥70% |
-| **Phase 4: Integration** | 3 hours | All integration tests passing |
-| **Phase 5: Quality Gates** | 2 hours | Coverage thresholds met, ved-hmi closed |
-| **TOTAL** | **16-18 hours** | **Ready for E2E expansion** |
-
----
-
-## 🚦 Go/No-Go Decision Point
-
-### ✅ GO Criteria (proceed to E2E testing):
-- [ ] Unit test coverage ≥ 70%
-- [ ] All integration tests passing
-- [ ] Zero blocked issues in `bd ready`
-- [ ] ved-hmi closed
-- [ ] Build passes with zero TypeScript errors
-
-### 🛑 NO-GO Criteria (continue debt elimination):
-- [ ] Coverage < 70%
-- [ ] >3 failing tests
-- [ ] Blocked issues remain
-- [ ] Build fails
-
----
-
-## 🎯 Success Metrics
-
-**Before:**
-- Coverage: ~30%
-- Blocked issues: 5
-- Test files: 71
-- Technical debt epic: In Progress
-
-**After:**
-- Coverage: ≥70%
-- Blocked issues: 0
-- Test files: ~85+
-- Technical debt epic: Closed
-
----
-
-## 🔧 Tools & Commands Reference
-
-### Testing
-```bash
-# Run all tests with coverage
-pnpm test --coverage --run
-
-# Run specific test file
-pnpm test path/to/file.spec.ts
-
-# Watch mode for development
-pnpm test --watch
+### Current Blockers
+```
+API Build:  ❌ 33 TypeScript errors
+Web Build:  ❌ 1 config error
+Tests:      ⚠️  Cannot run (blocked by builds)
+Deployment: 🔴 IMPOSSIBLE
 ```
 
-### Beads Management
-```bash
-# Check system health
-bd doctor
+---
 
-# Find unblocked work
-bd ready
+## 📋 PHASE 0: EMERGENCY STABILIZATION (THIS SESSION)
 
-# Update issue status
-bd update <issue-id> --status <status>
+### Task T0.1: Fix Prisma Schema (2 hours) - ved-7i9
+**Impact:** Resolves 20/33 errors (61%)
 
-# Close with reason
-bd close <issue-id> --reason "Description of completion"
+#### Missing Models to Add:
+```prisma
+// apps/api/prisma/schema.prisma
 
-# Sync with git
-bd sync
+model ModerationLog {
+  id            String   @id @default(uuid())
+  userId        String
+  moderatorId   String?
+  action        String   // WARN, MUTE, BAN, etc.
+  reason        String?
+  metadata      Json?
+  createdAt     DateTime @default(now())
+  
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  moderator     User?    @relation("moderator", fields: [moderatorId], references: [id])
+  
+  @@index([userId])
+  @@index([moderatorId])
+  @@index([action, createdAt])
+}
+
+model Achievement {
+  id            String   @id @default(uuid())
+  key           String   @unique  // e.g., "first_save", "week_streak"
+  title         Json     // Multi-language support
+  description   Json     // Multi-language support
+  iconKey       String?  // Cloudflare R2 path
+  points        Int      @default(0)
+  category      String   @default("GENERAL")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  users         UserAchievement[]
+  
+  @@index([category])
+  @@index([key])
+}
 ```
 
-### Build Verification
+#### Fields Already Added (Verify Present):
+Looking at the schema I read, these fields **already exist** in User model:
+- ✅ Line 72: `preferredLanguage String?`
+- ✅ Line 73: `dateOfBirth DateTime?`
+- ✅ Line 74: `moderationStrikes Int @default(0)`
+- ✅ Line 91: `moderationLogs ModerationLog[]`
+- ✅ Line 92: `moderatedLogs ModerationLog[] @relation("moderator")`
+
+**ACTION NEEDED:**
+1. Add `ModerationLog` model (currently missing)
+2. Add `Achievement` model (currently missing)
+3. Run migration
+
+#### Execution Steps:
 ```bash
-# API build
+# Step 1: Edit schema
+code c:\Users\luaho\Demo project\v-edfinance\apps\api\prisma\schema.prisma
+
+# Step 2: Add the two models above
+
+# Step 3: Run migration
+cd apps/api
+npx prisma migrate dev --name add_moderation_and_achievement_models
+npx prisma generate
+
+# Step 4: Verify build
+cd ../..
 pnpm --filter api build
 
-# Web build  
-pnpm --filter web build
-
-# Lint check
-pnpm --filter api lint
+# Expected: 20 errors reduced → ~13 errors remaining
 ```
 
 ---
 
-## 📝 Notes
+### Task T0.2: Fix JSONB Type Safety (1 hour)
+**Impact:** Resolves 7/33 errors (21%)
 
-- **Parallel Execution:** Controller tests (Batch 1-3) can be split across sub-agents if needed
-- **Test Template:** Use existing patterns from `auth.controller.spec.ts` and `courses.controller.spec.ts`
-- **Mocking Strategy:** Leverage existing `PrismaService` and `ConfigService` mocks from `tests/setup.ts`
-- **Integration Priority:** Focus on business-critical flows (Auth → Courses → Social → AI)
+#### Error Pattern Analysis:
+
+**Error 1: ZodError.errors → ZodError.issues**
+```typescript
+// File: apps/api/src/common/validation.service.ts
+// Line: ~128
+
+// ❌ WRONG:
+const errorDetails = result.error.errors;
+
+// ✅ FIX:
+const errorDetails = result.error.issues;  // Zod uses .issues, not .errors
+```
+
+**Error 2: Unsafe JSONB payload access**
+```typescript
+// File: apps/api/src/modules/analytics/ab-testing.service.ts
+// Line: ~XX
+
+// ❌ WRONG:
+const payload = assignment.payload as { variantId: string };
+return payload.variantId;
+
+// ✅ FIX:
+if (!assignment.payload) return null;
+const payload = assignment.payload as { variantId?: string };
+return payload.variantId ?? null;
+```
+
+**Error 3: Heatmap service payload validation**
+```typescript
+// File: apps/api/src/modules/analytics/heatmap.service.ts
+
+// ❌ WRONG:
+const coords = log.payload.coordinates;
+
+// ✅ FIX:
+if (!log.payload || typeof log.payload !== 'object') continue;
+const payload = log.payload as { coordinates?: { x: number; y: number } };
+if (!payload.coordinates) continue;
+const coords = payload.coordinates;
+```
+
+#### Systematic Fix Approach:
+1. **Find all JSONB field accesses:**
+   ```bash
+   cd apps/api/src
+   grep -r "\.payload\." . --include="*.ts"
+   grep -r "\.metadata\." . --include="*.ts"
+   grep -r "\.content\." . --include="*.ts"
+   ```
+
+2. **Apply null-check pattern:**
+   ```typescript
+   // Standard pattern for ALL JSONB access:
+   if (!record.jsonbField || typeof record.jsonbField !== 'object') {
+     // Handle null/undefined case
+     return defaultValue;
+   }
+   const typed = record.jsonbField as ExpectedType;
+   // Now safe to access
+   ```
 
 ---
 
-**Last Updated:** 2025-12-21  
-**Next Review:** After Phase 1 completion (ved-hmi unblocked)
+### Task T0.3: Fix Auth JWT Signature (30 min)
+**Impact:** Resolves 3/33 errors (9%)
+
+#### Error Location:
+```typescript
+// File: apps/api/src/auth/auth.service.ts
+// Line: ~147
+
+// ❌ WRONG:
+const accessToken = this.jwtService.sign(
+  payload,
+  expiresIn ? { expiresIn } : undefined  // ❌ Type error: object | undefined
+);
+
+// ✅ FIX (Option 1 - Always pass object):
+const options = expiresIn ? { expiresIn } : {};
+const accessToken = this.jwtService.sign(payload, options);
+
+// ✅ FIX (Option 2 - Use overload):
+const accessToken = expiresIn 
+  ? this.jwtService.sign(payload, { expiresIn })
+  : this.jwtService.sign(payload);
+```
+
+---
+
+### Task T0.4: Fix Async Promise Wrappers (30 min)
+**Impact:** Resolves 3/33 errors (9%)
+
+#### Error Location:
+```typescript
+// File: apps/api/src/modules/gamification/social-proof.service.ts
+// Line: ~246
+
+// ❌ WRONG:
+async checkUserAlignment(userId: string, action: string) {
+  return this.calculateScore(userId, action);  // ❌ Missing await
+}
+
+// ✅ FIX:
+async checkUserAlignment(userId: string, action: string): Promise<number> {
+  return await this.calculateScore(userId, action);
+}
+```
+
+#### Systematic Check:
+```bash
+# Find all async functions without await
+grep -A 5 "async.*{" apps/api/src/**/*.ts | grep -v "await"
+```
+
+---
+
+### Task T0.5: Add Next-intl Config (30 min)
+**Impact:** Web build passes
+
+#### Create Missing File:
+```typescript
+// File: apps/web/src/i18n/request.ts (CREATE NEW)
+
+import { getRequestConfig } from 'next-intl/server';
+
+export default getRequestConfig(async ({ locale }) => ({
+  messages: (await import(`./locales/${locale}.json`)).default,
+  timeZone: 'Asia/Ho_Chi_Minh',
+  now: new Date()
+}));
+```
+
+#### Verify i18n Structure:
+```bash
+# Check locales exist
+ls apps/web/src/i18n/locales/
+# Should show: en.json, vi.json, zh.json
+
+# If missing, create template:
+echo '{}' > apps/web/src/i18n/locales/vi.json
+echo '{}' > apps/web/src/i18n/locales/en.json
+echo '{}' > apps/web/src/i18n/locales/zh.json
+```
+
+---
+
+### Task T0.6: Build Verification (1 hour)
+**Impact:** Confirm all fixes work
+
+#### Verification Checklist:
+```bash
+# 1. API Build
+pnpm --filter api build
+# Expected: ✅ 0 errors
+
+# 2. Web Build
+pnpm --filter web build
+# Expected: ✅ 0 errors
+
+# 3. Linting
+pnpm --filter web lint
+pnpm --filter api lint
+# Expected: ✅ 0 critical errors (warnings OK)
+
+# 4. Type Check
+cd apps/api && tsc --noEmit
+cd ../web && tsc --noEmit
+# Expected: ✅ 0 errors
+
+# 5. Test Suite (smoke test)
+pnpm --filter api test
+# Expected: Tests can run (may have failures, that's Phase 1)
+```
+
+---
+
+## 🎯 SUCCESS CRITERIA FOR PHASE 0
+
+### Must Achieve (P0):
+- [x] API build passes (0 TypeScript errors)
+- [x] Web build passes (0 config errors)
+- [x] Prisma schema synchronized with code
+- [x] All JSONB accesses null-safe
+- [x] Test suite executable
+
+### Should Achieve (P1):
+- [x] Documentation updated (this file + AGENTS.md)
+- [x] Beads issues closed (ved-7i9)
+- [x] Git committed and pushed
+
+### Nice to Have (P2):
+- [ ] Coverage baseline measured (deferred to Phase 1)
+- [ ] Performance benchmarks run (deferred to Phase 3)
+
+---
+
+## 📊 PHASE 0 TIMELINE
+
+```
+Hour 0-1:   T0.1 - Fix Prisma Schema (ved-7i9)
+Hour 1-2:   T0.2 - Fix JSONB Type Safety
+Hour 2-2.5: T0.3 - Fix Auth JWT
+Hour 2.5-3: T0.4 - Fix Async Promises
+Hour 3-3.5: T0.5 - Add Next-intl Config
+Hour 3.5-4: T0.6 - Build Verification
+Hour 4-4.5: Documentation + Git commit/push
+Hour 4.5-5: Buffer for unexpected issues
+```
+
+**Total:** 4-5 hours
+
+---
+
+## 🚀 NEXT STEPS AFTER PHASE 0
+
+### Immediate (Next Session):
+1. **Phase 1:** Measure actual test coverage
+2. **Gap Analysis:** Identify untested modules
+3. **Update TEST_COVERAGE_PLAN.md** with real numbers
+
+### Week 1 (After Phase 0):
+1. **Coverage Sprint:** Close gap from ~30% → 70%
+2. **Critical Path Testing:** Auth, Payments, User flows
+3. **Integration Tests:** Service-to-service contracts
+
+### Week 2 (Production Prep):
+1. **Security Audit:** `pnpm audit` + manual review
+2. **Performance Testing:** Vegeta stress tests
+3. **Staging Deployment:** VPS deploy + E2E tests
+
+---
+
+## 📞 HANDOFF PROTOCOL
+
+### If You Must Stop Mid-Phase 0:
+```bash
+# 1. Document what's done
+echo "Completed: T0.X, T0.Y" >> HANDOFF.md
+
+# 2. Commit partial work
+git add -A
+git commit -m "WIP: Phase 0 - Tasks T0.X, T0.Y complete"
+
+# 3. Update beads
+bd close ved-XXX --reason "Partial: X/Y tasks done, see HANDOFF.md"
+
+# 4. Push to remote
+git push
+```
+
+### For Next Developer:
+```bash
+# 1. Read this file
+# 2. Check build status
+pnpm --filter api build 2>&1 | head -n 20
+
+# 3. Resume from first failing task
+# 4. Follow checklist above
+```
+
+---
+
+## 🎖️ COMMITMENT
+
+**This is NOT optional.**  
+**This is NOT negotiable.**  
+**This MUST be completed before ANY new features.**
+
+**When Phase 0 is done, we will have:**
+- ✅ Working builds
+- ✅ Runnable tests
+- ✅ Measurable coverage
+- ✅ Deployable system
+
+**Then, and ONLY then, do we move to Phase 1.**
+
+---
+
+**READY TO BEGIN?**  
+**Start with Task T0.1 - Fix Prisma Schema (ved-7i9)**  
+**See you on the other side! 🚀**

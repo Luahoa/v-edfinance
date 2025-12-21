@@ -237,6 +237,109 @@ Since this project is 100% Agent-coded, follow these rules to prevent "Hallucina
 
 ---
 
+## 🎯 Strategic Debt Paydown Protocol (MANDATORY)
+
+**Status:** 🔴 **ACTIVE** - Level 4 Emergency (33 build errors)  
+**Authority:** See [STRATEGIC_DEBT_PAYDOWN_PLAN.md](file:///c:/Users/luaho/Demo%20project/v-edfinance/STRATEGIC_DEBT_PAYDOWN_PLAN.md)
+
+### Constitutional Principle
+> **"No new features until builds pass. No new code until tests run. No deployment until debt is zero."**
+
+### Current Phase: Phase 0 - Emergency Stabilization
+**Goal:** Fix 33 build errors → Get builds green  
+**Duration:** 4-6 hours (1 session)  
+**Priority:** 🔴 P0 CRITICAL
+
+### Mandatory Session Protocol
+
+#### Every Session Start:
+```bash
+bd ready                    # Check for blockers (FIRST)
+bd doctor                   # Verify system health
+git pull --rebase          # Get latest changes
+pnpm install               # Sync dependencies
+pnpm --filter api build    # Verify build (MUST PASS before new work)
+pnpm --filter web build    # Verify build (MUST PASS before new work)
+```
+
+**IF ANY FAIL:** Fix immediately before proceeding to new tasks.
+
+#### Every Session End:
+```bash
+pnpm --filter api build    # Verify builds
+pnpm --filter web build    # Verify builds
+pnpm test                  # Run tests
+bd doctor                  # Health check
+bd sync                    # Sync beads to git
+git add -A && git commit   # Commit changes
+git push                   # Push to remote (MANDATORY)
+```
+
+**Work is NOT complete until `git push` succeeds.**
+
+### Debt Prevention Rules
+
+#### Rule 1: Schema Change Protocol
+When modifying Prisma schema:
+```bash
+# MANDATORY sequence:
+1. Edit apps/api/prisma/schema.prisma
+2. cd apps/api && npx prisma migrate dev --name descriptive_name
+3. npx prisma generate
+4. pnpm --filter api build  # Must pass
+5. Update DTOs/interfaces
+6. pnpm test                # Must pass
+7. git commit               # Only if all above pass
+```
+
+#### Rule 2: JSONB Field Protocol
+When adding JSONB fields:
+```typescript
+// 1. Define Zod schema
+const MySchema = z.object({ key: z.string() });
+
+// 2. Register in SchemaRegistry
+SchemaRegistry.register('mySchema', MySchema);
+
+// 3. Validate before write
+const validated = await ValidationService.validate('mySchema', data);
+
+// 4. Type-safe read
+const typed = data as z.infer<typeof MySchema>;
+```
+
+#### Rule 3: Build Gate Protocol
+When deploying AI agents in batch:
+```bash
+# After EVERY 10 agents or 1 hour:
+pnpm --filter api build
+pnpm --filter web build
+
+# IF FAILS: STOP all agent work, fix immediately
+```
+
+### Current Debt Status
+| Category | Errors | Priority | Status |
+|----------|--------|----------|--------|
+| Prisma Schema Drift | 20 | P0 | 🔴 Active |
+| JSONB Type Safety | 7 | P0 | 🔴 Active |
+| Auth/Async Issues | 6 | P0 | 🔴 Active |
+| **TOTAL** | **33** | **P0** | **🔴 BLOCKED** |
+
+**Next Action:** Execute Task T0.1 (Fix Prisma Schema) from [STRATEGIC_DEBT_PAYDOWN_PLAN.md](file:///c:/Users/luaho/Demo%20project/v-edfinance/STRATEGIC_DEBT_PAYDOWN_PLAN.md)
+
+### Success Criteria
+```bash
+✅ 0 build errors (API + Web)
+✅ 70%+ test coverage
+✅ 0 P0/P1 beads blockers
+✅ All quality gates green
+```
+
+**Read full strategy:** [STRATEGIC_DEBT_PAYDOWN_PLAN.md](file:///c:/Users/luaho/Demo%20project/v-edfinance/STRATEGIC_DEBT_PAYDOWN_PLAN.md)
+
+---
+
 ### 1. Nudge Orchestration (Richard Thaler)
 - **Engine Design**: Centralized service to calculate and deliver psychological triggers.
 - **Key Tactics**:
