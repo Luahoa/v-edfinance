@@ -32,6 +32,10 @@ This project follows a strict **"Fix First, Feature Second"** protocol:
 
 ## 🛡️ CI/CD & Testing
 [![CI](https://github.com/Luahoa/v-edfinance/actions/workflows/ci.yml/badge.svg)](https://github.com/Luahoa/v-edfinance/actions/workflows/ci.yml)
+[![Tests](https://github.com/Luahoa/v-edfinance/actions/workflows/test.yml/badge.svg)](https://github.com/Luahoa/v-edfinance/actions/workflows/test.yml)
+[![Quality Gates](https://github.com/Luahoa/v-edfinance/actions/workflows/quality-gates.yml/badge.svg)](https://github.com/Luahoa/v-edfinance/actions/workflows/quality-gates.yml)
+[![codecov](https://codecov.io/gh/Luahoa/v-edfinance/branch/main/graph/badge.svg)](https://codecov.io/gh/Luahoa/v-edfinance)
+
 - **Track 1 (Unit):** 100% Core Gamification Logic (AVA/Jest)
 - **Track 2 (DevOps):** File Structure & Docker Health Checks (Bats)
 - **Track 3 (Performance):** Stress Testing Payloads Ready (Vegeta)

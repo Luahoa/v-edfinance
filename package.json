@@ -43,13 +43,21 @@
     "ts-node": "^10.9.2",
     "turbo": "latest",
     "typescript": "^5.9.3",
+    "unplugin-swc": "1.5.9",
     "vitest": "^2.1.9"
   },
   "ava": {
-    "extensions": ["ts"],
-    "require": ["ts-node/register/transpile-only"]
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register/transpile-only"
+    ]
   },
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "dependencies": {
     "@uppy/aws-s3-multipart": "^4.1.2",
     "@uppy/core": "^4.1.2",

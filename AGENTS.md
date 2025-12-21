@@ -64,29 +64,17 @@ cd scripts/tests/vegeta && run-stress-test.bat
 ```
 
 ### Beads Task Management
-```bash
-# Daily Status Report
-.\scripts\beads-daily-status.ps1
 
-# Quick Commands (store in $BD)
-$BD = "$env:USERPROFILE\go\bin\bd.exe"
+This project uses **bd (beads)** for issue tracking.
+Run `bd prime` for workflow context, or install hooks (`bd hooks install`) for auto-injection.
 
-# Morning routine
-& $BD sync                              # Sync with team
-& $BD stats                             # View statistics
-& $BD ready --json                      # See tasks ready to work
-& $BD doctor                            # Check system health (Daily)
-& $BD list --status open --priority 0,1 # High priority tasks
+**Quick reference:**
+- `bd ready` - Find unblocked work
+- `bd create "Title" --type task --priority 2` - Create issue
+- `bd close <id>` - Complete work
+- `bd sync` - Sync with git (run at session end)
 
-# During work
-& $BD update ved-XXX --status in_progress  # Claim task
-& $BD comment ved-XXX "Progress update..."  # Add progress note
-& $BD create "Task title" -t task -p 2 --json  # Create new task
-
-# Completing work
-& $BD close ved-XXX --reason "Completed: ..."  # Close task
-& $BD sync                                     # Share with team
-```
+For full workflow details: `bd prime`
 
 **Workflow Tự động hóa với Agent:**
 1. **Trigger**: Khi Agent bắt đầu session, chạy `bd ready` để xác định task.
