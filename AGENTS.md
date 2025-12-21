@@ -63,35 +63,56 @@ npx bats scripts/tests/bats # Run shell script verification (Bats)
 cd scripts/tests/vegeta && run-stress-test.bat
 ```
 
-### Beads Task Management
+### Beads Task Management (MANDATORY for All Agents)
 
-This project uses **bd (beads)** for issue tracking.
-Run `bd prime` for workflow context, or install hooks (`bd hooks install`) for auto-injection.
+This project uses **bd (beads)** for issue tracking with **sync-branch** for multi-agent coordination.
+
+> ⚠️ **CRITICAL**: Dự án được xử lý bởi nhiều agents. PHẢI tuân thủ sync protocol!
+
+**Sync-Branch Config:** `beads-sync` (đã cấu hình trong `.beads/config.yaml`)
 
 **Quick reference:**
+- `bd onboard` - First-time setup, learn beads basics
+- `bd prime` - Get workflow context at session start
 - `bd ready` - Find unblocked work
 - `bd create "Title" --type task --priority 2` - Create issue
 - `bd close <id>` - Complete work
 - `bd sync` - Sync with git (run at session end)
+- `bd doctor` - Health check, find orphaned issues
 
 For full workflow details: `bd prime`
 
-**Workflow Tự động hóa với Agent:**
-1. **Trigger**: Khi Agent bắt đầu session, chạy `bd ready` để xác định task.
-2. **Execution**: Thực hiện code, commit kèm `(ved-XXX)`.
-3. **Validation**: Chạy `bd doctor` định kỳ mỗi 1 tiếng hoặc trước khi `git push` để đảm bảo không có issue bị treo hoặc sai lệch dependency.
-4. **Conclusion**: `bd close` và `bd sync`.
+**🔴 MANDATORY Session Protocol:**
+```bash
+# === BẮT ĐẦU SESSION ===
+git pull --rebase
+.\beads.exe sync           # ← SYNC TRƯỚC KHI LÀM BẤT CỨ GÌ
+.\beads.exe doctor
+.\beads.exe ready
+
+# === TRONG SESSION ===
+.\beads.exe update ved-xxx --status in_progress
+# ... làm việc ...
+.\beads.exe close ved-xxx --reason "Done: mô tả"
+.\beads.exe sync           # ← SYNC SAU MỖI TASK QUAN TRỌNG
+
+# === KẾT THÚC SESSION ===
+.\beads.exe sync           # ← MANDATORY
+git add -A && git commit -m "type: description (ved-xxx)"
+git push                   # ← MANDATORY - Work is NOT done until pushed
+```
 
 **Task Management Principles:**
 - 📝 **All work tracked in Beads** - No TODO comments in code
-- 🔄 **Sync twice daily** - Morning + afternoon to stay in sync
+- 🔄 **Sync before & after** - Luôn sync trước khi bắt đầu và sau khi kết thúc
 - 🎯 **Granular tasks** - Epic (2-4 weeks) → Feature (3-7 days) → Task (4-8 hours)
 - 🔗 **Link dependencies** - Use `--deps blocks:ved-XXX` or `discovered-from:ved-XXX`
 - ✅ **Close with context** - Always explain what was done in `--reason`
+- 🚫 **No orphan work** - Mọi thay đổi phải được tracked trong beads
 
-**Quick Reference:**
-- See [`BEADS_STRATEGY.md`](file:///c:/Users/luaho/.gemini/antigravity/brain/c584e8d2-3ee8-43a6-bf19-1885bd8abffb/beads_strategy.md) for comprehensive guide
-- See [`BEADS_GUIDE.md`](file:///c:/Users/luaho/Demo%20project/v-edfinance/BEADS_GUIDE.md) for CLI reference
+**Documentation:**
+- See [`BEADS_GUIDE.md`](BEADS_GUIDE.md) for CLI reference
+- See [`docs/BEADS_MULTI_AGENT_PROTOCOL.md`](docs/BEADS_MULTI_AGENT_PROTOCOL.md) for comprehensive multi-agent guide
 
 ---
 
