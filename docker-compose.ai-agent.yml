@@ -1,0 +1,49 @@
+# VED-DRX: AI Database Architect - Docker Compose Configuration
+# Standalone service for autonomous database optimization
+
+version: '3.8'
+
+services:
+  ai-database-architect:
+    build:
+      context: ../..
+      dockerfile: apps/api/Dockerfile.ai-agent
+    container_name: v-edfinance-ai-agent
+    restart: unless-stopped
+    environment:
+      # Database connection
+      DATABASE_URL: ${DATABASE_URL}
+      
+      # AI configuration
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-flash}
+      
+      # Node environment
+      NODE_ENV: ${NODE_ENV:-production}
+      
+      # Optimization settings
+      AI_OPTIMIZATION_THRESHOLD: ${AI_OPTIMIZATION_THRESHOLD:-50}  # Min query time (ms)
+      AI_OPTIMIZATION_LIMIT: ${AI_OPTIMIZATION_LIMIT:-20}         # Max queries to analyze
+      AI_CONFIDENCE_THRESHOLD: ${AI_CONFIDENCE_THRESHOLD:-70}     # Min confidence %
+      
+    networks:
+      - v-edfinance-network
+    depends_on:
+      - postgres
+    
+    # Run optimization every Sunday at 2 AM
+    # Note: This is handled by cron in production
+    # For testing, you can manually trigger:
+    #   docker-compose up ai-database-architect
+    
+    labels:
+      - "com.v-edfinance.service=ai-agent"
+      - "com.v-edfinance.version=1.0"
+      - "com.v-edfinance.description=Autonomous Database Optimizer"
+
+networks:
+  v-edfinance-network:
+    external: true
+
+volumes:
+  postgres-data:
