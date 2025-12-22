@@ -349,42 +349,52 @@ git add -A && git commit    # No Amp review, no beads sync
 - Code commits (sau khi tests pass)
 - Beads sync
 - Git push
-- Code regeneration (theo Amp review feedback)
+- **Code regeneration (theo Amp review feedback) ← AUTO-ACCEPT**
+- Refactoring code theo suggestions
+- Fixing TypeScript/lint errors
+- Updating tests theo recommendations
 
 **Phải hỏi user cho:**
-- Breaking changes
-- Schema migrations (database)
-- Major architecture decisions
+- Breaking changes (API changes, schema migrations)
+- Major architecture decisions (>500 lines refactor)
 - Deleting files/features
+- **KHÔNG phải cho Amp regenerate suggestions** ← Agent tự động làm
 
 ### Workflow Automation:
 
-**Mỗi khi hoàn thành task, Agent PHẢI:**
+**Mỗi khi hoàn thành task, Agent có 2 options:**
 
+#### **Option 1: Auto-Regenerate Workflow (RECOMMENDED)**
 ```powershell
-# Bước 1: Verify tests pass
-pnpm --filter api build
-pnpm --filter api test
+# Tự động regenerate code theo Amp suggestions
+.\scripts\amp-auto-workflow.ps1 `
+  -TaskId "ved-XXX" `
+  -Message "Task description"
 
-# Bước 2: Chạy workflow script (bắt buộc)
+# Workflow tự động:
+# 1. Run tests
+# 2. Generate diff → Amp reviews
+# 3. If Amp suggests changes:
+#    → Agent regenerates code (AUTO)
+#    → Loop back to step 1
+# 4. If Amp approves:
+#    → Commit, beads close, sync, push
+# 5. Max 3 iterations (configurable)
+```
+
+#### **Option 2: Manual Review Workflow**
+```powershell
+# Pause cho user xem Amp review (old workflow)
 .\scripts\amp-beads-workflow.ps1 `
   -TaskId "ved-XXX" `
   -Message "Task description"
 
-# Script sẽ tự động:
-# - Run tests lại (double-check)
-# - Stage changes
-# - Generate review file (cho Amp)
-# - Pause để Amp review
-# - Commit code (sau review)
-# - Close beads task
-# - Sync beads metadata
-# - Push to remote
-
-# Bước 3: Xác nhận completion
-.\beads.exe show ved-XXX  # Verify status = completed
-git log --oneline -3      # Verify commits pushed
+# Workflow thủ công:
+# - Pause để user xem Amp suggestions
+# - User quyết định: regenerate hay commit
 ```
+
+**🔥 Default: Dùng Option 1 (Auto-Regenerate) cho mọi task**
 
 ### Xử Lý "Commit All" Button:
 
