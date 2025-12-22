@@ -6,6 +6,7 @@
 
 - **Stack**: Next.js 15.1.2, React 18.3.1, NestJS, Prisma, PostgreSQL
 - **Architecture**: Turborepo monorepo
+- **Database Strategy**: 🔥 **Triple-ORM Hybrid** (Prisma migrations + Drizzle CRUD + Kysely analytics)
 - **i18n**: next-intl with `vi` (default), `en`, `zh`
 - **Deployment**: Cloudflare Pages (frontend) + Dokploy VPS (backend)
 
@@ -47,12 +48,26 @@ docker-compose -f docker-compose.monitoring.yml up -d  # Start Grafana/Prometheu
 # Access: Grafana (3001), Prometheus (9090)
 ```
 
-### Database
+### Database (Triple-ORM Strategy)
 ```bash
-npx prisma migrate dev     # Run Prisma migrations
-npx prisma generate        # Generate Prisma client
-npx prisma studio          # Open Prisma Studio
+# Prisma: Schema migrations ONLY (source of truth)
+npx prisma migrate dev --name migration_name  # Create migration
+npx prisma generate                           # Generate types
+npx prisma studio                             # View data
+
+# Drizzle: Fast runtime queries (65% faster reads, 93% faster batches)
+pnpm drizzle-kit generate:pg                  # Sync schema from Prisma
+# DO NOT run drizzle migrations - Prisma owns schema!
+
+# Kysely: Complex analytics (13 production queries)
+# Used via KyselyService in NestJS modules
 ```
+
+**🔥 ORM Decision Matrix:**
+- **Prisma:** Schema changes, migrations ONLY
+- **Drizzle:** All CRUD operations (BehaviorLog, OptimizationLog, SocialPost)
+- **Kysely:** Complex joins, pg_stat_statements, analytics
+- See [PRISMA_DRIZZLE_HYBRID_STRATEGY.md](docs/PRISMA_DRIZZLE_HYBRID_STRATEGY.md)
 
 ### Testing & Quality
 ```bash
@@ -168,7 +183,12 @@ v-edfinance/
 - **`apps/web/src/app/`**: Next.js App Router pages
 - **`apps/web/src/components/`**: Reusable React components
 - **`apps/api/src/modules/`**: NestJS feature modules
-- **`prisma/`**: Database schema and migrations
+- **`apps/api/src/database/`**: 🔥 Database layer (Prisma + Drizzle + Kysely)
+  - `prisma.service.ts` - Migrations only
+  - `drizzle-schema.ts` - Fast CRUD schema (mirrors Prisma)
+  - `kysely.service.ts` - Complex analytics
+  - `database.service.ts` - Unified interface (routes to appropriate ORM)
+- **`prisma/`**: Database schema and migrations (Prisma owns this)
 
 ---
 
@@ -232,6 +252,26 @@ Before completing any task, ensure:
 - **Deployment**: Frontend auto-deploys to Cloudflare Pages on push to main
 - **Database**: PostgreSQL connection details in `.env`
 - **New Thread Protocol**: When starting a new session, ask the agent to: "Read `AGENTS.md` to activate **Behavioral & AI Engineering** skills and follow the specific Phase goals using **Nudge** & **Hooked** theories."
+
+---
+
+## 🗺️ Current Focus: Database Optimization Phase 2
+
+**Epic:** Database Optimization with Triple-ORM + AI Agent  
+**Thread Handoff:** [THREAD_HANDOFF_DATABASE_OPTIMIZATION_PHASE2.md](THREAD_HANDOFF_DATABASE_OPTIMIZATION_PHASE2.md)  
+**Quick Start:** [DATABASE_OPTIMIZATION_QUICK_START.md](DATABASE_OPTIMIZATION_QUICK_START.md)
+
+**Mission:** Implement Drizzle ORM (65% faster) + AI Database Architect (autonomous optimization)
+
+**Key Docs:**
+- [PRISMA_DRIZZLE_HYBRID_STRATEGY.md](docs/PRISMA_DRIZZLE_HYBRID_STRATEGY.md) - Main strategy (MUST READ)
+- [AI_DB_ARCHITECT_TASKS.md](docs/AI_DB_ARCHITECT_TASKS.md) - 12 implementation tasks
+- [DATABASE_TOOLS_INTEGRATION_SUMMARY.md](docs/DATABASE_TOOLS_INTEGRATION_SUMMARY.md) - Executive summary
+
+**Success Metrics:**
+- BehaviorLog reads: 120ms → <50ms (65% faster)
+- AI Agent weekly scan: 15 min → 2 min (87% faster)
+- Autonomous optimization PRs: 2-5/week
 
 ---
 
