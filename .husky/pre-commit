@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Check if schema.prisma changed
+if git diff --cached --name-only | grep -q "schema.prisma"; then
+  echo "🔄 Prisma schema changed - regenerating types..."
+  cd apps/api && npx prisma generate
+  
+  # Add regenerated files to commit
+  git add apps/api/src/database/types.ts 2>/dev/null || true
+  git add apps/api/src/database/enums.ts 2>/dev/null || true
+  git add docs/erd.md 2>/dev/null || true
+  
+  echo "✅ Prisma types regenerated"
+fi
+
+# Run lint-staged for other checks
+npx lint-staged
