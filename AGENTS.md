@@ -97,6 +97,26 @@ This project uses **bd (beads)** for issue tracking with **sync-branch** for mul
 
 For full workflow details: `bd prime`
 
+**🤖 Amp + Beads Automated Workflow:**
+Use the workflow script for safe integration of Amp code review with Beads:
+```bash
+# Windows PowerShell
+.\scripts\amp-beads-workflow.ps1 -TaskId "ved-XXX" -Message "Feature complete"
+
+# Linux/Mac
+./scripts/amp-beads-workflow.sh ved-XXX "Feature complete"
+```
+
+This script handles:
+1. Pre-flight checks & tests
+2. Amp code review (interactive)
+3. Git commit (BEFORE beads sync - critical!)
+4. Beads task close
+5. Beads sync (safe - no conflicts)
+6. Git push
+
+See [docs/AMP_BEADS_INTEGRATION_GUIDE.md](docs/AMP_BEADS_INTEGRATION_GUIDE.md) for details.
+
 **🔴 MANDATORY Session Protocol:**
 ```bash
 # === BẮT ĐẦU SESSION ===
