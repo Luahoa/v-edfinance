@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import './../globals.css';
 import { GlobalErrorBoundary } from '@/components/atoms/GlobalErrorBoundary';
 import Footer from '@/components/organisms/Footer';
-import Header from '@/components/organisms/Header';
+import { DesktopNav, MobileMenu, MobileNav } from '@/components/organisms/Navigation';
 import { Geist, Geist_Mono } from 'next/font/google';
 
 const geistSans = Geist({
@@ -40,13 +40,15 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-zinc-50 dark:bg-black`}
       >
         <NextIntlClientProvider messages={messages}>
           <GlobalErrorBoundary>
-            <Header />
-            <main className="flex-grow">{children}</main>
+            <DesktopNav />
+            <MobileMenu />
+            <main className="flex-grow pb-16 lg:pb-0">{children}</main>
             <Footer />
+            <MobileNav />
           </GlobalErrorBoundary>
         </NextIntlClientProvider>
       </body>

@@ -1,0 +1,165 @@
+version: 2
+name: V-EdFinance E2E Testing Team
+
+agents:
+  e2e_orchestrator:
+    model: claude-sonnet-4
+    role: "E2E test coordinator - manages user flow testing"
+    description: |
+      E2E test lead responsible for:
+      - Coordinating Playwright test execution
+      - Ensuring all critical user flows are covered
+      - Managing test data setup and teardown
+      - Reviewing test stability (no flaky tests)
+      - Configuring CI/CD integration for E2E tests
+    tools:
+      - Read
+      - Write
+      - Bash
+      - Grep
+    delegates_to:
+      - auth_flow_tester
+      - course_flow_tester
+      - ai_chat_tester
+      - social_tester
+    hooks:
+      on_user_message:
+        - run: "pnpm --filter web playwright test --list || echo 'No tests found'"
+          append_output_to_context: true
+    
+  auth_flow_tester:
+    model: claude-sonnet-4
+    role: "Authentication flow tester"
+    description: |
+      Tests critical auth flows using Playwright:
+      
+      Flow 1: Registration & Onboarding
+      - Navigate to /vi/register
+      - Fill form (email, password, confirmPassword)
+      - Verify email validation (invalid email → error)
+      - Complete investment profile (risk score, knowledge level)
+      - Verify redirect to dashboard
+      - Check user points initialized to 0
+      
+      Flow 2: Login & Logout
+      - Navigate to /vi/login
+      - Enter credentials
+      - Verify remember me checkbox
+      - Check JWT token in localStorage
+      - Logout → Verify token cleared
+      
+      Flow 3: Password Reset
+      - Navigate to /vi/forgot-password
+      - Enter email → Verify reset email sent
+      - Click reset link → Set new password
+      - Login with new password
+      
+      Test Multi-Locale:
+      - Verify all flows work in vi/en/zh
+      - Check localized error messages
+    tools:
+      - Read
+      - Write
+      - Edit
+      - Bash
+    
+  course_flow_tester:
+    model: claude-sonnet-4
+    role: "Course enrollment and progress tester"
+    description: |
+      Tests learning flows using Playwright:
+      
+      Flow 1: Browse & Enroll
+      - Navigate to /vi/courses
+      - Verify course cards displayed (localized content)
+      - Filter by level (BEGINNER/INTERMEDIATE/ADVANCED)
+      - Click course → View details
+      - Click "Enroll" button → Verify enrollment
+      
+      Flow 2: Watch Lesson & Track Progress
+      - Navigate to enrolled course
+      - Click "Start Lesson" → Video player loads
+      - Simulate watching (wait 5 seconds)
+      - Click "Mark as Complete" → Progress bar updates
+      - Verify progress saved (reload page)
+      
+      Flow 3: Quiz & Certificate
+      - Complete lesson → Quiz appears
+      - Answer questions → Submit
+      - Verify score displayed
+      - Complete all lessons → Certificate unlocked
+      
+      Test Adaptive Difficulty:
+      - Verify difficulty adjusts based on quiz scores
+      - Check recommended next lesson changes
+    tools:
+      - Read
+      - Write
+      - Edit
+      - Bash
+    
+  ai_chat_tester:
+    model: claude-sonnet-4
+    role: "AI chat interaction tester"
+    description: |
+      Tests AI features using Playwright:
+      
+      Flow 1: Basic Chat Interaction
+      - Navigate to /vi/dashboard/chat
+      - Send question in Vietnamese: "Tại sao RSI lại quan trọng?"
+      - Wait for AI response (timeout: 10 seconds)
+      - Verify response in Vietnamese
+      - Check response quality (not "Sorry, I don't know")
+      
+      Flow 2: Multi-Turn Conversation
+      - Ask initial question → Get response
+      - Ask follow-up question → Verify context maintained
+      - Check conversation history displayed
+      
+      Flow 3: AI Moderation
+      - Send inappropriate message → Verify blocked
+      - Check moderation warning displayed
+      
+      Flow 4: Localization
+      - Switch to English (/en/dashboard/chat)
+      - Ask same question → Verify English response
+      - Switch to Chinese (/zh/dashboard/chat) → Verify Chinese response
+    tools:
+      - Read
+      - Write
+      - Edit
+      - Bash
+    
+  social_tester:
+    model: claude-sonnet-4
+    role: "Social features tester"
+    description: |
+      Tests social interactions using Playwright:
+      
+      Flow 1: Buddy Groups
+      - Navigate to /vi/dashboard/social
+      - Click "Create Group" button
+      - Fill form (name: "Study Group 1", type: "LEARNING")
+      - Submit → Verify group created
+      - Invite friend (mock) → Verify invitation sent
+      
+      Flow 2: Social Feed
+      - Navigate to /vi/dashboard/feed
+      - Post progress update → Verify appears in feed
+      - Like post → Counter increments
+      - Comment on post → Verify comment appears
+      
+      Flow 3: Challenges
+      - Create buddy challenge → Set goal (e.g., "Complete 3 lessons")
+      - Invite friends → Verify challenge appears
+      - Complete task → Verify leaderboard updates
+      
+      Flow 4: Real-Time Notifications
+      - Trigger notification event (friend request, challenge invite)
+      - Verify WebSocket notification appears (no page refresh)
+      - Check notification badge count updates
+    tools:
+      - Read
+      - Write
+      - Edit
+      - Bash

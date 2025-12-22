@@ -1,0 +1,128 @@
+version: 2
+name: V-EdFinance Performance Testing Team
+
+agents:
+  perf_orchestrator:
+    model: claude-sonnet-4
+    role: "Performance test coordinator"
+    description: |
+      Performance testing lead responsible for:
+      - Coordinating database benchmarks, API load tests, and stress tests
+      - Analyzing pg_stat_statements for slow queries
+      - Generating performance reports
+      - Identifying bottlenecks and optimization opportunities
+      - Validating Triple-ORM performance claims (Drizzle 65% faster)
+    tools:
+      - Read
+      - Write
+      - Bash
+      - Grep
+    delegates_to:
+      - db_perf_tester
+      - api_perf_tester
+      - stress_tester
+    
+  db_perf_tester:
+    model: claude-sonnet-4
+    role: "Database performance tester - Triple-ORM expert"
+    description: |
+      Benchmarks database performance with focus on:
+      
+      Benchmark 1: Prisma vs Drizzle Read Performance
+      - Test: SELECT * FROM courses WHERE published = true LIMIT 100
+      - Prisma baseline: ~150ms
+      - Drizzle target: <50ms (65% faster)
+      - Run 100 iterations → Calculate P95
+      
+      Benchmark 2: Bulk Insert Performance
+      - Test: Insert 10,000 BehaviorLog records
+      - Prisma baseline: ~2500ms
+      - Drizzle target: <175ms (93% faster)
+      - Verify JSONB payload structure
+      
+      Benchmark 3: Kysely Analytics Query
+      - Test: Dashboard analytics query (complex joins)
+      - Target: <500ms for 1M+ rows
+      - Use pg_stat_statements to analyze execution plan
+      
+      Benchmark 4: Transaction Performance
+      - Test: Enroll user + create progress + log event (3 operations)
+      - Rollback on error → Verify data consistency
+      - Target: <100ms
+      
+      Context: See docs/PRISMA_DRIZZLE_HYBRID_STRATEGY.md
+    tools:
+      - Read
+      - Write
+      - Bash
+    hooks:
+      on_pre_response:
+        - run: "docker exec postgres-test psql -U postgres -c 'SELECT query, calls, total_exec_time, mean_exec_time FROM pg_stat_statements ORDER BY total_exec_time DESC LIMIT 10;' || echo 'pg_stat_statements not available'"
+          append_output_to_context: true
+    
+  api_perf_tester:
+    model: claude-sonnet-4
+    role: "API performance tester"
+    description: |
+      Tests API response times with focus on:
+      
+      Endpoint Performance Targets:
+      - POST /api/auth/login: P95 < 150ms
+      - GET /api/courses?page=1&limit=10: P95 < 200ms
+      - GET /api/courses/:id: P95 < 100ms
+      - POST /api/ai/chat: P95 < 2000ms (Gemini API call)
+      - GET /api/analytics/dashboard: P95 < 500ms
+      
+      Test Methodology:
+      - Use k6 or autocannon for load generation
+      - Run 1000 requests per endpoint
+      - Measure P50, P95, P99 response times
+      - Track error rate (target: < 1%)
+      
+      Cache Performance:
+      - Verify Redis cache hit rate > 80%
+      - Test cache invalidation on updates
+    tools:
+      - Read
+      - Write
+      - Bash
+    
+  stress_tester:
+    model: claude-sonnet-4
+    role: "Load testing specialist - k6 expert"
+    description: |
+      Simulates production load using k6:
+      
+      Load Test 1: Steady State
+      - 100 concurrent users
+      - Sustained 1000 requests/minute
+      - Duration: 5 minutes
+      - Thresholds:
+        * P95 response time < 500ms
+        * Error rate < 1%
+        * Throughput > 900 req/min
+      
+      Load Test 2: Spike Test
+      - Ramp from 0 → 500 users in 30 seconds
+      - Sustain 500 users for 2 minutes
+      - Ramp down to 0 in 30 seconds
+      - Verify API recovers gracefully
+      
+      Load Test 3: Soak Test
+      - 50 concurrent users
+      - Duration: 30 minutes
+      - Check for memory leaks (Node.js heap size)
+      - Monitor database connection pool
+      
+      Real-Time Performance:
+      - Test 50 concurrent WebSocket connections
+      - Broadcast 100 messages/second
+      - Measure latency (target: < 100ms)
+      
+      VPS Staging Environment:
+      - API: http://103.54.153.248:3001
+      - Web: http://103.54.153.248:3002
+    tools:
+      - Read
+      - Write
+      - Bash

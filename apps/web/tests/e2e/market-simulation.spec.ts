@@ -32,7 +32,10 @@ test.describe('Market Simulation Execution (E006)', () => {
     await page.click('[data-testid="simulation-start"]');
 
     // Wait for simulation to initialize
-    await expect(page.locator('[data-testid="simulation-status"]')).toContainText(/Active|Đang chạy/, { timeout: 15000 });
+    await expect(page.locator('[data-testid="simulation-status"]')).toContainText(
+      /Active|Đang chạy/,
+      { timeout: 15000 }
+    );
 
     // Execute a trade
     await page.click('[data-testid="trade-panel-toggle"]');
@@ -42,18 +45,20 @@ test.describe('Market Simulation Execution (E006)', () => {
     await page.click('[data-testid="trade-execute"]');
 
     // Verify trade confirmation
-    await expect(page.locator('[data-testid="trade-confirmation"]')).toBeVisible({ timeout: 10000 });
-    
+    await expect(page.locator('[data-testid="trade-confirmation"]')).toBeVisible({
+      timeout: 10000,
+    });
+
     // Check real-time price updates (WebSocket)
     const priceElement = page.locator('[data-testid="stock-price-AAPL"]');
     await expect(priceElement).toBeVisible();
     const initialPrice = await priceElement.textContent();
-    
+
     // Wait for price update
     await page.waitForTimeout(3000);
     const updatedPrice = await priceElement.textContent();
     // Prices should be numeric
-    expect(parseFloat(initialPrice?.replace(/[^0-9.]/g, '') || '0')).toBeGreaterThan(0);
+    expect(Number.parseFloat(initialPrice?.replace(/[^0-9.]/g, '') || '0')).toBeGreaterThan(0);
 
     // View portfolio calculation
     await page.click('[data-testid="portfolio-view"]');
@@ -62,8 +67,10 @@ test.describe('Market Simulation Execution (E006)', () => {
 
     // View leaderboard
     await page.click('[data-testid="leaderboard-tab"]');
-    await expect(page.locator('[data-testid="leaderboard-rankings"]')).toBeVisible({ timeout: 10000 });
-    
+    await expect(page.locator('[data-testid="leaderboard-rankings"]')).toBeVisible({
+      timeout: 10000,
+    });
+
     // Verify current user appears in leaderboard
     const leaderboardItems = page.locator('[data-testid^="leaderboard-user-"]');
     await expect(leaderboardItems).not.toHaveCount(0);
@@ -71,7 +78,7 @@ test.describe('Market Simulation Execution (E006)', () => {
 
   test('should handle simulation failure gracefully', async ({ page }) => {
     await page.goto('/vi/simulation');
-    
+
     // Try to create simulation with invalid data
     await page.click('[data-testid="simulation-create"]');
     await page.fill('[data-testid="simulation-capital"]', '-1000'); // Invalid
@@ -79,15 +86,17 @@ test.describe('Market Simulation Execution (E006)', () => {
 
     // Should show error message
     await expect(page.locator('[data-testid="error-message"]')).toBeVisible({ timeout: 5000 });
-    await expect(page.locator('[data-testid="error-message"]')).toContainText(/Invalid|Không hợp lệ/);
+    await expect(page.locator('[data-testid="error-message"]')).toContainText(
+      /Invalid|Không hợp lệ/
+    );
   });
 
   test('should display performance metrics over time', async ({ page }) => {
     await page.goto('/vi/simulation/history');
-    
+
     // Check if historical data is displayed
     await expect(page.locator('[data-testid="simulation-chart"]')).toBeVisible({ timeout: 10000 });
-    
+
     // Verify metric cards
     await expect(page.locator('[data-testid="metric-total-return"]')).toBeVisible();
     await expect(page.locator('[data-testid="metric-win-rate"]')).toBeVisible();

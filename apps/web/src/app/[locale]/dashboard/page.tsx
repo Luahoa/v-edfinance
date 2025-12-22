@@ -1,5 +1,6 @@
 'use client';
 
+import { SmartNudgeBanner } from '@/components/molecules/SmartNudgeBanner';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { BuddyGroup, DashboardStats, Post as SocialPostType } from '@/types';
@@ -30,9 +31,6 @@ const BuddyRecommendations = dynamic(
 );
 const QuickActions = dynamic(() => import('@/components/molecules/QuickActions'), {
   loading: () => <div className="h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
-});
-const NudgeBanner = dynamic(() => import('@/components/molecules/NudgeBanner'), {
-  loading: () => <div className="h-20 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
 });
 
 export default function Dashboard() {
@@ -118,7 +116,7 @@ export default function Dashboard() {
       <div className="mx-auto max-w-6xl">
         <h1 className="text-2xl font-bold mb-8">{t('welcome')}!</h1>
 
-        <NudgeBanner />
+        <SmartNudgeBanner />
         <QuickActions />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
