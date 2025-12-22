@@ -179,7 +179,10 @@ echo -e "${YELLOW}[PHASE 5] Creating Git Commit...${NC}"
 COMMIT_MESSAGE="${COMMIT_TYPE}: ${MESSAGE} (${TASK_ID})"
 echo -e "${CYAN}  → Commit message: $COMMIT_MESSAGE${NC}"
 
+# Set environment variable to bypass pre-commit hook
+export AMP_BEADS_WORKFLOW=1
 git commit -m "$COMMIT_MESSAGE"
+unset AMP_BEADS_WORKFLOW
 COMMIT_HASH=$(git rev-parse --short HEAD)
 echo -e "${GREEN}✅ Committed: $COMMIT_HASH - $COMMIT_MESSAGE${NC}"
 

@@ -117,24 +117,59 @@ This script handles:
 
 See [docs/AMP_BEADS_INTEGRATION_GUIDE.md](docs/AMP_BEADS_INTEGRATION_GUIDE.md) for details.
 
-**🔴 MANDATORY Session Protocol:**
+**🔴 MANDATORY Session Protocol (UPDATED - Use Workflow Script):**
+
 ```bash
-# === BẮT ĐẦU SESSION ===
+# ═══════════════════════════════════════════════════════════
+# BẮT ĐẦU SESSION
+# ═══════════════════════════════════════════════════════════
 git pull --rebase
 .\beads.exe sync           # ← SYNC TRƯỚC KHI LÀM BẤT CỨ GÌ
 .\beads.exe doctor
 .\beads.exe ready
 
-# === TRONG SESSION ===
+# ═══════════════════════════════════════════════════════════
+# TRONG SESSION - CLAIM TASK
+# ═══════════════════════════════════════════════════════════
 .\beads.exe update ved-xxx --status in_progress
-# ... làm việc ...
-.\beads.exe close ved-xxx --reason "Done: mô tả"
-.\beads.exe sync           # ← SYNC SAU MỖI TASK QUAN TRỌNG
 
-# === KẾT THÚC SESSION ===
-.\beads.exe sync           # ← MANDATORY
-git add -A && git commit -m "type: description (ved-xxx)"
-git push                   # ← MANDATORY - Work is NOT done until pushed
+# ... implement feature ...
+# ... write tests ...
+# ... verify tests pass ...
+
+# ═══════════════════════════════════════════════════════════
+# HOÀN THÀNH TASK - DÙNG WORKFLOW SCRIPT (MANDATORY!)
+# ═══════════════════════════════════════════════════════════
+
+# ❌ KHÔNG ĐƯỢC LÀM THẾ NÀY:
+# git add -A && git commit -m "..."  # ← CẤM!
+# Click "Commit All" in IDE          # ← CẤM!
+
+# ✅ PHẢI LÀM THẾ NÀY:
+.\scripts\amp-beads-workflow.ps1 `
+  -TaskId "ved-xxx" `
+  -Message "Task completion description"
+
+# Script tự động:
+# 1. Run tests
+# 2. Stage changes
+# 3. Pause for Amp review (interactive)
+# 4. Git commit (BEFORE beads sync!)
+# 5. Beads close task
+# 6. Beads sync metadata
+# 7. Git push
+
+# ═══════════════════════════════════════════════════════════
+# KẾT THÚC SESSION - VERIFY
+# ═══════════════════════════════════════════════════════════
+.\beads.exe ready          # Check for more work
+.\beads.exe doctor         # Verify health
+git status                 # Should be clean (up to date with origin)
+
+# Work is NOT done until:
+# ✅ Workflow script completes successfully
+# ✅ git push succeeds
+# ✅ beads task shows "completed" status
 ```
 
 **Task Management Principles:**
@@ -275,6 +310,105 @@ Before completing any task, ensure:
 
 ---
 
+## 🔴 MANDATORY: Agent Commit Protocol
+
+**ALL AGENTS MUST FOLLOW THIS WORKFLOW - NO EXCEPTIONS**
+
+### Quy Tắc Vàng:
+> **"NEVER use IDE 'Commit All' button. ALWAYS use automated workflow script."**
+
+### Workflow Bắt Buộc:
+
+```bash
+# Windows PowerShell (MANDATORY)
+.\scripts\amp-beads-workflow.ps1 -TaskId "ved-XXX" -Message "Your description"
+
+# Linux/Mac (MANDATORY)
+./scripts/amp-beads-workflow.sh ved-XXX "Your description"
+```
+
+### ❌ CẤM TUYỆT ĐỐI:
+
+```bash
+# ❌ NEVER do this
+git commit -m "..."         # Missing beads coordination
+git add -A && git commit    # No Amp review, no beads sync
+# Click "Commit All" in VSCode/IDE  # Bypasses entire workflow
+```
+
+### ✅ Agent Được Cấp Quyền:
+
+**Bạn (AI Agent) có toàn quyền:**
+1. ✅ Tự động chạy workflow script
+2. ✅ Commit code sau khi implement
+3. ✅ Regenerate/refactor code theo review
+4. ✅ Push to remote khi workflow complete
+5. ✅ Close beads tasks và sync metadata
+
+**Không cần hỏi user cho:**
+- Code commits (sau khi tests pass)
+- Beads sync
+- Git push
+- Code regeneration (theo Amp review feedback)
+
+**Phải hỏi user cho:**
+- Breaking changes
+- Schema migrations (database)
+- Major architecture decisions
+- Deleting files/features
+
+### Workflow Automation:
+
+**Mỗi khi hoàn thành task, Agent PHẢI:**
+
+```powershell
+# Bước 1: Verify tests pass
+pnpm --filter api build
+pnpm --filter api test
+
+# Bước 2: Chạy workflow script (bắt buộc)
+.\scripts\amp-beads-workflow.ps1 `
+  -TaskId "ved-XXX" `
+  -Message "Task description"
+
+# Script sẽ tự động:
+# - Run tests lại (double-check)
+# - Stage changes
+# - Generate review file (cho Amp)
+# - Pause để Amp review
+# - Commit code (sau review)
+# - Close beads task
+# - Sync beads metadata
+# - Push to remote
+
+# Bước 3: Xác nhận completion
+.\beads.exe show ved-XXX  # Verify status = completed
+git log --oneline -3      # Verify commits pushed
+```
+
+### Xử Lý "Commit All" Button:
+
+**Nếu user vô tình ấn "Commit All" trong IDE:**
+
+1. **Agent phát hiện:**
+   ```bash
+   git log -1 --oneline  # Check if manual commit exists
+   ```
+
+2. **Agent rollback và fix:**
+   ```bash
+   # Rollback commit (giữ changes)
+   git reset --soft HEAD~1
+   
+   # Chạy lại workflow đúng cách
+   .\scripts\amp-beads-workflow.ps1 -TaskId "ved-XXX" -Message "..."
+   ```
+
+3. **Agent thông báo:**
+   > "⚠️ Detected manual commit. Rolling back to follow proper workflow..."
+
+---
+
 ## 🗺️ Current Focus: Database Optimization Phase 2
 
 **Epic:** Database Optimization with Triple-ORM + AI Agent  
@@ -282,15 +416,16 @@ Before completing any task, ensure:
 **Strategy Doc:** [THREAD_HANDOFF_DATABASE_OPTIMIZATION_PHASE2.md](THREAD_HANDOFF_DATABASE_OPTIMIZATION_PHASE2.md)  
 **Quick Start:** [DATABASE_OPTIMIZATION_QUICK_START.md](DATABASE_OPTIMIZATION_QUICK_START.md)
 
-**Progress:** 🟢 2/12 Tasks Complete (Drizzle installed, schema created)  
-**Next Steps:** VED-6YB (Pgvector), VED-B7M (OptimizationLog), VED-ASV (DatabaseService)
+**Progress:** 🟢 3/12 Tasks Complete (VED-AOR, VED-296 done)  
+**Next Steps:** VED-9D0 (VPS Deployment), VED-XYZ (pg_stat_statements)
 
 **Mission:** Implement Drizzle ORM (65% faster) + AI Database Architect (autonomous optimization)
 
 **Key Docs:**
 - [PRISMA_DRIZZLE_HYBRID_STRATEGY.md](docs/PRISMA_DRIZZLE_HYBRID_STRATEGY.md) - Main strategy (MUST READ)
 - [AI_DB_ARCHITECT_TASKS.md](docs/AI_DB_ARCHITECT_TASKS.md) - 12 implementation tasks
-- [DATABASE_TOOLS_INTEGRATION_SUMMARY.md](docs/DATABASE_TOOLS_INTEGRATION_SUMMARY.md) - Executive summary
+- [DATABASE_TOOLS_INTEGRATION_SUMMARY.md](docs/DATABASE_TOOLS_INTEGRATION_SUMMARY.md) - Amp+Beads Workflow
+- [AMP_BEADS_INTEGRATION_GUIDE.md](docs/AMP_BEADS_INTEGRATION_GUIDE.md) - Complete workflow guide
 
 **Success Metrics:**
 - BehaviorLog reads: 120ms → <50ms (65% faster)

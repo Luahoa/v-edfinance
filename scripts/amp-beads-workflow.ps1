@@ -211,7 +211,10 @@ Write-Host "[PHASE 5] Creating Git Commit..." -ForegroundColor Yellow
 $commitMessage = "${CommitType}: ${Message} (${TaskId})"
 Write-Host "  → Commit message: $commitMessage" -ForegroundColor Cyan
 
+# Set environment variable to bypass pre-commit hook
+$env:AMP_BEADS_WORKFLOW = "1"
 git commit -m "$commitMessage"
+$env:AMP_BEADS_WORKFLOW = $null
 if ($LASTEXITCODE -ne 0) {
     Write-Host "❌ Git commit failed!" -ForegroundColor Red
     exit 1
