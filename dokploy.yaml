@@ -9,7 +9,7 @@ domain: dokploy.v-edfinance.com
 # PostgreSQL - Shared for dev/staging
 postgres:
   serviceName: postgres
-  image: postgres:15-alpine
+  image: postgres:17-alpine
   ports:
     - "5432:5432"
   volumes:

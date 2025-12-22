@@ -22,9 +22,17 @@ services:
     restart: unless-stopped
     networks:
       - vedfinance-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
 
   postgres:
-    image: postgres:15-alpine
+    image: postgres:17-alpine
     container_name: vedfinance-postgres
     restart: always
     healthcheck:
@@ -42,6 +50,14 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - vedfinance-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 768M
+        reservations:
+          cpus: '0.25'
+          memory: 512M
 
   redis:
     image: redis:7-alpine
@@ -56,6 +72,14 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 128M
 
 volumes:
   postgres_data:
