@@ -133,4 +133,14 @@ SETUP_*.bat
 SIMPLE_*.bat
 
 # n8n workflows (backups)
-scripts/n8n/ 
+scripts/n8n/
+
+# ═══════════════════════════════════════════════════════════
+# Additional Automation Scripts (2026-01-03 - Cleanup Phase)
+# ═══════════════════════════════════════════════════════════
+
+# PowerShell automation scripts
+AUTO_*.ps1
+
+# Batch startup scripts
+START_*.bat 
