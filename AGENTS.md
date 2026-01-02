@@ -80,16 +80,31 @@ cd scripts/tests/vegeta && run-stress-test.bat
 
 ### Beads Task Management (MANDATORY for All Agents)
 
-This project uses **Beads Trinity** for 100-agent orchestration:
+This project uses **Beads Trinity Architecture** for 100-agent orchestration:
 
 > ⚠️ **CRITICAL**: Dự án được xử lý bởi nhiều agents. PHẢI tuân thủ sync protocol!
 
-**The Trinity:**
-1. **beads (bd)** - Task management (CRUD operations)
-2. **beads_viewer (bv)** - Analytics (graph metrics, AI recommendations)
-3. **mcp_agent_mail** - Coordination (messaging, file locks)
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   BEADS TRINITY ARCHITECTURE                │
+├─────────────────────────────────────────────────────────────┤
+│  beads (bd)        beads_viewer (bv)    mcp_agent_mail     │
+│  Task Mgmt         Analytics            Coordination        │
+│  (Write)           (Read + AI)          (Messaging)         │
+│       │                   │                    │            │
+│       └───────────────────┼────────────────────┘            │
+│                           ▼                                 │
+│              .beads/issues.jsonl                            │
+│              Single Source of Truth                         │
+└─────────────────────────────────────────────────────────────┘
+```
 
-**Single Source of Truth:** `.beads/issues.jsonl`
+**The Trinity:**
+1. **beads (bd)** - Task management (CRUD: create/update/close tasks)
+2. **beads_viewer (bv)** - Analytics (PageRank, Betweenness, cycle detection)
+3. **mcp_agent_mail** - Coordination (messaging, file locks, conflict prevention)
+
+**Single Source of Truth:** `.beads/issues.jsonl` (canonical task database)
 
 **Sync-Branch Config:** `beads-sync` (đã cấu hình trong `.beads/config.yaml`)
 

@@ -2,6 +2,31 @@
 
 **EdTech Platform for Financial Education**
 
+## 🏗️ Beads Trinity Architecture
+
+This project uses **Beads Trinity** for 100-agent orchestration:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  beads (bd)        beads_viewer (bv)    mcp_agent_mail     │
+│  Task Mgmt         Analytics            Coordination        │
+│  (Write)           (Read + AI)          (Messaging)         │
+│       │                   │                    │            │
+│       └───────────────────┼────────────────────┘            │
+│                           ▼                                 │
+│              .beads/issues.jsonl                            │
+│              Single Source of Truth                         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**Quick Commands:**
+- `bd ready` - Find unblocked tasks
+- `bv --robot-next` - Get AI-recommended next task (PageRank)
+- `bd doctor` - Health check
+- `bd sync` - Sync to git
+
+---
+
 ## 🛡️ Zero-Debt Engineering
 This project follows a strict **"Fix First, Feature Second"** protocol:
 1. **Issue Check:** Use `bd ready` to identify pending tasks/bugs.

@@ -239,11 +239,45 @@ Before starting a complex new feature (estimated > 2 hours), issue this prompt t
 ---
 
 ### 10.5 Zero-Debt Engineering Protocol (MANDATORY)
-To ensure the project remains stable as it grows:
-1.  **Beads First:** ALWAYS check `bd ready` for pending issues/bugs before starting any new feature.
-2.  **Resolution before Expansion:** Fix all critical bugs and technical debt (identified by `bd doctor`) before adding new lines of feature code.
-3.  **Strict Testing Gate:** A task is NOT closed until all relevant Unit, Integration, and E2E tests pass.
-4.  **No Ghost Code:** Do not commit commented-out code or unused files.
+
+This project uses **Beads Trinity Architecture** for multi-agent task orchestration:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   BEADS TRINITY ARCHITECTURE                │
+├─────────────────────────────────────────────────────────────┤
+│  beads (bd)        beads_viewer (bv)    mcp_agent_mail     │
+│  Task Mgmt         Analytics            Coordination        │
+│  (Write)           (Read + AI)          (Messaging)         │
+│       │                   │                    │            │
+│       └───────────────────┼────────────────────┘            │
+│                           ▼                                 │
+│              .beads/issues.jsonl                            │
+│              Single Source of Truth                         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**The Trinity:**
+1. **beads (bd)** - Task management (CRUD: create/update/close tasks)
+2. **beads_viewer (bv)** - Analytics (PageRank, Betweenness, cycle detection, AI-driven task selection)
+3. **mcp_agent_mail** - Coordination (messaging, file locks, conflict prevention between agents)
+
+**Zero-Debt Workflow:**
+1. **Beads First:** ALWAYS check `bd ready` for pending issues/bugs before starting any new feature.
+2. **AI-Driven Selection:** Use `bv --robot-next` to get high-impact task recommendations via PageRank algorithm.
+3. **Resolution before Expansion:** Fix all critical bugs and technical debt (identified by `bd doctor`) before adding new lines of feature code.
+4. **Strict Testing Gate:** A task is NOT closed until all relevant Unit, Integration, and E2E tests pass.
+5. **No Ghost Code:** Do not commit commented-out code or unused files.
+6. **Sync Protocol:** Run `bd sync` at end of session to persist task metadata to git.
+
+**Quick Commands:**
+- `bd ready` - Find unblocked tasks
+- `bv --robot-next` - Get AI-recommended next task
+- `bv --robot-insights` - View graph health (cycles, bottlenecks)
+- `bd doctor` - Health check system
+- `bd sync` - Sync tasks to git
+
+See [BEADS_INTEGRATION_DEEP_DIVE.md](BEADS_INTEGRATION_DEEP_DIVE.md) for complete workflow.
 
 ---
 
