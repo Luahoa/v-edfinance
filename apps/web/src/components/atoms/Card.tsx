@@ -41,7 +41,7 @@ export function Card({
       className={cn(
         'rounded-xl p-6 transition-all duration-200',
         variants[variant],
-        glowOnHover && 'hover:shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:border-blue-400',
+        glowOnHover && 'hover:shadow-lg hover:border-blue-400',
         onClick && 'cursor-pointer hover:scale-[1.02]',
         className
       )}

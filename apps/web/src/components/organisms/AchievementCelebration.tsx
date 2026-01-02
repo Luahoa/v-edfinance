@@ -4,7 +4,13 @@ import { Badge } from '@/components/atoms/Badge';
 import { cn } from '@/lib/cn';
 import { Share2, X, Zap } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import Confetti from 'react-confetti-explosion';
+
+const styles = `
+  @keyframes confetti {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-200px) rotate(360deg); opacity: 0; }
+  }
+`;
 
 interface Achievement {
   id: string;
@@ -41,6 +47,10 @@ export function AchievementCelebration({
 
   useEffect(() => {
     setShow(true);
+    // Inject styles
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = styles;
+    document.head.appendChild(styleSheet);
 
     const confettiTimer = setTimeout(() => {
       setConfettiActive(false);
@@ -55,10 +65,14 @@ export function AchievementCelebration({
       return () => {
         clearTimeout(confettiTimer);
         clearTimeout(closeTimer);
+        document.head.removeChild(styleSheet);
       };
     }
 
-    return () => clearTimeout(confettiTimer);
+    return () => {
+      clearTimeout(confettiTimer);
+      document.head.removeChild(styleSheet);
+    };
   }, [autoClose, onClose]);
 
   const handleClose = () => {
@@ -145,13 +159,19 @@ export function AchievementCelebration({
 
           {/* Confetti Effect */}
           {confettiActive && (
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-              <Confetti
-                particleCount={config.confettiCount}
-                duration={3000}
-                force={0.6}
-                width={400}
-              />
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              {Array.from({ length: config.confettiCount }).map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor: ['#FFC700', '#FF0000', '#2E3192', '#41BBC7'][i % 4],
+                    animation: `confetti 1s ease-out forwards`,
+                    animationDelay: `${Math.random() * 0.5}s`,
+                    transform: `translate(${Math.random() * 400 - 200}px, ${Math.random() * 400 - 200}px)`,
+                  }}
+                />
+              ))}
             </div>
           )}
 

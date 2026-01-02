@@ -1,0 +1,5 @@
+login as existing user
+click user profile menu
+click "Logout" button
+verify redirected to homepage
+verify login button is visible again

@@ -85,3 +85,52 @@ beads.exe
 go_installer.msi
 *.exe
 *.msi
+
+# ═══════════════════════════════════════════════════════════
+# Git Sync Error Resolution (Task ved-ymis)
+# Added: 2026-01-03
+# ═══════════════════════════════════════════════════════════
+
+# Secrets (E2B, Gemini API keys)
+.env.e2b
+.env.testing
+
+# Build/Test Artifacts
+api_build_success.txt
+coverage_*.txt
+test_output*.txt
+git-status-raw.txt
+DATABASE_SEED_TEST_RESULTS.json
+
+# Test Results
+test-results/
+playwright-report/
+*.test.png
+
+# Temp Directories (Skipped AI Skills)
+temp_skills/arbigent/
+temp_skills/qa-use/
+
+# Generated Configs
+config/netdata/
+libs/
+
+# VPS Deployment Scripts (contain IPs/credentials)
+scripts/*vps*.ts
+scripts/*vps*.sh
+scripts/*vps*.ps1
+scripts/*amphitheatre*.ts
+*VPS_*.bat
+*VPS_*.ps1
+AMPHITHEATRE_DEPLOY*.ps1
+
+# One-time Fix Scripts (no longer needed)
+FIX_*.bat
+RUN_*_TESTS.bat
+AUTO_*.bat
+VERIFY_*.bat
+SETUP_*.bat
+SIMPLE_*.bat
+
+# n8n workflows (backups)
+scripts/n8n/ 

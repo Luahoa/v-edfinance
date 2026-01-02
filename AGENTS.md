@@ -80,9 +80,16 @@ cd scripts/tests/vegeta && run-stress-test.bat
 
 ### Beads Task Management (MANDATORY for All Agents)
 
-This project uses **bd (beads)** for issue tracking with **sync-branch** for multi-agent coordination.
+This project uses **Beads Trinity** for 100-agent orchestration:
 
 > ⚠️ **CRITICAL**: Dự án được xử lý bởi nhiều agents. PHẢI tuân thủ sync protocol!
+
+**The Trinity:**
+1. **beads (bd)** - Task management (CRUD operations)
+2. **beads_viewer (bv)** - Analytics (graph metrics, AI recommendations)
+3. **mcp_agent_mail** - Coordination (messaging, file locks)
+
+**Single Source of Truth:** `.beads/issues.jsonl`
 
 **Sync-Branch Config:** `beads-sync` (đã cấu hình trong `.beads/config.yaml`)
 
@@ -95,7 +102,14 @@ This project uses **bd (beads)** for issue tracking with **sync-branch** for mul
 - `bd sync` - Sync with git (run at session end)
 - `bd doctor` - Health check, find orphaned issues
 
-For full workflow details: `bd prime`
+**New: Beads Trinity Commands:**
+- `bv --robot-next` - Get AI-recommended next task (PageRank + Betweenness)
+- `bv --robot-insights` - View graph health (cycles, bottlenecks, critical path)
+- `bv --robot-alerts --severity=critical` - Detect blocking cascades
+- `./scripts/beads-smart-select.sh AgentName` - Smart task selection (bd + bv)
+- `./scripts/beads-unified-dashboard.sh` - Real-time dashboard (all 3 tools)
+
+For full workflow details: `bd prime` or see [BEADS_INTEGRATION_DEEP_DIVE.md](BEADS_INTEGRATION_DEEP_DIVE.md)
 
 **🤖 Amp + Beads Automated Workflow:**
 Use the workflow script for safe integration of Amp code review with Beads:
@@ -441,6 +455,106 @@ git add -A && git commit    # No Amp review, no beads sync
 - BehaviorLog reads: 120ms → <50ms (65% faster)
 - AI Agent weekly scan: 15 min → 2 min (87% faster)
 - Autonomous optimization PRs: 2-5/week
+
+---
+
+## 🤖 AI Testing Army - Automated Testing with Google Gemini
+
+**Status:** ✅ DEPLOYED - Using e2e-test-agent with FREE Gemini API  
+**Cost:** $0/month (Gemini 2.0 Flash free tier)  
+**Coverage Target:** 90% (unit) + 85% (E2E)
+
+### Deployed Tools:
+
+**1. e2e-test-agent (Primary E2E Tool)** ✅
+- **Stack:** TypeScript, LangChain, Playwright MCP
+- **AI:** Google Gemini 2.0 Flash (FREE tier)
+- **Location:** `run-e2e-tests.ts`, `tests/e2e/`
+- **Usage:**
+  ```bash
+  # Run all E2E tests with Gemini
+  npx tsx run-e2e-tests.ts
+  
+  # Tests are in natural language (.test files)
+  # Example: tests/e2e/auth/2-signup.test
+  ```
+
+**2. TestPilot (Unit Test Generator)** ✅
+- **Stack:** TypeScript, Mocha
+- **AI:** OpenAI API (can use Gemini via proxy)
+- **Location:** `temp_skills/testpilot/`
+- **Usage:**
+  ```bash
+  cd temp_skills/testpilot
+  node benchmark/run.js --outputDir ./reports --package ../../apps/api
+  ```
+
+**3. Arbigent (Cross-Platform Scenarios)** ⚠️ Skipped
+- **Reason:** Requires Java/Gradle (not installed)
+- **Alternative:** e2e-test-agent covers same use cases
+
+### Current Test Coverage:
+
+**E2E Tests (Natural Language):**
+- ✅ `1-homepage.test` - Homepage loads
+- ✅ `auth/2-signup.test` - User registration
+- ✅ `auth/3-login.test` - User login
+- ✅ `auth/4-logout.test` - User logout
+- ✅ `courses/1-browse.test` - Browse courses
+- ✅ `courses/2-enroll.test` - Enroll in course
+
+**Total:** 6 E2E tests (authentication + courses)
+
+### Configuration:
+
+**API Keys:** Stored in `.env.testing` (NOT in git)
+```bash
+GEMINI_API_KEY=AIza...  # FREE tier (1500 req/day)
+MODEL_NAME=gemini-2.0-flash-exp
+GEMINI_ENDPOINT=https://generativelanguage.googleapis.com/v1beta/openai/
+```
+
+### CI/CD Integration:
+
+**Not yet integrated** - Manual runs only for now. Future:
+- GitHub Actions workflow
+- Run on every PR
+- Quality gates (<3min execution, 98% pass rate)
+
+### Beads Tasks (AI Testing Army):
+
+```bash
+# View AI testing tasks
+beads.exe list --title-contains "AI" --status open
+
+# Completed so far:
+# ✅ ved-10p: Got Gemini API key
+# ✅ ved-g8a: Created .env.testing
+# ✅ ved-m17: Installed e2e-test-agent
+# ✅ ved-2vb: Installed TestPilot
+# ✅ ved-8k0: Skipped Arbigent (Java not available)
+# ✅ ved-361x: Created 3 auth test cases
+
+# In Progress:
+# 🔄 ved-r78p: Course test cases (2/5 complete)
+```
+
+### Quick Commands:
+
+```bash
+# Run all E2E tests
+npx tsx run-e2e-tests.ts
+
+# Create new test
+echo "open http://localhost:3002, verify title" > tests/e2e/new-test.test
+
+# Update Gemini API key
+# Edit .env.testing (DO NOT commit!)
+```
+
+### Documentation:
+- [AI_TESTING_ARMY_INTEGRATION_PLAN.md](file:///c:/Users/luaho/Demo%20project/v-edfinance/AI_TESTING_ARMY_INTEGRATION_PLAN.md)
+- [GOOGLE_GEMINI_API_FOR_TESTING.md](file:///c:/Users/luaho/Demo%20project/v-edfinance/GOOGLE_GEMINI_API_FOR_TESTING.md)
 
 ---
 

@@ -1,0 +1,7 @@
+open http://localhost:3002/signup
+verify signup form is visible
+fill email field with "testuser@example.com"
+fill password field with "SecurePass123!"
+fill confirm password field with "SecurePass123!"
+click "Sign Up" button
+verify "Welcome" or "Registration successful" message appears

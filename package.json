@@ -50,12 +50,22 @@
     "vitest": "^2.1.9"
   },
   "ava": {
-    "extensions": ["ts"],
-    "require": ["ts-node/register/transpile-only"]
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register/transpile-only"
+    ]
   },
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "libs/*"
+  ],
   "lint-staged": {
-    "*.{js,ts,tsx,json}": ["biome check --fix"]
+    "*.{js,ts,tsx,json}": [
+      "biome check --fix"
+    ]
   },
   "dependencies": {
     "@uppy/aws-s3-multipart": "^4.1.2",

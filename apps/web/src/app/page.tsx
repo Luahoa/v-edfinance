@@ -52,10 +52,7 @@ function HeroSection() {
   return (
     <section className="relative overflow-hidden px-6 py-20 lg:py-32">
       {/* Background Gradient Orbs */}
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-50/50 to-transparent dark:from-zinc-900/50" />
 
       <div className="mx-auto max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-12 items-center">

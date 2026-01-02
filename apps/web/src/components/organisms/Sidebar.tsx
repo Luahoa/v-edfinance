@@ -1,17 +1,9 @@
 'use client';
+import { cn } from '@/lib/cn';
 
 import { Link, usePathname } from '@/i18n/routing';
 import { motion } from 'framer-motion';
-import {
-  BookOpen,
-  Gamepad2,
-  LayoutDashboard,
-  Settings,
-  ShoppingBag,
-  Trophy,
-  Users,
-  X,
-} from 'lucide-react';
+import { Icons } from '@/lib/icons';
 import { useTranslations } from 'next-intl';
 
 interface SidebarProps {
@@ -24,12 +16,12 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
   const pathname = usePathname();
 
   const menuItems = [
-    { href: '/dashboard', label: t('dashboard'), icon: LayoutDashboard },
-    { href: '/courses', label: t('courses'), icon: BookOpen },
-    { href: '/simulation', label: t('simulation'), icon: Gamepad2 },
-    { href: '/leaderboard', label: t('leaderboard'), icon: Trophy },
-    { href: '/social', label: t('social'), icon: Users },
-    { href: '/store', label: t('store'), icon: ShoppingBag },
+    { href: '/dashboard', label: t('dashboard'), icon: Icons.LayoutDashboard || Icons.Award },
+    { href: '/courses', label: t('courses'), icon: Icons.BookOpen },
+    { href: '/simulation', label: t('simulation'), icon: Icons.Play || Icons.Zap },
+    { href: '/leaderboard', label: t('leaderboard'), icon: Icons.Award },
+    { href: '/social', label: t('social'), icon: Icons.Users },
+    { href: '/store', label: t('store'), icon: Icons.ArrowRight }, // Fallback for ShoppingBag
   ];
 
   return (
@@ -48,7 +40,7 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
             onClick={onClose}
             className="lg:hidden p-2 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg"
           >
-            <X size={20} />
+            <Icons.X className="w-5 h-5" />
           </button>
         )}
       </div>
@@ -63,18 +55,17 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
               key={item.href}
               href={item.href}
               onClick={onClose}
-              className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${
-                isActive
-                  ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
-                  : 'text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800/50'
-              }`}
+              className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all ${isActive
+                ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
+                : 'text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800/50'
+                }`}
             >
               <item.icon
-                size={20}
                 className={
-                  isActive
+                  cn('w-5 h-5', isActive
                     ? 'text-blue-600 dark:text-blue-400'
                     : 'text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300'
+                  )
                 }
               />
               {item.label}
@@ -95,7 +86,7 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
           onClick={onClose}
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800/50 transition-all"
         >
-          <Settings size={20} className="text-zinc-400" />
+          <Icons.Settings className="text-zinc-400 w-5 h-5" />
           {t('settings') || 'Settings'}
         </Link>
       </div>

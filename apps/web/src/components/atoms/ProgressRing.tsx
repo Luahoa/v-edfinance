@@ -31,18 +31,8 @@ export function ProgressRing({
   className,
   animated = true,
 }: ProgressRingProps) {
-  const [displayProgress, setDisplayProgress] = useState(0);
-
-  // Animate progress on mount
-  useEffect(() => {
-    if (animated) {
-      const timer = setTimeout(() => {
-        setDisplayProgress(progress);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-    setDisplayProgress(progress);
-  }, [progress, animated]);
+  // Instant update without state effect
+  const displayProgress = progress;
 
   const sizes = {
     sm: { ring: 60, stroke: 4, text: 'text-sm' },

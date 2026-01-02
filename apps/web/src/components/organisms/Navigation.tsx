@@ -3,7 +3,7 @@
 import { Badge } from '@/components/atoms/Badge';
 import { cn } from '@/lib/cn';
 import { useAuthStore } from '@/store/useAuthStore';
-import { BookOpen, Home, LayoutDashboard, Menu, Trophy, User, Users, X } from 'lucide-react';
+import { Icons } from '@/lib/icons';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -27,12 +27,13 @@ interface NavItem {
 }
 
 const primaryNavItems: NavItem[] = [
-  { href: '/', label: 'Home', icon: Home },
-  { href: '/courses', label: 'Courses', icon: BookOpen, requiresAuth: false },
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, requiresAuth: true },
-  { href: '/social', label: 'Community', icon: Users, requiresAuth: true },
-  { href: '/profile', label: 'Profile', icon: User, requiresAuth: true },
+  { href: '/', label: 'Home', icon: Icons.Home || Icons.ArrowRight },
+  { href: '/courses', label: 'Courses', icon: Icons.BookOpen, requiresAuth: false },
+  { href: '/dashboard', label: 'Dashboard', icon: Icons.LayoutDashboard || Icons.Award, requiresAuth: true },
+  { href: '/social', label: 'Community', icon: Icons.Users, requiresAuth: true },
+  { href: '/profile', label: 'Profile', icon: Icons.User || Icons.Users, requiresAuth: true },
 ];
+
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -96,10 +97,10 @@ export function MobileMenu() {
   const { isAuthenticated, user } = useAuthStore();
 
   const secondaryItems = [
-    { href: '/achievements', label: 'Achievements', icon: Trophy, requiresAuth: true },
-    { href: '/leaderboard', label: 'Leaderboard', icon: Trophy, requiresAuth: true },
-    { href: '/settings', label: 'Settings', icon: User, requiresAuth: true },
-    { href: '/help', label: 'Help & Support', icon: Home, requiresAuth: false },
+    { href: '/achievements', label: 'Achievements', icon: Icons.Award, requiresAuth: true },
+    { href: '/leaderboard', label: 'Leaderboard', icon: Icons.Award, requiresAuth: true },
+    { href: '/settings', label: 'Settings', icon: Icons.User || Icons.Users, requiresAuth: true },
+    { href: '/help', label: 'Help & Support', icon: Icons.Home || Icons.ArrowRight, requiresAuth: false },
   ];
 
   const visibleSecondary = secondaryItems.filter((item) => !item.requiresAuth || isAuthenticated);
@@ -112,7 +113,7 @@ export function MobileMenu() {
         className="lg:hidden fixed top-4 right-4 z-40 p-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg shadow-lg"
         aria-label="Open menu"
       >
-        <Menu className="w-6 h-6" />
+        <Icons.Menu className="w-6 h-6" />
       </button>
 
       {/* Drawer Overlay */}
@@ -144,7 +145,7 @@ export function MobileMenu() {
               className="p-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800"
               aria-label="Close menu"
             >
-              <X className="w-6 h-6" />
+              <Icons.X className="w-6 h-6" />
             </button>
           </div>
 

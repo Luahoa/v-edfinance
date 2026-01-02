@@ -1,0 +1,6 @@
+login as student
+navigate to courses page
+find "Financial Literacy 101" course
+click "Enroll Now" button
+verify enrollment success message
+check if course appears in "My Courses" section
