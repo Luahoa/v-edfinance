@@ -296,7 +296,11 @@ export function getColor(path: string): string {
   let value: unknown = tokens;
 
   for (const part of parts) {
-    value = (value as any)[part];
+    if (typeof value === 'object' && value !== null && part in value) {
+      value = (value as Record<string, unknown>)[part];
+    } else {
+      return '';
+    }
     if (value === undefined) return '';
   }
 

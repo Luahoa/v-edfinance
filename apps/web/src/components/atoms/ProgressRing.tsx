@@ -29,7 +29,7 @@ export function ProgressRing({
   color = 'blue',
   strokeWidth,
   className,
-  animated = true,
+  animated: _animated = true, // Prefixed to indicate intentionally unused
 }: ProgressRingProps) {
   // Instant update without state effect
   const displayProgress = progress;
@@ -63,7 +63,14 @@ export function ProgressRing({
 
   return (
     <div className={cn('relative inline-flex items-center justify-center', className)}>
-      <svg width={ring} height={ring} className="transform -rotate-90">
+      <svg
+        width={ring}
+        height={ring}
+        className="transform -rotate-90"
+        role="img"
+        aria-label={`Progress: ${Math.round(displayProgress)}%`}
+      >
+        <title>Progress Ring: {Math.round(displayProgress)}% complete</title>
         {/* Background Circle */}
         <circle
           cx={ring / 2}
