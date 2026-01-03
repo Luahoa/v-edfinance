@@ -2,14 +2,14 @@
 /**
  * AI-Powered File Categorization Script
  * Uses Google Gemini 2.0 Flash API to categorize 209 .md files
- * 
+ *
  * Usage:
  *   npx tsx scripts/cleanup/ai-categorizer.ts --dry-run
  *   npx tsx scripts/cleanup/ai-categorizer.ts
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 interface FileCategory {
   filename: string;
@@ -106,16 +106,16 @@ Return JSON array of FileCategory objects.
 
 async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
   console.log(`📋 Categorizing ${files.length} files...`);
-  
+
   // Rule-based categorization (fast, no API needed)
   const categories: FileCategory[] = [];
-  
+
   for (const filename of files) {
     let category: FileCategory = {
       filename,
       category: 'core',
       reason: 'Unknown - needs manual review',
-      targetPath: filename
+      targetPath: filename,
     };
 
     // ARCHIVE - Historical Reports
@@ -125,15 +125,19 @@ async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
         category: 'archive',
         subcategory: 'test-waves',
         reason: 'Test wave report from 2025-12',
-        targetPath: `docs/archive/2025-12/test-waves/${filename}`
+        targetPath: `docs/archive/2025-12/test-waves/${filename}`,
       };
-    } else if (filename.includes('HANDOFF') || filename.includes('SESSION') || filename.includes('PROGRESS')) {
+    } else if (
+      filename.includes('HANDOFF') ||
+      filename.includes('SESSION') ||
+      filename.includes('PROGRESS')
+    ) {
       category = {
         filename,
         category: 'archive',
         subcategory: 'session-reports',
         reason: 'Session/handoff report from 2025-12',
-        targetPath: `docs/archive/2025-12/session-reports/${filename}`
+        targetPath: `docs/archive/2025-12/session-reports/${filename}`,
       };
     } else if (filename.includes('VED-') && filename.includes('COMPLETION_REPORT')) {
       category = {
@@ -141,10 +145,12 @@ async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
         category: 'archive',
         subcategory: 'completion-reports',
         reason: 'Task completion report',
-        targetPath: `docs/archive/2025-12/completion-reports/${filename}`
+        targetPath: `docs/archive/2025-12/completion-reports/${filename}`,
       };
     } else if (
-      (filename.startsWith('AUDIT') || filename.includes('COMPREHENSIVE_AUDIT') || filename.includes('COMPREHENSIVE_PROJECT_AUDIT')) &&
+      (filename.startsWith('AUDIT') ||
+        filename.includes('COMPREHENSIVE_AUDIT') ||
+        filename.includes('COMPREHENSIVE_PROJECT_AUDIT')) &&
       !filename.includes('2026-01-03')
     ) {
       category = {
@@ -152,10 +158,10 @@ async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
         category: 'archive',
         subcategory: 'audits',
         reason: 'Old audit report (keeping latest 2026-01-03)',
-        targetPath: `docs/archive/2025-12/audits/${filename}`
+        targetPath: `docs/archive/2025-12/audits/${filename}`,
       };
     }
-    
+
     // EDTECH - Behavioral Design
     else if (
       filename === 'GAMIFICATION_TEST_REPORT.md' ||
@@ -171,10 +177,10 @@ async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
         filename,
         category: 'edtech',
         reason: 'EdTech behavioral design test report',
-        targetPath: `docs/behavioral-design/test-reports/${filename}`
+        targetPath: `docs/behavioral-design/test-reports/${filename}`,
       };
     }
-    
+
     // TESTING
     else if (
       filename === 'MASTER_TESTING_PLAN.md' ||
@@ -189,10 +195,10 @@ async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
         filename,
         category: 'testing',
         reason: 'Testing documentation',
-        targetPath: `docs/testing/${filename}`
+        targetPath: `docs/testing/${filename}`,
       };
     }
-    
+
     // DEVOPS
     else if (
       filename.startsWith('DEVOPS') ||
@@ -206,20 +212,25 @@ async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
         filename,
         category: 'devops',
         reason: 'DevOps documentation',
-        targetPath: `docs/devops/${filename}`
+        targetPath: `docs/devops/${filename}`,
       };
     }
-    
+
     // BEADS (except BEADS_GUIDE.md)
-    else if (filename.startsWith('BEADS') && filename !== 'BEADS_GUIDE.md' && filename !== 'BEADS_CLEANUP_ROADMAP.md' && filename !== 'BEADS_TASKS_SIMPLE.txt') {
+    else if (
+      filename.startsWith('BEADS') &&
+      filename !== 'BEADS_GUIDE.md' &&
+      filename !== 'BEADS_CLEANUP_ROADMAP.md' &&
+      filename !== 'BEADS_TASKS_SIMPLE.txt'
+    ) {
       category = {
         filename,
         category: 'beads',
         reason: 'Beads workflow documentation',
-        targetPath: `docs/beads/${filename}`
+        targetPath: `docs/beads/${filename}`,
       };
     }
-    
+
     // CORE - Files to keep in root
     else if (
       filename === 'AGENTS.md' ||
@@ -245,16 +256,16 @@ async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
       filename === 'TASK1_AUDIT_REPORT.md' ||
       filename === 'CLEANUP_PROGRESS_REPORT.md' ||
       filename === 'audit-root-files.txt' ||
-      !filename.endsWith('.md')  // Keep non-.md files
+      !filename.endsWith('.md') // Keep non-.md files
     ) {
       category = {
         filename,
         category: 'core',
         reason: 'Core documentation - keep in root',
-        targetPath: filename
+        targetPath: filename,
       };
     }
-    
+
     // DELETE - Superseded files
     else if (
       filename === 'CONTEXT_HANDOFF_2025-12-21_23h.md' ||
@@ -267,7 +278,7 @@ async function categorizeFiles(files: string[]): Promise<FileCategory[]> {
         filename,
         category: 'delete',
         reason: 'Superseded or obsolete',
-        targetPath: ''
+        targetPath: '',
       };
     }
 
@@ -293,8 +304,12 @@ async function main() {
   }
 
   const auditContent = fs.readFileSync(auditPath, 'utf-8');
-  const lines = auditContent.split('\n').filter(line => line.trim() && !line.startsWith('Name') && !line.startsWith('----'));
-  const files = lines.map(line => line.trim()).filter(f => f.endsWith('.md') || f.endsWith('.txt'));
+  const lines = auditContent
+    .split('\n')
+    .filter((line) => line.trim() && !line.startsWith('Name') && !line.startsWith('----'));
+  const files = lines
+    .map((line) => line.trim())
+    .filter((f) => f.endsWith('.md') || f.endsWith('.txt'));
 
   console.log(`📂 Found ${files.length} files to categorize\n`);
 
@@ -303,14 +318,14 @@ async function main() {
 
   // Summary
   const summary = {
-    archive: categories.filter(c => c.category === 'archive').length,
-    edtech: categories.filter(c => c.category === 'edtech').length,
-    testing: categories.filter(c => c.category === 'testing').length,
-    database: categories.filter(c => c.category === 'database').length,
-    devops: categories.filter(c => c.category === 'devops').length,
-    beads: categories.filter(c => c.category === 'beads').length,
-    core: categories.filter(c => c.category === 'core').length,
-    delete: categories.filter(c => c.category === 'delete').length,
+    archive: categories.filter((c) => c.category === 'archive').length,
+    edtech: categories.filter((c) => c.category === 'edtech').length,
+    testing: categories.filter((c) => c.category === 'testing').length,
+    database: categories.filter((c) => c.category === 'database').length,
+    devops: categories.filter((c) => c.category === 'devops').length,
+    beads: categories.filter((c) => c.category === 'beads').length,
+    core: categories.filter((c) => c.category === 'core').length,
+    delete: categories.filter((c) => c.category === 'delete').length,
   };
 
   console.log('📊 Categorization Summary:');
@@ -332,13 +347,13 @@ async function main() {
   if (dryRun) {
     console.log('🔍 DRY RUN MODE - No files will be moved');
     console.log('\nSample categorizations:');
-    
+
     // Show samples from each category
     for (const cat of Object.keys(summary) as Array<keyof typeof summary>) {
-      const samples = categories.filter(c => c.category === cat).slice(0, 3);
+      const samples = categories.filter((c) => c.category === cat).slice(0, 3);
       if (samples.length > 0) {
         console.log(`\n${cat.toUpperCase()}:`);
-        samples.forEach(s => {
+        samples.forEach((s) => {
           console.log(`  ${s.filename} → ${s.targetPath || 'DELETE'}`);
           console.log(`    Reason: ${s.reason}`);
         });

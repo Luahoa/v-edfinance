@@ -2,12 +2,12 @@
 /**
  * Generate Automated Move Plan
  * Reads categorization.json and generates PowerShell move script
- * 
+ *
  * Usage:
  *   npx tsx scripts/cleanup/generate-move-plan.ts
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 
 interface FileCategory {
   filename: string;
@@ -19,7 +19,7 @@ interface FileCategory {
 
 function generatePowerShellScript(categories: FileCategory[]): string {
   const script: string[] = [];
-  
+
   // Header
   script.push('# Auto-Generated File Move Script');
   script.push(`# Generated: ${new Date().toISOString()}`);
@@ -48,7 +48,7 @@ function generatePowerShellScript(categories: FileCategory[]): string {
 
   // Group by category
   const byCategory: Record<string, FileCategory[]> = {};
-  categories.forEach(cat => {
+  categories.forEach((cat) => {
     if (!byCategory[cat.category]) {
       byCategory[cat.category] = [];
     }
@@ -58,23 +58,25 @@ function generatePowerShellScript(categories: FileCategory[]): string {
   // Generate moves for each category
   for (const [category, files] of Object.entries(byCategory)) {
     if (category === 'core') {
-      script.push(`# ═══════════════════════════════════════════════════════════`);
+      script.push('# ═══════════════════════════════════════════════════════════');
       script.push(`# CORE FILES (${files.length} files) - KEEP IN ROOT`);
-      script.push(`# ═══════════════════════════════════════════════════════════`);
+      script.push('# ═══════════════════════════════════════════════════════════');
       script.push('');
-      script.push(`Write-Host "✅ Core files: ${files.length} files (keeping in root)" -ForegroundColor Green`);
+      script.push(
+        `Write-Host "✅ Core files: ${files.length} files (keeping in root)" -ForegroundColor Green`
+      );
       script.push('Write-Host ""');
       script.push('');
       continue;
     }
 
     if (category === 'delete') {
-      script.push(`# ═══════════════════════════════════════════════════════════`);
+      script.push('# ═══════════════════════════════════════════════════════════');
       script.push(`# DELETE FILES (${files.length} files)`);
-      script.push(`# ═══════════════════════════════════════════════════════════`);
+      script.push('# ═══════════════════════════════════════════════════════════');
       script.push('');
       script.push(`Write-Host "🗑️  Delete: ${files.length} files" -ForegroundColor Yellow`);
-      
+
       for (const file of files) {
         script.push('');
         script.push(`# ${file.filename}`);
@@ -93,15 +95,17 @@ function generatePowerShellScript(categories: FileCategory[]): string {
       continue;
     }
 
-    script.push(`# ═══════════════════════════════════════════════════════════`);
+    script.push('# ═══════════════════════════════════════════════════════════');
     script.push(`# ${category.toUpperCase()} (${files.length} files)`);
-    script.push(`# ═══════════════════════════════════════════════════════════`);
+    script.push('# ═══════════════════════════════════════════════════════════');
     script.push('');
-    script.push(`Write-Host "${getCategoryIcon(category)} ${capitalizeFirst(category)}: ${files.length} files" -ForegroundColor Cyan`);
+    script.push(
+      `Write-Host "${getCategoryIcon(category)} ${capitalizeFirst(category)}: ${files.length} files" -ForegroundColor Cyan`
+    );
 
     // Group by target directory
     const byTarget: Record<string, FileCategory[]> = {};
-    files.forEach(f => {
+    files.forEach((f) => {
       const targetDir = f.targetPath.substring(0, f.targetPath.lastIndexOf('/'));
       if (!byTarget[targetDir]) {
         byTarget[targetDir] = [];
@@ -112,7 +116,7 @@ function generatePowerShellScript(categories: FileCategory[]): string {
     for (const [targetDir, targetFiles] of Object.entries(byTarget)) {
       script.push('');
       script.push(`# Target: ${targetDir}/ (${targetFiles.length} files)`);
-      
+
       for (const file of targetFiles) {
         const destDir = file.targetPath.substring(0, file.targetPath.lastIndexOf('/'));
         script.push('');
@@ -139,17 +143,23 @@ function generatePowerShellScript(categories: FileCategory[]): string {
   script.push('# ═══════════════════════════════════════════════════════════');
   script.push('');
   script.push('Write-Host "📊 Summary:" -ForegroundColor Cyan');
-  
+
   for (const [category, files] of Object.entries(byCategory)) {
     if (category === 'core') {
-      script.push(`Write-Host "  Core (keep):  ${files.length.toString().padStart(3)} files" -ForegroundColor Green`);
+      script.push(
+        `Write-Host "  Core (keep):  ${files.length.toString().padStart(3)} files" -ForegroundColor Green`
+      );
     } else if (category === 'delete') {
-      script.push(`Write-Host "  Delete:       ${files.length.toString().padStart(3)} files" -ForegroundColor Yellow`);
+      script.push(
+        `Write-Host "  Delete:       ${files.length.toString().padStart(3)} files" -ForegroundColor Yellow`
+      );
     } else {
-      script.push(`Write-Host "  ${capitalizeFirst(category).padEnd(13)}: ${files.length.toString().padStart(3)} files"`);
+      script.push(
+        `Write-Host "  ${capitalizeFirst(category).padEnd(13)}: ${files.length.toString().padStart(3)} files"`
+      );
     }
   }
-  
+
   script.push('Write-Host ""');
   script.push('');
   script.push('if ($DryRun -eq "true") {');
@@ -174,7 +184,7 @@ function getCategoryIcon(category: string): string {
     devops: '⚙️',
     beads: '🔄',
     core: '✅',
-    delete: '🗑️'
+    delete: '🗑️',
   };
   return icons[category] || '📄';
 }
@@ -195,9 +205,7 @@ async function main() {
     process.exit(1);
   }
 
-  const categories: FileCategory[] = JSON.parse(
-    fs.readFileSync(categorizationPath, 'utf-8')
-  );
+  const categories: FileCategory[] = JSON.parse(fs.readFileSync(categorizationPath, 'utf-8'));
 
   console.log(`📂 Loaded ${categories.length} file categorizations\n`);
 
@@ -212,7 +220,7 @@ async function main() {
 
   // Generate summary
   const byCategory: Record<string, number> = {};
-  categories.forEach(cat => {
+  categories.forEach((cat) => {
     byCategory[cat.category] = (byCategory[cat.category] || 0) + 1;
   });
 
