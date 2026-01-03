@@ -1,9 +1,50 @@
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
+  external_labels:
+    cluster: 'v-edfinance'
+    environment: 'production'
+
+# Load alert rules
+rule_files:
+  - '/etc/prometheus/alerts.yml'
+
+# Alertmanager configuration (optional - for Slack/Email notifications)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets: ['alertmanager:9093']
 
 scrape_configs:
   - job_name: 'vedfinance-api'
     metrics_path: '/api/debug/metrics'
     static_configs:
-      - targets: ['host.docker.internal:3000'] # Adjusted for Windows/Mac host access
+      - targets: ['host.docker.internal:3000']
+        labels:
+          service: 'api'
+          app: 'v-edfinance'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+
+  - job_name: 'vedfinance-web'
+    static_configs:
+      - targets: ['host.docker.internal:3002']
+        labels:
+          service: 'web'
+          app: 'v-edfinance'
+    scrape_interval: 15s
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['host.docker.internal:5432']
+        labels:
+          service: 'database'
+          app: 'v-edfinance'
+    scrape_interval: 30s
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'monitoring'
+          app: 'prometheus'
