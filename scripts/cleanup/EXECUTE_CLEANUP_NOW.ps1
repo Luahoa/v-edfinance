@@ -1,4 +1,4 @@
-# 🧹 V-EdFinance Project Cleanup Executor
+# V-EdFinance Project Cleanup Executor
 # Auto-generated: 2026-01-04
 # Reduces root from 180+ files to 15 core files
 
@@ -7,32 +7,20 @@ param(
     [switch]$Force = $false
 )
 
-Write-Host "🧹 V-EdFinance Project Cleanup Starting..." -ForegroundColor Cyan
+Write-Host "V-EdFinance Project Cleanup Starting..." -ForegroundColor Cyan
 Write-Host "Mode: $(if($DryRun){'DRY RUN'}else{'LIVE EXECUTION'})" -ForegroundColor Yellow
 
-# ========================================
-# PHASE 1: SAFETY CHECKS
-# ========================================
-Write-Host "`n📋 Phase 1: Safety Checks" -ForegroundColor Green
+# Phase 1: Safety Checks
+Write-Host "`nPhase 1: Safety Checks" -ForegroundColor Green
 
-# Check git status
 $gitStatus = git status --short
 if ($gitStatus -and !$Force) {
-    Write-Host "❌ Uncommitted changes detected. Commit first or use -Force" -ForegroundColor Red
+    Write-Host "Uncommitted changes detected. Commit first or use -Force" -ForegroundColor Red
     exit 1
 }
 
-# Create backup
-if (!$DryRun) {
-    Write-Host "💾 Creating backup..." -ForegroundColor Yellow
-    $backupDir = "cleanup-backup-$(Get-Date -Format 'yyyy-MM-dd-HHmmss')"
-    New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
-}
-
-# ========================================
-# PHASE 2: ARCHIVE HISTORICAL REPORTS
-# ========================================
-Write-Host "`n📦 Phase 2: Archive Historical Reports (47 files)" -ForegroundColor Green
+# Phase 2: Archive Historical Reports
+Write-Host "`nPhase 2: Archive Historical Reports (47 files)" -ForegroundColor Green
 
 $archiveStructure = @{
     "docs/archive/2025-12/wave-reports" = @("WAVE*.bat")
@@ -51,19 +39,17 @@ foreach ($targetDir in $archiveStructure.Keys) {
         $files = Get-ChildItem -Filter $pattern -File -ErrorAction SilentlyContinue
         foreach ($file in $files) {
             if ($DryRun) {
-                Write-Host "  [DRY] Would move: $($file.Name) → $targetDir" -ForegroundColor Cyan
+                Write-Host "  [DRY] Would move: $($file.Name) to $targetDir" -ForegroundColor Cyan
             } else {
                 Move-Item $file.FullName "$targetDir/$($file.Name)" -Force
-                Write-Host "  ✅ Moved: $($file.Name) → $targetDir" -ForegroundColor Green
+                Write-Host "  Moved: $($file.Name) to $targetDir" -ForegroundColor Green
             }
         }
     }
 }
 
-# ========================================
-# PHASE 3: CONSOLIDATE TEST OUTPUTS
-# ========================================
-Write-Host "`n🧪 Phase 3: Consolidate Test Outputs (15+ files)" -ForegroundColor Green
+# Phase 3: Consolidate Test Outputs
+Write-Host "`nPhase 3: Consolidate Test Outputs (15 files)" -ForegroundColor Green
 
 $testStructure = @{
     "test-results/unit/archive" = @("test_output*.txt", "test_failures*.txt")
@@ -79,19 +65,17 @@ foreach ($targetDir in $testStructure.Keys) {
         $files = Get-ChildItem -Filter $pattern -File -ErrorAction SilentlyContinue
         foreach ($file in $files) {
             if ($DryRun) {
-                Write-Host "  [DRY] Would move: $($file.Name) → $targetDir" -ForegroundColor Cyan
+                Write-Host "  [DRY] Would move: $($file.Name) to $targetDir" -ForegroundColor Cyan
             } else {
                 Move-Item $file.FullName "$targetDir/$($file.Name)" -Force
-                Write-Host "  ✅ Moved: $($file.Name) → $targetDir" -ForegroundColor Green
+                Write-Host "  Moved: $($file.Name) to $targetDir" -ForegroundColor Green
             }
         }
     }
 }
 
-# ========================================
-# PHASE 4: ORGANIZE AUTOMATION SCRIPTS
-# ========================================
-Write-Host "`n🛠️ Phase 4: Organize Automation Scripts (40+ files)" -ForegroundColor Green
+# Phase 4: Organize Automation Scripts
+Write-Host "`nPhase 4: Organize Automation Scripts (40 files)" -ForegroundColor Green
 
 $scriptStructure = @{
     "scripts/setup" = @("INSTALL_*.bat", "INSTALL_*.ps1", "SETUP_*.bat", "COMPLETE_SETUP.bat", "*_INSTALL*.ps1")
@@ -110,67 +94,44 @@ foreach ($targetDir in $scriptStructure.Keys) {
     foreach ($pattern in $scriptStructure[$targetDir]) {
         $files = Get-ChildItem -Filter $pattern -File -ErrorAction SilentlyContinue
         foreach ($file in $files) {
-            # Skip if already in scripts/ subdirectory
             if ($file.DirectoryName -like "*\scripts\*") { continue }
             
             if ($DryRun) {
-                Write-Host "  [DRY] Would move: $($file.Name) → $targetDir" -ForegroundColor Cyan
+                Write-Host "  [DRY] Would move: $($file.Name) to $targetDir" -ForegroundColor Cyan
             } else {
                 $newName = $file.Name.ToLower().Replace('_', '-')
                 Move-Item $file.FullName "$targetDir/$newName" -Force
-                Write-Host "  ✅ Moved: $($file.Name) → $targetDir/$newName" -ForegroundColor Green
+                Write-Host "  Moved: $($file.Name) to $targetDir/$newName" -ForegroundColor Green
             }
         }
     }
 }
 
-# ========================================
-# PHASE 5: CLEANUP TEMP FILES
-# ========================================
-Write-Host "`n🗑️ Phase 5: Remove Temp Files (20+ files)" -ForegroundColor Green
+# Phase 5: Remove Temp Files
+Write-Host "`nPhase 5: Remove Temp Files (20 files)" -ForegroundColor Green
 
-$tempFiles = @(
-    '$null',
-    'temp_*.ts', 'temp_*.txt', 'temp_*.py', 'temp_*.pub',
-    '*.log',
-    'api_build_success.txt',
-    'audit-root-files.txt',
-    'categorization.json',
-    'git-status-raw.txt',
-    'move-execution.log',
-    'remove_duplicates.py',
-    'update_schema.py',
-    'go_installer.msi',
-    'routes.txt',
-    'security-audit.json',
-    'test-r2-upload.txt',
-    'test-upload.txt',
-    'quick-test.ts',
-    'move-files.ps1',
-    'BEADS_TASKS_SIMPLE.txt'
-)
+$tempPatterns = @('temp_*', '*.log', 'api_build_success.txt', 'audit-root-files.txt', 
+                  'categorization.json', 'git-status-raw.txt', 'move-execution.log',
+                  'routes.txt', 'security-audit.json', 'test-*.txt', 'quick-test.ts')
 
-foreach ($pattern in $tempFiles) {
+foreach ($pattern in $tempPatterns) {
     $files = Get-ChildItem -Filter $pattern -File -ErrorAction SilentlyContinue
     foreach ($file in $files) {
         if ($DryRun) {
             Write-Host "  [DRY] Would delete: $($file.Name)" -ForegroundColor Cyan
         } else {
             Remove-Item $file.FullName -Force
-            Write-Host "  ✅ Deleted: $($file.Name)" -ForegroundColor Green
+            Write-Host "  Deleted: $($file.Name)" -ForegroundColor Green
         }
     }
 }
 
-# ========================================
-# PHASE 6: CONSOLIDATE DOCUMENTATION
-# ========================================
-Write-Host "`n📚 Phase 6: Consolidate Documentation" -ForegroundColor Green
+# Phase 6: Consolidate Documentation
+Write-Host "`nPhase 6: Consolidate Documentation" -ForegroundColor Green
 
 $docStructure = @{
     "docs/database" = @("DATABASE_*.md", "SCHEMA_*.md")
     "docs/beads" = @("BEADS_*.md")
-    "docs/deployment" = @("AMPHITHEATRE_*.md", "VPS_*.md", "DOKPLOY_*.md")
     "docs/ai-optimization" = @("AI_SYSTEM_*.md", "PHASE2_*.md")
 }
 
@@ -183,51 +144,27 @@ foreach ($targetDir in $docStructure.Keys) {
         $files = Get-ChildItem -Filter $pattern -File -ErrorAction SilentlyContinue
         foreach ($file in $files) {
             if ($DryRun) {
-                Write-Host "  [DRY] Would move: $($file.Name) → $targetDir" -ForegroundColor Cyan
+                Write-Host "  [DRY] Would move: $($file.Name) to $targetDir" -ForegroundColor Cyan
             } else {
                 Move-Item $file.FullName "$targetDir/$($file.Name)" -Force
-                Write-Host "  ✅ Moved: $($file.Name) → $targetDir" -ForegroundColor Green
+                Write-Host "  Moved: $($file.Name) to $targetDir" -ForegroundColor Green
             }
         }
     }
 }
 
-# ========================================
-# PHASE 7: FINAL REPORT
-# ========================================
-Write-Host "`n📊 Final Report" -ForegroundColor Green
+# Phase 7: Final Report
+Write-Host "`nFinal Report" -ForegroundColor Green
 
 $remainingFiles = Get-ChildItem -File | Where-Object { 
     $_.Extension -in @('.md', '.bat', '.ps1', '.txt', '.log') 
 }
 
-Write-Host "`nRemaining root files:" -ForegroundColor Yellow
-Write-Host "  Total: $($remainingFiles.Count)" -ForegroundColor Cyan
-
-if ($remainingFiles.Count -le 20) {
-    Write-Host "`n✅ SUCCESS! Root directory cleaned to $($remainingFiles.Count) files" -ForegroundColor Green
-    Write-Host "`nCore files (should keep):" -ForegroundColor Yellow
-    $coreFiles = @('AGENTS.md', 'SPEC.md', 'README.md', 'ARCHITECTURE.md', 
-                   'STRATEGIC_DEBT_PAYDOWN_PLAN.md', 'TEST_COVERAGE_BASELINE.md',
-                   'package.json', 'tsconfig.json', 'turbo.json', 'biome.json',
-                   'pnpm-workspace.yaml', 'vitest.config.ts', 'playwright.config.ts',
-                   '.gitignore', '.npmrc')
-    
-    foreach ($file in $remainingFiles) {
-        $isCore = $file.Name -in $coreFiles
-        $color = if ($isCore) { "Green" } else { "Red" }
-        Write-Host "  $($file.Name)" -ForegroundColor $color
-    }
-} else {
-    Write-Host "`n⚠️ Still $($remainingFiles.Count) files in root. Review needed." -ForegroundColor Yellow
-}
+Write-Host "`nRemaining root files: $($remainingFiles.Count)" -ForegroundColor Cyan
 
 if ($DryRun) {
-    Write-Host "`n✅ DRY RUN COMPLETE. Review above, then run with -DryRun:`$false" -ForegroundColor Cyan
+    Write-Host "`nDRY RUN COMPLETE. Review above, then run with -DryRun:`$false" -ForegroundColor Cyan
 } else {
-    Write-Host "`n✅ CLEANUP COMPLETE!" -ForegroundColor Green
-    Write-Host "Next steps:" -ForegroundColor Yellow
-    Write-Host "  1. Review changes: git status" -ForegroundColor White
-    Write-Host "  2. Test builds: pnpm build" -ForegroundColor White
-    Write-Host "  3. Commit: git add -A && git commit -m 'chore: Project cleanup - 93% root reduction'" -ForegroundColor White
+    Write-Host "`nCLEANUP COMPLETE!" -ForegroundColor Green
+    Write-Host "Next: git add -A and git commit -m 'chore: Project cleanup'" -ForegroundColor Yellow
 }
