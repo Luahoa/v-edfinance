@@ -247,11 +247,20 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host ""
 Write-Host "[PHASE 7] Syncing Beads Metadata..." -ForegroundColor Yellow
 
-& $beadsPath sync
+& $beadsPath sync --branch beads-sync
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "⚠️  Beads sync failed. Retry manually with: beads sync" -ForegroundColor Yellow
+    Write-Host "⚠️  Beads sync had warnings. Continuing..." -ForegroundColor Yellow
 } else {
-    Write-Host "✅ Beads metadata synced" -ForegroundColor Green
+    Write-Host "✅ Beads metadata synced to beads-sync branch" -ForegroundColor Green
+}
+
+# Run beads doctor for health check
+Write-Host "  → Running beads doctor..." -ForegroundColor Cyan
+& $beadsPath doctor --auto-fix
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "⚠️  Beads doctor found warnings (non-blocking)" -ForegroundColor Yellow
+} else {
+    Write-Host "✅ Beads health verified" -ForegroundColor Green
 }
 
 # ═══════════════════════════════════════════════════════════════════════════

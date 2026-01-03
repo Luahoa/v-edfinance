@@ -1,0 +1,106 @@
+name: Beads Sync
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - staging
+      - 'spike/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  beads-sync:
+    name: Sync Beads to Git
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Download Beads CLI
+        run: |
+          echo "📥 Downloading beads CLI..."
+          curl -L -o beads "https://github.com/beadlabs/beads/releases/latest/download/beads-linux-amd64"
+          chmod +x beads
+          ./beads --version
+      
+      - name: Configure Git
+        run: |
+          git config --global user.name "beads-bot"
+          git config --global user.email "beads-bot@v-edfinance.com"
+      
+      - name: Run Beads Doctor
+        id: doctor
+        run: |
+          echo "🔍 Running beads doctor..."
+          ./beads doctor --auto-fix || echo "warnings_found=true" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      
+      - name: Sync Beads to Git
+        id: sync
+        run: |
+          echo "🔄 Syncing beads metadata to git..."
+          
+          # Get current branch
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "Current branch: $BRANCH"
+          
+          # Sync beads
+          ./beads sync --branch beads-sync
+          
+          # Check if there are changes
+          if git diff --quiet .beads/; then
+            echo "✅ No beads changes to sync"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "📝 Beads changes detected"
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+            
+            # Show changes
+            git status .beads/
+          fi
+      
+      - name: Commit and Push Beads Changes
+        if: steps.sync.outputs.has_changes == 'true'
+        run: |
+          echo "💾 Committing beads sync..."
+          
+          git add .beads/
+          git commit -m "chore(beads): sync metadata from ${{ github.ref_name }} [skip ci]"
+          
+          # Push to beads-sync branch
+          git push origin HEAD:beads-sync --force
+          
+          echo "✅ Beads metadata synced to beads-sync branch"
+      
+      - name: Verify Beads Health
+        run: |
+          echo "🏥 Verifying beads health..."
+          ./beads ready || true
+          ./beads list --status open --limit 5 || true
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Beads Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Doctor Check:** ${{ steps.doctor.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Sync Status:** ${{ steps.sync.outcome }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Changes Detected:** ${{ steps.sync.outputs.has_changes }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.sync.outputs.has_changes }}" == "true" ]; then
+            echo "✅ Beads metadata synced to \`beads-sync\` branch" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ No beads changes to sync" >> $GITHUB_STEP_SUMMARY
+          fi

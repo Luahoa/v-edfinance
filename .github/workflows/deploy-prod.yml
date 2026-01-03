@@ -98,9 +98,37 @@ jobs:
           echo ""
           echo "Waiting for approval from authorized personnel..."
 
+  beads-sync:
+    name: Sync Beads Pre-Deploy
+    needs: [quality-gates, approval]
+    if: |
+      always() && 
+      needs.quality-gates.outputs.passed == 'true' &&
+      (needs.approval.result == 'success' || github.event.inputs.skip_approval == 'true')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Download Beads CLI
+        run: |
+          curl -L -o beads "https://github.com/beadlabs/beads/releases/latest/download/beads-linux-amd64"
+          chmod +x beads
+      
+      - name: Beads Doctor & Sync
+        run: |
+          git config --global user.name "beads-bot"
+          git config --global user.email "beads-bot@v-edfinance.com"
+          ./beads doctor --auto-fix || true
+          ./beads sync --branch beads-sync || true
+        continue-on-error: true
+
   deploy:
     name: Deploy to Production
-    needs: [quality-gates, approval]
+    needs: [quality-gates, approval, beads-sync]
     if: |
       always() && 
       needs.quality-gates.outputs.passed == 'true' &&
