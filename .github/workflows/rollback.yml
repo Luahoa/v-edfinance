@@ -1,0 +1,267 @@
+name: Rollback Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to rollback'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      force:
+        description: 'Force rollback even if healthy'
+        required: false
+        type: boolean
+        default: false
+      reason:
+        description: 'Reason for rollback (required for production)'
+        required: false
+        type: string
+
+env:
+  DOKPLOY_URL: https://dokploy.v-edfinance.com
+
+jobs:
+  approval:
+    name: Rollback Approval
+    if: github.event.inputs.environment == 'production'
+    runs-on: ubuntu-latest
+    environment:
+      name: production-rollback
+    
+    steps:
+      - name: Request Approval
+        run: |
+          echo "🛡️ Production rollback requires manual approval"
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Reason: ${{ github.event.inputs.reason }}"
+          echo ""
+          if [ -z "${{ github.event.inputs.reason }}" ]; then
+            echo "❌ Reason is required for production rollback"
+            exit 1
+          fi
+          echo "Waiting for approval from authorized personnel..."
+
+  rollback:
+    name: Execute Rollback
+    needs: [approval]
+    if: |
+      always() &&
+      (needs.approval.result == 'success' || github.event.inputs.environment != 'production')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set environment variables
+        id: env
+        run: |
+          case "${{ github.event.inputs.environment }}" in
+            development)
+              echo "api_domain=api-dev.v-edfinance.com" >> $GITHUB_OUTPUT
+              echo "web_domain=dev.v-edfinance.com" >> $GITHUB_OUTPUT
+              ;;
+            staging)
+              echo "api_domain=api-staging.v-edfinance.com" >> $GITHUB_OUTPUT
+              echo "web_domain=staging.v-edfinance.com" >> $GITHUB_OUTPUT
+              ;;
+            production)
+              echo "api_domain=api.v-edfinance.com" >> $GITHUB_OUTPUT
+              echo "web_domain=v-edfinance.com" >> $GITHUB_OUTPUT
+              ;;
+          esac
+      
+      - name: Pre-Rollback Health Check
+        id: pre-health
+        run: |
+          echo "🔍 Checking current deployment health..."
+          
+          API_HEALTHY=false
+          WEB_HEALTHY=false
+          
+          if curl -f -s -o /dev/null https://${{ steps.env.outputs.api_domain }}/api/health; then
+            echo "✅ API is currently healthy"
+            API_HEALTHY=true
+          else
+            echo "❌ API is unhealthy"
+          fi
+          
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://${{ steps.env.outputs.web_domain }})
+          if [ "$HTTP_CODE" -eq 200 ]; then
+            echo "✅ Web is currently healthy"
+            WEB_HEALTHY=true
+          else
+            echo "❌ Web is unhealthy (HTTP $HTTP_CODE)"
+          fi
+          
+          if [ "$API_HEALTHY" = true ] && [ "$WEB_HEALTHY" = true ]; then
+            if [ "${{ github.event.inputs.force }}" != "true" ]; then
+              echo "⚠️ Services are healthy - rollback not needed"
+              echo "Set 'force' to true to rollback anyway"
+              exit 1
+            fi
+            echo "⚠️ FORCE rollback enabled - proceeding"
+          fi
+          
+          echo "api_healthy=$API_HEALTHY" >> $GITHUB_OUTPUT
+          echo "web_healthy=$WEB_HEALTHY" >> $GITHUB_OUTPUT
+        continue-on-error: true
+      
+      - name: Execute Auto-Rollback Script
+        env:
+          DOKPLOY_API_TOKEN: ${{ secrets.DOKPLOY_API_TOKEN }}
+          FORCE_ROLLBACK: ${{ github.event.inputs.force }}
+        run: |
+          chmod +x scripts/deploy/auto-rollback.sh
+          ./scripts/deploy/auto-rollback.sh ${{ github.event.inputs.environment }}
+      
+      - name: Post-Rollback Health Check
+        run: |
+          echo "🏥 Verifying rollback health..."
+          
+          MAX_RETRIES=15
+          RETRY_COUNT=0
+          
+          echo "Checking API..."
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if curl -f -s https://${{ steps.env.outputs.api_domain }}/api/health > /dev/null; then
+              echo "✅ API healthy after rollback"
+              break
+            fi
+            echo "⏳ Waiting for API... ($(($RETRY_COUNT + 1))/$MAX_RETRIES)"
+            sleep 10
+            RETRY_COUNT=$(($RETRY_COUNT + 1))
+          done
+          
+          if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+            echo "❌ API health check failed"
+            exit 1
+          fi
+          
+          RETRY_COUNT=0
+          echo "Checking Web..."
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://${{ steps.env.outputs.web_domain }})
+            if [ "$HTTP_CODE" -eq 200 ]; then
+              echo "✅ Web healthy after rollback"
+              break
+            fi
+            echo "⏳ Waiting for Web... ($(($RETRY_COUNT + 1))/$MAX_RETRIES)"
+            sleep 10
+            RETRY_COUNT=$(($RETRY_COUNT + 1))
+          done
+          
+          if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+            echo "❌ Web health check failed"
+            exit 1
+          fi
+      
+      - name: Upload Rollback Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rollback-report-${{ github.event.inputs.environment }}
+          path: rollback-report-*.json
+          retention-days: 30
+
+  notify:
+    name: Send Notifications
+    needs: [rollback]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Determine Status
+        id: status
+        run: |
+          if [ "${{ needs.rollback.result }}" == "success" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "color=3066993" >> $GITHUB_OUTPUT
+            echo "title=✅ Rollback Successful" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "color=15158332" >> $GITHUB_OUTPUT
+            echo "title=❌ Rollback Failed" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Notify Slack (Critical)
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "⚠️ Slack webhook not configured"
+            exit 0
+          fi
+          
+          ALERT_PREFIX=""
+          if [ "${{ github.event.inputs.environment }}" == "production" ]; then
+            ALERT_PREFIX="<!channel> "
+          fi
+          
+          curl -X POST "$SLACK_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"text\": \"${ALERT_PREFIX}${{ steps.status.outputs.title }}\",
+              \"blocks\": [
+                {
+                  \"type\": \"header\",
+                  \"text\": {
+                    \"type\": \"plain_text\",
+                    \"text\": \"${{ steps.status.outputs.title }}\"
+                  }
+                },
+                {
+                  \"type\": \"section\",
+                  \"text\": {
+                    \"type\": \"mrkdwn\",
+                    \"text\": \"*Reason:* ${{ github.event.inputs.reason || 'Not provided' }}\"
+                  }
+                },
+                {
+                  \"type\": \"section\",
+                  \"fields\": [
+                    {\"type\": \"mrkdwn\", \"text\": \"*Environment:*\\n${{ github.event.inputs.environment }}\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*Forced:*\\n${{ github.event.inputs.force }}\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*Triggered by:*\\n${{ github.actor }}\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*Timestamp:*\\n$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}
+                  ]
+                },
+                {
+                  \"type\": \"context\",
+                  \"elements\": [
+                    {\"type\": \"mrkdwn\", \"text\": \"<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow>\"}
+                  ]
+                }
+              ]
+            }" || echo "Slack notification failed"
+      
+      - name: Create Incident Issue (on failure)
+        if: needs.rollback.result == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Rollback Failed: ${{ github.event.inputs.environment }}`,
+              body: `### Rollback Failure Report
+              
+              **Environment:** ${{ github.event.inputs.environment }}
+              **Reason:** ${{ github.event.inputs.reason || 'Not provided' }}
+              **Triggered by:** ${{ github.actor }}
+              **Timestamp:** ${new Date().toISOString()}
+              **Workflow:** [View Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+              
+              ### Action Required
+              - [ ] Investigate rollback failure
+              - [ ] Manual intervention may be needed
+              - [ ] Check deployment logs
+              - [ ] Verify service health
+              
+              cc: @${{ github.actor }}`,
+              labels: ['incident', 'P0', 'deployment']
+            });
