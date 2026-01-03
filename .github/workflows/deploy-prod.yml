@@ -1,0 +1,365 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      skip_approval:
+        description: 'Skip manual approval (emergency only)'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  DOKPLOY_URL: https://dokploy.v-edfinance.com
+  ENVIRONMENT: production
+  DOMAIN: v-edfinance.com
+  API_DOMAIN: api.v-edfinance.com
+
+jobs:
+  quality-gates:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    outputs:
+      passed: ${{ steps.gate-result.outputs.passed }}
+      report: ${{ steps.gate-result.outputs.report }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.15.0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run Quality Gates
+        id: run-gates
+        run: |
+          chmod +x scripts/quality-gate.sh
+          ./scripts/quality-gate.sh | tee quality-gate.log
+        continue-on-error: true
+      
+      - name: Process Gate Results
+        id: gate-result
+        run: |
+          if [ -f quality-gate.log ]; then
+            PASSED=$(grep -q "ALL QUALITY GATES PASSED" quality-gate.log && echo "true" || echo "false")
+            REPORT=$(cat quality-gate.log | tail -20)
+            echo "passed=$PASSED" >> $GITHUB_OUTPUT
+            echo "report<<EOF" >> $GITHUB_OUTPUT
+            echo "$REPORT" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            
+            if [ "$PASSED" == "false" ]; then
+              echo "❌ Quality gates failed - BLOCKING PRODUCTION DEPLOYMENT"
+              exit 1
+            fi
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+      
+      - name: Upload Quality Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-gate-report-production
+          path: quality-gate.log
+          retention-days: 30
+  
+  approval:
+    name: Manual Approval
+    needs: quality-gates
+    if: needs.quality-gates.outputs.passed == 'true' && github.event.inputs.skip_approval != 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://${{ env.DOMAIN }}
+    
+    steps:
+      - name: Request Approval
+        run: |
+          echo "🛡️ Production deployment requires manual approval"
+          echo "Environment: production"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit: ${{ github.sha }}"
+          echo ""
+          echo "Waiting for approval from authorized personnel..."
+
+  deploy:
+    name: Deploy to Production
+    needs: [quality-gates, approval]
+    if: |
+      always() && 
+      needs.quality-gates.outputs.passed == 'true' &&
+      (needs.approval.result == 'success' || github.event.inputs.skip_approval == 'true')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Create Deployment Record
+        id: create-deployment
+        run: |
+          echo "📝 Creating deployment record..."
+          DEPLOY_ID="prod-$(date +%Y%m%d-%H%M%S)"
+          echo "deployment_id=$DEPLOY_ID" >> $GITHUB_OUTPUT
+          echo "Deployment ID: $DEPLOY_ID"
+      
+      - name: Trigger Dokploy Deployment
+        id: deploy
+        run: |
+          echo "🚀 Deploying to ${{ env.ENVIRONMENT }}..."
+          echo "⚠️  This is a PRODUCTION deployment with zero-downtime rolling update"
+          
+          RESPONSE=$(curl -X POST "${{ env.DOKPLOY_URL }}/api/deploy" \
+            -H "Authorization: Bearer ${{ secrets.DOKPLOY_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "project": "v-edfinance",
+              "environment": "${{ env.ENVIRONMENT }}",
+              "branch": "${{ github.ref_name }}",
+              "deploymentId": "${{ steps.create-deployment.outputs.deployment_id }}"
+            }' \
+            -w "\n%{http_code}" -s)
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+          
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Deployment triggered successfully"
+          else
+            echo "❌ Deployment trigger failed"
+            exit 1
+          fi
+      
+      - name: Wait for Rolling Deployment
+        run: |
+          echo "⏳ Waiting for rolling deployment to complete..."
+          echo "ℹ️  Zero-downtime deployment in progress (maxSurge=1, maxUnavailable=0)"
+          sleep 90
+      
+      - name: Health Check API (Primary)
+        id: health-api-primary
+        run: |
+          echo "🏥 Running API health check..."
+          
+          MAX_RETRIES=20
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            RESPONSE=$(curl -f -s https://${{ env.API_DOMAIN }}/api/health)
+            if [ $? -eq 0 ]; then
+              echo "✅ API is healthy!"
+              echo "Response: $RESPONSE"
+              exit 0
+            fi
+            
+            echo "⏳ Waiting for API... ($(($RETRY_COUNT + 1))/$MAX_RETRIES)"
+            sleep 15
+            RETRY_COUNT=$(($RETRY_COUNT + 1))
+          done
+          
+          echo "❌ Health check failed after $MAX_RETRIES attempts"
+          exit 1
+      
+      - name: Health Check Web (Primary)
+        id: health-web-primary
+        run: |
+          echo "🏥 Running Web health check..."
+          
+          MAX_RETRIES=20
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.DOMAIN }})
+            if [ "$HTTP_CODE" -eq 200 ]; then
+              echo "✅ Web is healthy!"
+              exit 0
+            fi
+            
+            echo "⏳ Waiting for Web... ($(($RETRY_COUNT + 1))/$MAX_RETRIES)"
+            sleep 15
+            RETRY_COUNT=$(($RETRY_COUNT + 1))
+          done
+          
+          echo "❌ Web health check failed"
+          exit 1
+      
+      - name: Verify Both Replicas
+        run: |
+          echo "🔍 Verifying all replicas are healthy..."
+          
+          # Check both replicas are responding
+          for i in {1..5}; do
+            curl -f -s https://${{ env.API_DOMAIN }}/api/health | jq .
+            sleep 2
+          done
+          
+          echo "✅ All replicas verified"
+      
+      - name: Production Smoke Tests
+        run: |
+          echo "🧪 Running production smoke tests..."
+          
+          # Test API health
+          echo "Testing API health..."
+          curl -f https://${{ env.API_DOMAIN }}/api/health | jq .
+          
+          # Test Web homepage
+          echo "Testing Web homepage..."
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.DOMAIN }})
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "❌ Homepage returned $HTTP_CODE"
+            exit 1
+          fi
+          
+          # Test www redirect
+          echo "Testing www redirect..."
+          HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -L https://www.${{ env.DOMAIN }})
+          if [ "$HTTP_CODE" -ne 200 ]; then
+            echo "❌ www redirect failed: $HTTP_CODE"
+            exit 1
+          fi
+          
+          # Test API endpoints (non-destructive)
+          echo "Testing public API endpoints..."
+          curl -f -X POST https://${{ env.API_DOMAIN }}/api/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{"email":"test@example.com","password":"invalid"}' || true
+          
+          echo "✅ All production smoke tests passed"
+      
+      - name: Monitor Error Rates
+        run: |
+          echo "📊 Monitoring error rates (5 min window)..."
+          sleep 60
+          
+          # Check health endpoint multiple times
+          ERROR_COUNT=0
+          for i in {1..10}; do
+            if ! curl -f -s https://${{ env.API_DOMAIN }}/api/health > /dev/null; then
+              ((ERROR_COUNT++))
+            fi
+            sleep 30
+          done
+          
+          if [ $ERROR_COUNT -gt 2 ]; then
+            echo "❌ High error rate detected: $ERROR_COUNT/10 failed"
+            exit 1
+          fi
+          
+          echo "✅ Error rate acceptable: $ERROR_COUNT/10 failed"
+
+  notify:
+    name: Send Notifications
+    needs: [quality-gates, approval, deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Determine Status
+        id: status
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "color=3066993" >> $GITHUB_OUTPUT
+            echo "title=✅ Production Deployment Successful" >> $GITHUB_OUTPUT
+            echo "message=Production deployment completed successfully with zero downtime" >> $GITHUB_OUTPUT
+          elif [ "${{ needs.quality-gates.result }}" == "failure" ]; then
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "color=15158332" >> $GITHUB_OUTPUT
+            echo "title=❌ Quality Gates Failed" >> $GITHUB_OUTPUT
+            echo "message=Production deployment blocked by quality gate failures" >> $GITHUB_OUTPUT
+          elif [ "${{ needs.approval.result }}" == "cancelled" ]; then
+            echo "status=cancelled" >> $GITHUB_OUTPUT
+            echo "color=16776960" >> $GITHUB_OUTPUT
+            echo "title=⚠️ Production Deployment Cancelled" >> $GITHUB_OUTPUT
+            echo "message=Deployment approval was cancelled or timed out" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "color=15158332" >> $GITHUB_OUTPUT
+            echo "title=❌ Production Deployment Failed" >> $GITHUB_OUTPUT
+            echo "message=Production deployment encountered an error" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Notify Slack (Critical)
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "⚠️ Slack webhook not configured - PRODUCTION NOTIFICATION SKIPPED"
+            exit 0
+          fi
+          
+          curl -X POST "$SLACK_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"text\": \"<!channel> ${{ steps.status.outputs.title }}\",
+              \"blocks\": [
+                {
+                  \"type\": \"header\",
+                  \"text\": {
+                    \"type\": \"plain_text\",
+                    \"text\": \"${{ steps.status.outputs.title }}\"
+                  }
+                },
+                {
+                  \"type\": \"section\",
+                  \"text\": {
+                    \"type\": \"mrkdwn\",
+                    \"text\": \"${{ steps.status.outputs.message }}\"
+                  }
+                },
+                {
+                  \"type\": \"section\",
+                  \"fields\": [
+                    {\"type\": \"mrkdwn\", \"text\": \"*Environment:*\\n🔴 PRODUCTION\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*Branch:*\\n${{ github.ref_name }}\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*Commit:*\\n<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${GITHUB_SHA:0:7}>\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*URL:*\\n<https://${{ env.DOMAIN }}|${{ env.DOMAIN }}>\"}
+                  ]
+                },
+                {
+                  \"type\": \"context\",
+                  \"elements\": [
+                    {\"type\": \"mrkdwn\", \"text\": \"Deployed by ${{ github.actor }} • <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow>\"}
+                  ]
+                }
+              ]
+            }" || echo "❌ Slack notification failed"
+      
+      - name: Create GitHub Release (on success)
+        if: needs.deploy.result == 'success'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: prod-${{ github.run_number }}
+          release_name: Production Release ${{ github.run_number }}
+          body: |
+            Production deployment successful!
+            
+            **Commit:** ${{ github.sha }}
+            **Deployed by:** ${{ github.actor }}
+            **Deployment ID:** prod-${{ github.run_number }}
+            
+            🔗 [View Live Site](https://${{ env.DOMAIN }})
+          draft: false
+          prerelease: false

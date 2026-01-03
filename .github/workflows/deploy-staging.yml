@@ -1,0 +1,243 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+env:
+  DOKPLOY_URL: https://dokploy.v-edfinance.com
+  ENVIRONMENT: staging
+  DOMAIN: staging.v-edfinance.com
+  API_DOMAIN: api-staging.v-edfinance.com
+
+jobs:
+  quality-gates:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    outputs:
+      passed: ${{ steps.gate-result.outputs.passed }}
+      report: ${{ steps.gate-result.outputs.report }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.15.0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Run Quality Gates
+        id: run-gates
+        run: |
+          chmod +x scripts/quality-gate.sh
+          ./scripts/quality-gate.sh | tee quality-gate.log
+        continue-on-error: true
+      
+      - name: Process Gate Results
+        id: gate-result
+        run: |
+          if [ -f quality-gate.log ]; then
+            PASSED=$(grep -q "ALL QUALITY GATES PASSED" quality-gate.log && echo "true" || echo "false")
+            REPORT=$(cat quality-gate.log | tail -20)
+            echo "passed=$PASSED" >> $GITHUB_OUTPUT
+            echo "report<<EOF" >> $GITHUB_OUTPUT
+            echo "$REPORT" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            
+            if [ "$PASSED" == "false" ]; then
+              echo "❌ Quality gates failed"
+              exit 1
+            fi
+          else
+            echo "passed=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+      
+      - name: Upload Quality Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-gate-report-staging
+          path: quality-gate.log
+          retention-days: 14
+
+  deploy:
+    name: Deploy to Staging
+    needs: quality-gates
+    if: needs.quality-gates.outputs.passed == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Trigger Dokploy Deployment
+        id: deploy
+        run: |
+          echo "🚀 Deploying to ${{ env.ENVIRONMENT }}..."
+          
+          RESPONSE=$(curl -X POST "${{ env.DOKPLOY_URL }}/api/deploy" \
+            -H "Authorization: Bearer ${{ secrets.DOKPLOY_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "project": "v-edfinance",
+              "environment": "${{ env.ENVIRONMENT }}",
+              "branch": "${{ github.ref_name }}"
+            }' \
+            -w "\n%{http_code}" -s)
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response: $BODY"
+          
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Deployment triggered successfully"
+            echo "deployment_id=$(echo $BODY | jq -r '.deploymentId // "unknown"')" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Deployment trigger failed"
+            exit 1
+          fi
+      
+      - name: Wait for Deployment
+        run: |
+          echo "⏳ Waiting for deployment to complete..."
+          sleep 60
+      
+      - name: Health Check API
+        id: health-api
+        run: |
+          echo "🏥 Running API health check..."
+          
+          MAX_RETRIES=15
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            if curl -f -s -o /dev/null https://${{ env.API_DOMAIN }}/api/health; then
+              echo "✅ API is healthy!"
+              exit 0
+            fi
+            
+            echo "⏳ Waiting for API... ($(($RETRY_COUNT + 1))/$MAX_RETRIES)"
+            sleep 10
+            RETRY_COUNT=$(($RETRY_COUNT + 1))
+          done
+          
+          echo "❌ Health check failed after $MAX_RETRIES attempts"
+          exit 1
+      
+      - name: Health Check Web
+        id: health-web
+        run: |
+          echo "🏥 Running Web health check..."
+          
+          MAX_RETRIES=15
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.DOMAIN }})
+            if [ "$HTTP_CODE" -eq 200 ]; then
+              echo "✅ Web is healthy!"
+              exit 0
+            fi
+            
+            echo "⏳ Waiting for Web... ($(($RETRY_COUNT + 1))/$MAX_RETRIES)"
+            sleep 10
+            RETRY_COUNT=$(($RETRY_COUNT + 1))
+          done
+          
+          echo "❌ Web health check failed"
+          exit 1
+      
+      - name: E2E Smoke Tests
+        run: |
+          echo "🧪 Running E2E smoke tests..."
+          
+          # Test API health endpoint
+          curl -f https://${{ env.API_DOMAIN }}/api/health | jq .
+          
+          # Test Web homepage
+          curl -f -I https://${{ env.DOMAIN }}
+          
+          # Test API auth endpoint
+          curl -f -X POST https://${{ env.API_DOMAIN }}/api/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{"email":"test@example.com","password":"invalid"}' || true
+          
+          echo "✅ Smoke tests passed"
+
+  notify:
+    name: Send Notifications
+    needs: [quality-gates, deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Determine Status
+        id: status
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "color=3066993" >> $GITHUB_OUTPUT
+            echo "title=✅ Staging Deployment Successful" >> $GITHUB_OUTPUT
+          elif [ "${{ needs.quality-gates.result }}" == "failure" ]; then
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "color=15158332" >> $GITHUB_OUTPUT
+            echo "title=❌ Quality Gates Failed" >> $GITHUB_OUTPUT
+          else
+            echo "status=failure" >> $GITHUB_OUTPUT
+            echo "color=15158332" >> $GITHUB_OUTPUT
+            echo "title=❌ Staging Deployment Failed" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Notify Slack
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "ℹ️  Slack webhook not configured"
+            exit 0
+          fi
+          
+          curl -X POST "$SLACK_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"text\": \"${{ steps.status.outputs.title }}\",
+              \"blocks\": [
+                {
+                  \"type\": \"header\",
+                  \"text\": {
+                    \"type\": \"plain_text\",
+                    \"text\": \"${{ steps.status.outputs.title }}\"
+                  }
+                },
+                {
+                  \"type\": \"section\",
+                  \"fields\": [
+                    {\"type\": \"mrkdwn\", \"text\": \"*Environment:*\\nStaging\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*Branch:*\\n${{ github.ref_name }}\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*Commit:*\\n<https://github.com/${{ github.repository }}/commit/${{ github.sha }}|${GITHUB_SHA:0:7}>\"},
+                    {\"type\": \"mrkdwn\", \"text\": \"*URL:*\\n<https://${{ env.DOMAIN }}|${{ env.DOMAIN }}>\"}
+                  ]
+                },
+                {
+                  \"type\": \"context\",
+                  \"elements\": [
+                    {\"type\": \"mrkdwn\", \"text\": \"Triggered by ${{ github.actor }} • <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow>\"}
+                  ]
+                }
+              ]
+            }" || echo "Slack notification failed"
