@@ -1,2 +1,0 @@
- ERROR  Unknown options: 'run', 'coverage'
-For help, run: pnpm help test
