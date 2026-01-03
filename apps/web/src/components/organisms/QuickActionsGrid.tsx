@@ -2,7 +2,7 @@
 
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
-import { Play, Target, TrendingUp, Users, BookOpen, Award } from 'lucide-react';
+import { Play, Target, TrendingUp, Users, BookOpen, Award, MessageCircle, Sparkles, Brain, TrendingDown, FileSearch } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/cn';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -25,12 +25,48 @@ const quickActions = [
     hoverGradient: 'hover:from-purple-400 hover:to-pink-400',
   },
   { 
+    icon: MessageCircle, 
+    labelKey: 'askAiTutor',
+    href: '/ai-tutor',
+    action: 'AI_CHAT',
+    gradient: 'from-violet-500 to-purple-500',
+    hoverGradient: 'hover:from-violet-400 hover:to-purple-400',
+    badge: 'AI',
+  },
+  { 
+    icon: Sparkles, 
+    labelKey: 'recommendedCourses',
+    href: '/recommendations',
+    action: 'AI_RECOMMENDATIONS',
+    gradient: 'from-cyan-500 to-blue-500',
+    hoverGradient: 'hover:from-cyan-400 hover:to-blue-400',
+    badge: 'AI',
+  },
+  { 
+    icon: Brain, 
+    labelKey: 'predictSuccess',
+    href: '/prediction',
+    action: 'PREDICT_SUCCESS',
+    gradient: 'from-indigo-500 to-purple-500',
+    hoverGradient: 'hover:from-indigo-400 hover:to-purple-400',
+    badge: 'AI',
+  },
+  { 
     icon: TrendingUp, 
-    labelKey: 'budgetSimulator',
-    href: '/simulation',
-    action: 'BUDGET_SIMULATOR',
+    labelKey: 'marketSimulator',
+    href: '/market-simulator',
+    action: 'MARKET_SIMULATOR',
     gradient: 'from-green-500 to-emerald-500',
     hoverGradient: 'hover:from-green-400 hover:to-emerald-400',
+  },
+  { 
+    icon: FileSearch, 
+    labelKey: 'analyzeDocument',
+    href: '/document-analyzer',
+    action: 'ANALYZE_DOCUMENT',
+    gradient: 'from-teal-500 to-cyan-500',
+    hoverGradient: 'hover:from-teal-400 hover:to-cyan-400',
+    badge: 'AI',
   },
   { 
     icon: Users, 
@@ -47,14 +83,6 @@ const quickActions = [
     action: 'BROWSE_COURSES',
     gradient: 'from-pink-500 to-rose-500',
     hoverGradient: 'hover:from-pink-400 hover:to-rose-400',
-  },
-  { 
-    icon: Award, 
-    labelKey: 'viewAchievements',
-    href: '/leaderboard',
-    action: 'VIEW_ACHIEVEMENTS',
-    gradient: 'from-yellow-500 to-amber-500',
-    hoverGradient: 'hover:from-yellow-400 hover:to-amber-400',
   },
 ];
 
@@ -107,7 +135,7 @@ export function QuickActionsGrid() {
                 {/* Icon */}
                 <div
                   className={cn(
-                    'w-12 h-12 mb-4 rounded-lg flex items-center justify-center',
+                    'w-12 h-12 mb-4 rounded-lg flex items-center justify-center relative',
                     'bg-gradient-to-br',
                     action.gradient,
                     action.hoverGradient,
@@ -115,6 +143,11 @@ export function QuickActionsGrid() {
                   )}
                 >
                   <Icon className="w-6 h-6 text-white" />
+                  {action.badge && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                      {action.badge}
+                    </span>
+                  )}
                 </div>
 
                 {/* Label */}

@@ -74,7 +74,12 @@
     "budgetSimulator": "Mô phỏng ngân sách",
     "studyGroup": "Nhóm học tập",
     "browseCourses": "Duyệt khóa học",
-    "viewAchievements": "Xem thành tựu"
+    "viewAchievements": "Xem thành tựu",
+    "askAiTutor": "Hỏi AI Tutor",
+    "recommendedCourses": "Khóa học cho bạn",
+    "predictSuccess": "Dự đoán kết quả",
+    "marketSimulator": "Mô phỏng thị trường",
+    "analyzeDocument": "Phân tích tài liệu"
   },
   "Checklist": {
     "title": "Danh sách kiểm tra tương tác",
