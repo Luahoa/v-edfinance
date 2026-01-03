@@ -43,7 +43,12 @@
     "simulation": "Giả lập",
     "settings": "Cài đặt",
     "profile": "Trang cá nhân",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "learn": "Học tập",
+    "practice": "Thực hành",
+    "social": "Cộng đồng",
+    "more": "Thêm",
+    "help": "Trợ giúp"
   },
   "Dashboard": {
     "title": "Bảng điều khiển",
@@ -63,7 +68,13 @@
     "continueLearning": "Tiếp tục học",
     "setGoal": "Đặt mục tiêu",
     "viewPortfolio": "Danh mục đầu tư",
-    "askAi": "Hỏi AI Mentor"
+    "askAi": "Hỏi AI Mentor",
+    "quickActions": "Thao tác nhanh",
+    "dailyChallenge": "Thử thách hàng ngày",
+    "budgetSimulator": "Mô phỏng ngân sách",
+    "studyGroup": "Nhóm học tập",
+    "browseCourses": "Duyệt khóa học",
+    "viewAchievements": "Xem thành tựu"
   },
   "Checklist": {
     "title": "Danh sách kiểm tra tương tác",

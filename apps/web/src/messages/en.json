@@ -43,7 +43,12 @@
     "simulation": "Simulation",
     "settings": "Settings",
     "profile": "Profile",
-    "logout": "Logout"
+    "logout": "Logout",
+    "learn": "Learn",
+    "practice": "Practice",
+    "social": "Social",
+    "more": "More",
+    "help": "Help"
   },
   "Dashboard": {
     "title": "Dashboard",
@@ -63,7 +68,13 @@
     "continueLearning": "Continue Learning",
     "setGoal": "Set Goal",
     "viewPortfolio": "Portfolio",
-    "askAi": "Ask AI Mentor"
+    "askAi": "Ask AI Mentor",
+    "quickActions": "Quick Actions",
+    "dailyChallenge": "Daily Challenge",
+    "budgetSimulator": "Budget Simulator",
+    "studyGroup": "Study Group",
+    "browseCourses": "Browse Courses",
+    "viewAchievements": "View Achievements"
   },
   "Checklist": {
     "title": "Interactive Checklist",

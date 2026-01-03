@@ -1,6 +1,7 @@
 'use client';
 
 import { SmartNudgeBanner } from '@/components/molecules/SmartNudgeBanner';
+import { QuickActionsGrid } from '@/components/organisms/QuickActionsGrid';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { BuddyGroup, DashboardStats, Post as SocialPostType } from '@/types';
@@ -105,8 +106,29 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+      <div className="min-h-screen bg-zinc-50 dark:bg-black p-6 text-zinc-900 dark:text-zinc-100">
+        <div className="mx-auto max-w-6xl">
+          <div className="h-8 w-48 mb-8 animate-pulse bg-zinc-200 dark:bg-zinc-800 rounded" />
+          
+          {/* Stats skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
+            ))}
+          </div>
+
+          {/* Content skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
+              <div className="h-96 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
+            </div>
+            <div className="lg:col-span-1 space-y-6">
+              <div className="h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
+              <div className="h-32 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -117,7 +139,7 @@ export default function Dashboard() {
         <h1 className="text-2xl font-bold mb-8">{t('welcome')}!</h1>
 
         <SmartNudgeBanner />
-        <QuickActions />
+        <QuickActionsGrid />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatCard

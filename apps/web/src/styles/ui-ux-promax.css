@@ -1,0 +1,164 @@
+/**
+ * UI/UX Promax Color Palette
+ * Based on Fintech/Crypto recommendation: Glassmorphism + Dark Mode (OLED)
+ * 
+ * Color Strategy:
+ * - Primary: #F59E0B (Amber) - Trust, premium feel
+ * - Secondary: #FBBF24 (Gold) - Premium actions, highlights
+ * - CTA: #8B5CF6 (Purple) - Call-to-action, gamification
+ * - Background: #0F172A (Dark Slate) - OLED-friendly dark mode
+ * - Text: #F8FAFC (Light) - High contrast on dark
+ * - Border: #334155 (Slate 700) - Subtle separation
+ */
+
+:root {
+  /* Primary - Amber (Trust & Premium) */
+  --color-primary-50: #fffbeb;
+  --color-primary-100: #fef3c7;
+  --color-primary-200: #fde68a;
+  --color-primary-300: #fcd34d;
+  --color-primary-400: #fbbf24;
+  --color-primary-500: #f59e0b; /* Main */
+  --color-primary-600: #d97706;
+  --color-primary-700: #b45309;
+  --color-primary-800: #92400e;
+  --color-primary-900: #78350f;
+
+  /* Secondary - Gold (Premium Highlights) */
+  --color-secondary-50: #fefce8;
+  --color-secondary-100: #fef9c3;
+  --color-secondary-200: #fef08a;
+  --color-secondary-300: #fde047;
+  --color-secondary-400: #fbbf24; /* Main */
+  --color-secondary-500: #eab308;
+  --color-secondary-600: #ca8a04;
+  --color-secondary-700: #a16207;
+  --color-secondary-800: #854d0e;
+  --color-secondary-900: #713f12;
+
+  /* CTA - Purple (Call-to-Action) */
+  --color-cta-50: #faf5ff;
+  --color-cta-100: #f3e8ff;
+  --color-cta-200: #e9d5ff;
+  --color-cta-300: #d8b4fe;
+  --color-cta-400: #c084fc;
+  --color-cta-500: #a855f7;
+  --color-cta-600: #9333ea;
+  --color-cta-700: #7e22ce;
+  --color-cta-800: #6b21a8;
+  --color-cta-900: #581c87;
+  --color-cta-950: #3b0764;
+
+  /* Background - Dark Slate (OLED) */
+  --color-bg-primary: #0f172a; /* slate-950 */
+  --color-bg-secondary: #1e293b; /* slate-800 */
+  --color-bg-tertiary: #334155; /* slate-700 */
+  --color-bg-light: #f8fafc; /* slate-50 */
+
+  /* Text */
+  --color-text-primary: #f8fafc; /* Light on dark */
+  --color-text-secondary: #cbd5e1; /* slate-300 */
+  --color-text-muted: #94a3b8; /* slate-400 */
+  --color-text-dark: #0f172a; /* Dark on light */
+
+  /* Border */
+  --color-border-default: #334155; /* slate-700 */
+  --color-border-light: #475569; /* slate-600 */
+  --color-border-muted: #1e293b; /* slate-800 */
+
+  /* Status Colors */
+  --color-success: #22c55e; /* green-500 */
+  --color-warning: #f59e0b; /* amber-500 */
+  --color-error: #ef4444; /* red-500 */
+  --color-info: #3b82f6; /* blue-500 */
+
+  /* Glass Effects */
+  --glass-bg: rgba(15, 23, 42, 0.7); /* Dark slate with transparency */
+  --glass-border: rgba(148, 163, 184, 0.1); /* Subtle border */
+  --glass-blur: 12px;
+
+  /* Spacing (8px grid) */
+  --spacing-1: 0.25rem; /* 4px */
+  --spacing-2: 0.5rem; /* 8px */
+  --spacing-3: 0.75rem; /* 12px */
+  --spacing-4: 1rem; /* 16px */
+  --spacing-6: 1.5rem; /* 24px */
+  --spacing-8: 2rem; /* 32px */
+  --spacing-12: 3rem; /* 48px */
+  --spacing-16: 4rem; /* 64px */
+
+  /* Border Radius */
+  --radius-sm: 0.375rem; /* 6px */
+  --radius-md: 0.5rem; /* 8px */
+  --radius-lg: 0.75rem; /* 12px */
+  --radius-xl: 1rem; /* 16px */
+  --radius-2xl: 1.5rem; /* 24px */
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px rgba(245, 158, 11, 0.3); /* Amber glow */
+
+  /* Animation */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Light mode overrides (if needed) */
+@media (prefers-color-scheme: light) {
+  :root {
+    --color-bg-primary: #f8fafc;
+    --color-bg-secondary: #f1f5f9;
+    --color-bg-tertiary: #e2e8f0;
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #475569;
+    --color-text-muted: #64748b;
+    --color-border-default: #e2e8f0;
+    --color-border-light: #cbd5e1;
+    --glass-bg: rgba(248, 250, 252, 0.7);
+  }
+}
+
+/* Dark mode class variant */
+.dark {
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-bg-tertiary: #334155;
+  --color-bg-light: #f8fafc;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #94a3b8;
+  --color-text-dark: #0f172a;
+  --color-border-default: #334155;
+  --color-border-light: #475569;
+  --color-border-muted: #1e293b;
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(148, 163, 184, 0.1);
+}
+
+/* Utility classes */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+}
+
+.gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-400));
+}
+
+.gradient-cta {
+  background: linear-gradient(135deg, var(--color-cta-600), var(--color-cta-800));
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

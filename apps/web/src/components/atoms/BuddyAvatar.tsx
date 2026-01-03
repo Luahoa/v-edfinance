@@ -38,6 +38,7 @@ export const BuddyAvatar = ({ displayName, avatarUrl, size = 'md' }: BuddyAvatar
           alt={displayName || 'Avatar'}
           width={dimensions[size]}
           height={dimensions[size]}
+          loading="lazy"
           className="w-full h-full object-cover"
         />
       ) : (

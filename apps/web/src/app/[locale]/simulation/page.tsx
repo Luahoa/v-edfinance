@@ -27,7 +27,20 @@ export default function SimulationPage() {
     fetchPortfolio();
   }, []);
 
-  if (loading) return <div className="p-20 text-center text-zinc-500">Loading simulation...</div>;
+  if (loading) {
+    return (
+      <div className="container mx-auto max-w-6xl p-6">
+        <div className="h-9 w-64 mb-8 animate-pulse bg-zinc-200 dark:bg-zinc-800 rounded" />
+        
+        {/* Simulation cards skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-2xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto max-w-6xl p-6">

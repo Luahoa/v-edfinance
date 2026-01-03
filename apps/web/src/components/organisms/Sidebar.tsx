@@ -5,6 +5,12 @@ import { Link, usePathname } from '@/i18n/routing';
 import { motion } from 'framer-motion';
 import { Icons } from '@/lib/icons';
 import { useTranslations } from 'next-intl';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 interface SidebarProps {
   className?: string;
@@ -15,13 +21,19 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
   const t = useTranslations('Navigation');
   const pathname = usePathname();
 
-  const menuItems = [
-    { href: '/dashboard', label: t('dashboard'), icon: Icons.LayoutDashboard || Icons.Award },
-    { href: '/courses', label: t('courses'), icon: Icons.BookOpen },
-    { href: '/simulation', label: t('simulation'), icon: Icons.Play || Icons.Zap },
+  // Primary navigation items (4+1 pattern)
+  const primaryItems = [
+    { href: '/dashboard', label: t('dashboard'), icon: Icons.LayoutDashboard || Icons.Award, shortcut: 'Alt+H' },
+    { href: '/learn', label: t('learn'), icon: Icons.BookOpen, shortcut: 'Alt+L' },
+    { href: '/practice', label: t('practice'), icon: Icons.Play || Icons.Zap, shortcut: 'Alt+P' },
+    { href: '/social', label: t('social'), icon: Icons.Users, shortcut: 'Alt+S' },
+  ];
+
+  // Secondary navigation items (in "More" dropdown)
+  const secondaryItems = [
+    { href: '/store', label: t('store'), icon: Icons.ArrowRight },
     { href: '/leaderboard', label: t('leaderboard'), icon: Icons.Award },
-    { href: '/social', label: t('social'), icon: Icons.Users },
-    { href: '/store', label: t('store'), icon: Icons.ArrowRight }, // Fallback for ShoppingBag
+    { href: '/settings', label: t('settings'), icon: Icons.Settings },
   ];
 
   return (
@@ -37,6 +49,7 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
         </Link>
         {onClose && (
           <button
+            type="button"
             onClick={onClose}
             className="lg:hidden p-2 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg"
           >
@@ -46,7 +59,7 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
       </div>
 
       <nav className="flex-1 space-y-1 p-4 overflow-y-auto">
-        {menuItems.map((item) => {
+        {primaryItems.map((item) => {
           const isActive =
             pathname === item.href ||
             (item.href !== '/dashboard' && pathname.startsWith(item.href));
@@ -78,18 +91,34 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
             </Link>
           );
         })}
-      </nav>
 
-      <div className="p-4 border-t border-zinc-200 dark:border-zinc-800">
-        <Link
-          href="/settings"
-          onClick={onClose}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800/50 transition-all"
-        >
-          <Icons.Settings className="text-zinc-400 w-5 h-5" />
-          {t('settings') || 'Settings'}
-        </Link>
-      </div>
+        {/* More dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              type="button"
+              className="w-full group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-zinc-600 hover:bg-zinc-50 dark:text-zinc-400 dark:hover:bg-zinc-800/50 transition-all"
+            >
+              <Icons.MoreHorizontal className="w-5 h-5 text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-300" />
+              {t('more')}
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            {secondaryItems.map((item) => (
+              <DropdownMenuItem key={item.href} asChild>
+                <Link
+                  href={item.href}
+                  onClick={onClose}
+                  className="flex items-center gap-3 cursor-pointer"
+                >
+                  <item.icon className="w-4 h-4" />
+                  {item.label}
+                </Link>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </nav>
     </aside>
   );
 }

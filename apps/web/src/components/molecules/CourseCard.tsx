@@ -26,6 +26,7 @@ export default function CourseCard({ course }: CourseCardProps) {
           }
           alt={title}
           fill
+          loading="lazy"
           className="object-cover transition-transform group-hover:scale-105"
         />
         <div className="absolute left-2 top-2 rounded bg-blue-600 px-2 py-1 text-xs font-bold text-white uppercase">

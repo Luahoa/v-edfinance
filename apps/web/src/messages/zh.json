@@ -43,7 +43,12 @@
     "simulation": "模拟",
     "settings": "设置",
     "profile": "个人资料",
-    "logout": "退出登录"
+    "logout": "退出登录",
+    "learn": "学习",
+    "practice": "练习",
+    "social": "社区",
+    "more": "更多",
+    "help": "帮助"
   },
   "Dashboard": {
     "title": "仪表盘",
@@ -63,7 +68,13 @@
     "continueLearning": "继续学习",
     "setGoal": "设定目标",
     "viewPortfolio": "投资组合",
-    "askAi": "咨询 AI 导师"
+    "askAi": "咨询 AI 导师",
+    "quickActions": "快捷操作",
+    "dailyChallenge": "每日挑战",
+    "budgetSimulator": "预算模拟器",
+    "studyGroup": "学习小组",
+    "browseCourses": "浏览课程",
+    "viewAchievements": "查看成就"
   },
   "Checklist": {
     "title": "互动清单",
