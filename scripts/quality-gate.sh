@@ -1,8 +1,9 @@
 #!/bin/bash
 # Quality Gate Script - Zero-Debt Engineering
 # Epic: ved-xt3 - Phase 1 Quality Gate
-# Version: 1.0
-# Date: 2026-01-03
+# Version: 2.0 (Enhanced for CI/CD)
+# Date: 2026-01-04
+# Changes: Added JSON export for CI/CD integration
 
 set -e  # Exit on any error
 
@@ -18,26 +19,47 @@ PASSED=0
 FAILED=0
 WARNINGS=0
 
+# JSON report data
+JSON_GATES='[]'
+START_TIME=$(date +%s)
+
 echo -e "${BLUE}════════════════════════════════════════════════════════${NC}"
 echo -e "${BLUE}         🔍 V-EdFinance Quality Gate Check${NC}"
 echo -e "${BLUE}         Phase 1: Zero-Debt Engineering${NC}"
 echo -e "${BLUE}════════════════════════════════════════════════════════${NC}"
 echo ""
 
+# Function to add gate result to JSON
+add_gate_result() {
+    local gate_name="$1"
+    local status="$2"
+    local message="$3"
+    local details="${4:-}"
+    
+    JSON_GATES=$(echo "$JSON_GATES" | jq --arg name "$gate_name" \
+        --arg status "$status" \
+        --arg message "$message" \
+        --arg details "$details" \
+        '. += [{"gate": $name, "status": $status, "message": $message, "details": $details}]')
+}
+
 # Function to report results
 pass() {
     echo -e "${GREEN}✅ PASS:${NC} $1"
     ((PASSED++))
+    add_gate_result "${CURRENT_GATE:-Unknown}" "passed" "$1"
 }
 
 fail() {
     echo -e "${RED}❌ FAIL:${NC} $1"
     ((FAILED++))
+    add_gate_result "${CURRENT_GATE:-Unknown}" "failed" "$1"
 }
 
 warn() {
     echo -e "${YELLOW}⚠️  WARN:${NC} $1"
     ((WARNINGS++))
+    add_gate_result "${CURRENT_GATE:-Unknown}" "warning" "$1"
 }
 
 info() {
@@ -48,6 +70,7 @@ info() {
 # GATE 1: TypeScript Strict Mode & Build Validation
 # ═══════════════════════════════════════════════════════
 
+CURRENT_GATE="TypeScript Build"
 echo -e "${BLUE}╔══ Gate 1: TypeScript Build ══╗${NC}"
 
 info "Building API (NestJS + Prisma + Drizzle)..."
@@ -79,6 +102,7 @@ echo ""
 # GATE 2: Schema Synchronization Verification
 # ═══════════════════════════════════════════════════════
 
+CURRENT_GATE="Schema Sync"
 echo -e "${BLUE}╔══ Gate 2: Schema Sync ══╗${NC}"
 
 info "Verifying Prisma/Drizzle schema parity..."
@@ -101,6 +125,7 @@ echo ""
 # GATE 3: Test Coverage Threshold
 # ═══════════════════════════════════════════════════════
 
+CURRENT_GATE="Test Coverage"
 echo -e "${BLUE}╔══ Gate 3: Test Coverage ══╗${NC}"
 
 info "Running test suite with coverage..."
@@ -127,6 +152,7 @@ echo ""
 # GATE 4: Lint & Code Quality
 # ═══════════════════════════════════════════════════════
 
+CURRENT_GATE="Code Quality"
 echo -e "${BLUE}╔══ Gate 4: Code Quality ══╗${NC}"
 
 info "Running ESLint on API..."
@@ -149,6 +175,7 @@ echo ""
 # GATE 5: Performance Benchmarks
 # ═══════════════════════════════════════════════════════
 
+CURRENT_GATE="Performance"
 echo -e "${BLUE}╔══ Gate 5: Performance ══╗${NC}"
 
 info "Checking database query performance..."
@@ -174,6 +201,7 @@ echo ""
 # GATE 6: Security Checks
 # ═══════════════════════════════════════════════════════
 
+CURRENT_GATE="Security"
 echo -e "${BLUE}╔══ Gate 6: Security ══╗${NC}"
 
 info "Checking for exposed secrets..."
@@ -197,6 +225,9 @@ echo ""
 # FINAL REPORT
 # ═══════════════════════════════════════════════════════
 
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+
 echo -e "${BLUE}════════════════════════════════════════════════════════${NC}"
 echo -e "${BLUE}                  📊 Quality Gate Summary${NC}"
 echo -e "${BLUE}════════════════════════════════════════════════════════${NC}"
@@ -205,6 +236,33 @@ echo ""
 echo -e "  ${GREEN}✅ Passed:${NC}   $PASSED checks"
 echo -e "  ${RED}❌ Failed:${NC}   $FAILED checks"
 echo -e "  ${YELLOW}⚠️  Warnings:${NC} $WARNINGS checks"
+echo -e "  ⏱️  Duration: ${DURATION}s"
+echo ""
+
+# Export JSON report
+JSON_REPORT=$(jq -n \
+    --argjson gates "$JSON_GATES" \
+    --arg passed "$PASSED" \
+    --arg failed "$FAILED" \
+    --arg warnings "$WARNINGS" \
+    --arg duration "$DURATION" \
+    --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    --arg overall "$([ $FAILED -eq 0 ] && echo 'passed' || echo 'failed')" \
+    '{
+        timestamp: $timestamp,
+        overall: $overall,
+        summary: {
+            passed: ($passed | tonumber),
+            failed: ($failed | tonumber),
+            warnings: ($warnings | tonumber),
+            duration: ($duration | tonumber)
+        },
+        gates: $gates
+    }')
+
+# Write JSON report to file
+echo "$JSON_REPORT" > quality-gate-report.json
+echo -e "${BLUE}📄 JSON report saved to quality-gate-report.json${NC}"
 echo ""
 
 if [ $FAILED -eq 0 ]; then
