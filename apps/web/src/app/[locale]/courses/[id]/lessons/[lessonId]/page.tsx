@@ -1,6 +1,7 @@
 'use client';
 
 import Button from '@/components/atoms/Button';
+import YouTubeEmbed from '@/components/molecules/YouTubeEmbed';
 import { Link, useRouter } from '@/i18n/routing';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { Course, Lesson } from '@/types';
@@ -169,15 +170,36 @@ export default function LessonPage({
               </div>
               <h1 className="text-3xl md:text-4xl font-bold mb-8 tracking-tight">{currentTitle}</h1>
 
-              {lesson.type === 'VIDEO' && (
+              {lesson.type === 'VIDEO' && lesson.videoType === 'YOUTUBE' && lesson.videoKey && (
+                <div className="mb-10">
+                  <YouTubeEmbed
+                    videoId={
+                      typeof lesson.videoKey === 'string'
+                        ? lesson.videoKey
+                        : JSON.parse(lesson.videoKey).videoId
+                    }
+                    onProgress={(state) => {
+                      // Track progress for analytics
+                      console.log('Progress:', state.playedSeconds);
+                    }}
+                    onEnded={() => {
+                      // Auto-mark as complete when video ends
+                      console.log('Video ended');
+                    }}
+                    className="shadow-2xl"
+                  />
+                </div>
+              )}
+
+              {lesson.type === 'VIDEO' && lesson.videoType !== 'YOUTUBE' && (
                 <div className="aspect-video w-full overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl mb-10 group relative border border-zinc-800">
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-zinc-500">
                     <PlayCircle
                       size={64}
                       className="mb-4 text-blue-600 opacity-80 group-hover:scale-110 transition-transform"
                     />
-                    <p className="font-medium">Video ID: {lesson.videoKey}</p>
-                    <p className="text-sm opacity-60 mt-2">Ready to stream</p>
+                    <p className="font-medium">Local video player placeholder</p>
+                    <p className="text-sm opacity-60 mt-2">File: {lesson.videoKey}</p>
                   </div>
                 </div>
               )}
