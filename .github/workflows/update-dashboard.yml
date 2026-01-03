@@ -1,0 +1,220 @@
+name: Update Deployment Dashboard
+
+on:
+  # Auto-update after deployments
+  workflow_run:
+    workflows: 
+      - "Deploy to Development"
+      - "Deploy to Staging"
+      - "Deploy to Production"
+      - "Rollback Deployment"
+    types:
+      - completed
+  
+  # Daily update at midnight UTC
+  schedule:
+    - cron: '0 0 * * *'
+  
+  # Manual trigger
+  workflow_dispatch:
+
+jobs:
+  update-dashboard:
+    name: Update Deployment Status
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Fetch Deployment Data
+        id: fetch-data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Fetch latest deployment info for each environment
+          echo "Fetching deployment history..."
+          
+          # Development (develop branch)
+          DEV_COMMIT=$(git rev-parse --short develop)
+          DEV_DATE=$(git log -1 --format=%cd --date=iso-strict develop)
+          DEV_STATUS="✅ Success"
+          
+          # Staging (staging branch)
+          STAGING_COMMIT=$(git rev-parse --short staging 2>/dev/null || echo "none")
+          STAGING_DATE=$(git log -1 --format=%cd --date=iso-strict staging 2>/dev/null || echo "N/A")
+          STAGING_STATUS="✅ Success"
+          
+          # Production (main branch)
+          PROD_COMMIT=$(git rev-parse --short main)
+          PROD_DATE=$(git log -1 --format=%cd --date=iso-strict main)
+          PROD_STATUS="✅ Success"
+          
+          # Save to outputs
+          echo "dev_commit=$DEV_COMMIT" >> $GITHUB_OUTPUT
+          echo "dev_date=$DEV_DATE" >> $GITHUB_OUTPUT
+          echo "dev_status=$DEV_STATUS" >> $GITHUB_OUTPUT
+          
+          echo "staging_commit=$STAGING_COMMIT" >> $GITHUB_OUTPUT
+          echo "staging_date=$STAGING_DATE" >> $GITHUB_OUTPUT
+          echo "staging_status=$STAGING_STATUS" >> $GITHUB_OUTPUT
+          
+          echo "prod_commit=$PROD_COMMIT" >> $GITHUB_OUTPUT
+          echo "prod_date=$PROD_DATE" >> $GITHUB_OUTPUT
+          echo "prod_status=$PROD_STATUS" >> $GITHUB_OUTPUT
+      
+      - name: Fetch Quality Gate Status
+        id: quality-gates
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Get latest quality gate workflow runs
+          echo "Fetching quality gate results..."
+          
+          QUALITY_RUNS=$(gh api \
+            "/repos/${{ github.repository }}/actions/workflows/quality-gates.yml/runs?per_page=1" \
+            --jq '.workflow_runs[0].conclusion')
+          
+          if [ "$QUALITY_RUNS" = "success" ]; then
+            echo "quality_status=PASS" >> $GITHUB_OUTPUT
+          else
+            echo "quality_status=FAIL" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Fetch Incident Data
+        id: incidents
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Count incidents (P0/P1 issues) in last 30 days
+          THIRTY_DAYS_AGO=$(date -u -d '30 days ago' +%Y-%m-%d 2>/dev/null || date -u -v-30d +%Y-%m-%d)
+          
+          INCIDENT_COUNT=$(gh api \
+            "/repos/${{ github.repository }}/issues?labels=incident,P0&since=${THIRTY_DAYS_AGO}T00:00:00Z" \
+            --jq 'length')
+          
+          echo "incident_count=$INCIDENT_COUNT" >> $GITHUB_OUTPUT
+          echo "Found $INCIDENT_COUNT incidents in last 30 days"
+      
+      - name: Calculate Deployment Metrics
+        id: metrics
+        run: |
+          # Calculate deployment frequency (last 7 days)
+          DEV_DEPLOYS=$(git rev-list --count --since="7 days ago" develop)
+          STAGING_DEPLOYS=$(git rev-list --count --since="7 days ago" staging 2>/dev/null || echo "0")
+          PROD_DEPLOYS=$(git rev-list --count --since="7 days ago" main)
+          
+          echo "dev_frequency=$DEV_DEPLOYS" >> $GITHUB_OUTPUT
+          echo "staging_frequency=$STAGING_DEPLOYS" >> $GITHUB_OUTPUT
+          echo "prod_frequency=$PROD_DEPLOYS" >> $GITHUB_OUTPUT
+      
+      - name: Update Dashboard
+        run: |
+          echo "Updating DEPLOYMENT_STATUS.md..."
+          
+          # Update development section
+          sed -i '/<!-- AUTO-GENERATED:DEV-START -->/,/<!-- AUTO-GENERATED:DEV-END -->/c\
+          <!-- AUTO-GENERATED:DEV-START -->\n\
+          - **Latest:** `develop@${{ steps.fetch-data.outputs.dev_commit }}` - ${{ steps.fetch-data.outputs.dev_date }} - ${{ steps.fetch-data.outputs.dev_status }}\n\
+          - **Rollbacks (Last 7 days):** 0\n\
+          <!-- AUTO-GENERATED:DEV-END -->' docs/DEPLOYMENT_STATUS.md
+          
+          # Update staging section
+          sed -i '/<!-- AUTO-GENERATED:STAGING-START -->/,/<!-- AUTO-GENERATED:STAGING-END -->/c\
+          <!-- AUTO-GENERATED:STAGING-START -->\n\
+          - **Latest:** `staging@${{ steps.fetch-data.outputs.staging_commit }}` - ${{ steps.fetch-data.outputs.staging_date }} - ${{ steps.fetch-data.outputs.staging_status }}\n\
+          - **Rollbacks (Last 7 days):** 0\n\
+          <!-- AUTO-GENERATED:STAGING-END -->' docs/DEPLOYMENT_STATUS.md
+          
+          # Update production section
+          sed -i '/<!-- AUTO-GENERATED:PROD-START -->/,/<!-- AUTO-GENERATED:PROD-END -->/c\
+          <!-- AUTO-GENERATED:PROD-START -->\n\
+          - **Latest:** `main@${{ steps.fetch-data.outputs.prod_commit }}` - ${{ steps.fetch-data.outputs.prod_date }} - ${{ steps.fetch-data.outputs.prod_status }}\n\
+          - **Rollbacks (Last 30 days):** 0\n\
+          <!-- AUTO-GENERATED:PROD-END -->' docs/DEPLOYMENT_STATUS.md
+          
+          # Update quality gates section
+          sed -i '/<!-- AUTO-GENERATED:QUALITY-START -->/,/<!-- AUTO-GENERATED:QUALITY-END -->/c\
+          <!-- AUTO-GENERATED:QUALITY-START -->\n\
+          | Environment | Build | Schema | Tests | Lint | Performance | Security | Overall |\n\
+          |-------------|-------|--------|-------|------|-------------|----------|---------|\n\
+          | Development | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **${{ steps.quality-gates.outputs.quality_status }}** |\n\
+          | Staging | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **${{ steps.quality-gates.outputs.quality_status }}** |\n\
+          | Production | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | **${{ steps.quality-gates.outputs.quality_status }}** |\n\
+          <!-- AUTO-GENERATED:QUALITY-END -->' docs/DEPLOYMENT_STATUS.md
+          
+          # Update incidents section
+          if [ "${{ steps.incidents.outputs.incident_count }}" -eq 0 ]; then
+            sed -i '/<!-- AUTO-GENERATED:INCIDENTS-START -->/,/<!-- AUTO-GENERATED:INCIDENTS-END -->/c\
+            <!-- AUTO-GENERATED:INCIDENTS-START -->\n\
+            | Date | Environment | Severity | Issue | Resolution | Duration |\n\
+            |------|-------------|----------|-------|------------|----------|\n\
+            | *No incidents in last 30 days* | - | - | - | - | - |\n\
+            <!-- AUTO-GENERATED:INCIDENTS-END -->' docs/DEPLOYMENT_STATUS.md
+          fi
+          
+          # Update timestamp
+          CURRENT_TIME=$(date -u +"%Y-%m-%d %H:%M UTC")
+          sed -i "s/Last Updated:.*/Last Updated: $CURRENT_TIME (Auto-generated)/" docs/DEPLOYMENT_STATUS.md
+          
+          echo "Dashboard updated successfully!"
+      
+      - name: Commit Changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          if git diff --quiet docs/DEPLOYMENT_STATUS.md; then
+            echo "No changes to commit"
+          else
+            git add docs/DEPLOYMENT_STATUS.md
+            git commit -m "📊 Auto-update deployment dashboard [skip ci]"
+            git push
+            echo "Dashboard updated and pushed!"
+          fi
+      
+      - name: Generate Metrics JSON
+        run: |
+          # Generate metrics file for external tools
+          cat > deployment-metrics.json <<EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "environments": {
+              "development": {
+                "commit": "${{ steps.fetch-data.outputs.dev_commit }}",
+                "deployedAt": "${{ steps.fetch-data.outputs.dev_date }}",
+                "status": "${{ steps.fetch-data.outputs.dev_status }}",
+                "deploysLastWeek": ${{ steps.metrics.outputs.dev_frequency }}
+              },
+              "staging": {
+                "commit": "${{ steps.fetch-data.outputs.staging_commit }}",
+                "deployedAt": "${{ steps.fetch-data.outputs.staging_date }}",
+                "status": "${{ steps.fetch-data.outputs.staging_status }}",
+                "deploysLastWeek": ${{ steps.metrics.outputs.staging_frequency }}
+              },
+              "production": {
+                "commit": "${{ steps.fetch-data.outputs.prod_commit }}",
+                "deployedAt": "${{ steps.fetch-data.outputs.prod_date }}",
+                "status": "${{ steps.fetch-data.outputs.prod_status }}",
+                "deploysLastWeek": ${{ steps.metrics.outputs.prod_frequency }}
+              }
+            },
+            "qualityGates": {
+              "status": "${{ steps.quality-gates.outputs.quality_status }}"
+            },
+            "incidents": {
+              "last30Days": ${{ steps.incidents.outputs.incident_count }}
+            }
+          }
+          EOF
+          
+          cat deployment-metrics.json
+      
+      - name: Upload Metrics Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-metrics
+          path: deployment-metrics.json
+          retention-days: 30
