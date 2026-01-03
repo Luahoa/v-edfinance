@@ -1,0 +1,1325 @@
+[
+  {
+    "filename": "100_AGENT_ORCHESTRATION_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "100_AGENT_ORCHESTRATION_PLAN.md"
+  },
+  {
+    "filename": "4_SKILLS_DATABASE_OPTIMIZATION_COMPLETE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "4_SKILLS_DATABASE_OPTIMIZATION_COMPLETE.md"
+  },
+  {
+    "filename": "AGENT_VERIFICATION_PROTOCOL.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "AGENT_VERIFICATION_PROTOCOL.md"
+  },
+  {
+    "filename": "AGENTS.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "AGENTS.md"
+  },
+  {
+    "filename": "AI_SERVICE_TEST_REPORT.md",
+    "category": "edtech",
+    "reason": "EdTech behavioral design test report",
+    "targetPath": "docs/behavioral-design/test-reports/AI_SERVICE_TEST_REPORT.md"
+  },
+  {
+    "filename": "AI_SKILLS_FINAL_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "AI_SKILLS_FINAL_REPORT.md"
+  },
+  {
+    "filename": "AI_SKILLS_FINAL_STATUS.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "AI_SKILLS_FINAL_STATUS.md"
+  },
+  {
+    "filename": "AI_SKILLS_INSTALLATION_COMPLETE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "AI_SKILLS_INSTALLATION_COMPLETE.md"
+  },
+  {
+    "filename": "AI_SKILLS_INSTALLATION_SUMMARY.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "AI_SKILLS_INSTALLATION_SUMMARY.md"
+  },
+  {
+    "filename": "AI_SKILLS_README.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "AI_SKILLS_README.md"
+  },
+  {
+    "filename": "AI_TESTING_ARMY_BEADS_PLAN.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/AI_TESTING_ARMY_BEADS_PLAN.md"
+  },
+  {
+    "filename": "AI_TESTING_ARMY_DEPLOYMENT_COMPLETE.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/AI_TESTING_ARMY_DEPLOYMENT_COMPLETE.md"
+  },
+  {
+    "filename": "AI_TESTING_ARMY_FINAL_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/AI_TESTING_ARMY_FINAL_REPORT.md"
+  },
+  {
+    "filename": "AI_TESTING_ARMY_INTEGRATION_PLAN.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/AI_TESTING_ARMY_INTEGRATION_PLAN.md"
+  },
+  {
+    "filename": "AI_TESTING_TOOLS_ANALYSIS.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/AI_TESTING_TOOLS_ANALYSIS.md"
+  },
+  {
+    "filename": "AMP_AUTO_WORKFLOW_TEST_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/AMP_AUTO_WORKFLOW_TEST_REPORT.md"
+  },
+  {
+    "filename": "ANALYTICS_INTEGRATION_TEST_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/ANALYTICS_INTEGRATION_TEST_REPORT.md"
+  },
+  {
+    "filename": "ANTI_HALLUCINATION_SPEC.md",
+    "category": "edtech",
+    "reason": "EdTech behavioral design test report",
+    "targetPath": "docs/behavioral-design/test-reports/ANTI_HALLUCINATION_SPEC.md"
+  },
+  {
+    "filename": "ARCHITECTURE.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "ARCHITECTURE.md"
+  },
+  {
+    "filename": "ARMY_DASHBOARD.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "ARMY_DASHBOARD.md"
+  },
+  {
+    "filename": "AUDIT_REPORT_100_AGENT_ORCHESTRATION.md",
+    "category": "archive",
+    "subcategory": "audits",
+    "reason": "Old audit report (keeping latest 2026-01-03)",
+    "targetPath": "docs/archive/2025-12/audits/AUDIT_REPORT_100_AGENT_ORCHESTRATION.md"
+  },
+  {
+    "filename": "AUDIT_REPORT_2025-12-22.md",
+    "category": "archive",
+    "subcategory": "audits",
+    "reason": "Old audit report (keeping latest 2026-01-03)",
+    "targetPath": "docs/archive/2025-12/audits/AUDIT_REPORT_2025-12-22.md"
+  },
+  {
+    "filename": "AUTH_MODULE_TEST_ENHANCEMENT_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/AUTH_MODULE_TEST_ENHANCEMENT_REPORT.md"
+  },
+  {
+    "filename": "AUTO_TEST_SYSTEM.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/AUTO_TEST_SYSTEM.md"
+  },
+  {
+    "filename": "BACKEND_PRIORITY_HANDOFF.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/BACKEND_PRIORITY_HANDOFF.md"
+  },
+  {
+    "filename": "BEADS_CLEANUP_ROADMAP.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "BEADS_CLEANUP_ROADMAP.md"
+  },
+  {
+    "filename": "BEADS_GUIDE.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "BEADS_GUIDE.md"
+  },
+  {
+    "filename": "beads_import.md",
+    "category": "delete",
+    "reason": "Superseded or obsolete",
+    "targetPath": ""
+  },
+  {
+    "filename": "BEADS_INTEGRATION_DEEP_DIVE.md",
+    "category": "beads",
+    "reason": "Beads workflow documentation",
+    "targetPath": "docs/beads/BEADS_INTEGRATION_DEEP_DIVE.md"
+  },
+  {
+    "filename": "BEADS_OPTIMIZATION_ROADMAP.md",
+    "category": "beads",
+    "reason": "Beads workflow documentation",
+    "targetPath": "docs/beads/BEADS_OPTIMIZATION_ROADMAP.md"
+  },
+  {
+    "filename": "CLEANUP_PLAN.md",
+    "category": "delete",
+    "reason": "Superseded or obsolete",
+    "targetPath": ""
+  },
+  {
+    "filename": "CODE_REVIEW_PHASE1_COMPLETE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "CODE_REVIEW_PHASE1_COMPLETE.md"
+  },
+  {
+    "filename": "COMMITMENT_CONTRACTS_TEST_REPORT.md",
+    "category": "edtech",
+    "reason": "EdTech behavioral design test report",
+    "targetPath": "docs/behavioral-design/test-reports/COMMITMENT_CONTRACTS_TEST_REPORT.md"
+  },
+  {
+    "filename": "COMPLETE_ECOSYSTEM_INVENTORY.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "COMPLETE_ECOSYSTEM_INVENTORY.md"
+  },
+  {
+    "filename": "COMPREHENSIVE_AUDIT_AND_OPTIMIZATION_ROADMAP_2025-12-23.md",
+    "category": "archive",
+    "subcategory": "audits",
+    "reason": "Old audit report (keeping latest 2026-01-03)",
+    "targetPath": "docs/archive/2025-12/audits/COMPREHENSIVE_AUDIT_AND_OPTIMIZATION_ROADMAP_2025-12-23.md"
+  },
+  {
+    "filename": "COMPREHENSIVE_AUDIT_REPORT_2025-12-22.md",
+    "category": "archive",
+    "subcategory": "audits",
+    "reason": "Old audit report (keeping latest 2026-01-03)",
+    "targetPath": "docs/archive/2025-12/audits/COMPREHENSIVE_AUDIT_REPORT_2025-12-22.md"
+  },
+  {
+    "filename": "COMPREHENSIVE_DATABASE_AUDIT_4_SKILLS.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "COMPREHENSIVE_DATABASE_AUDIT_4_SKILLS.md"
+  },
+  {
+    "filename": "COMPREHENSIVE_PROJECT_AUDIT_2025-12-23.md",
+    "category": "archive",
+    "subcategory": "audits",
+    "reason": "Old audit report (keeping latest 2026-01-03)",
+    "targetPath": "docs/archive/2025-12/audits/COMPREHENSIVE_PROJECT_AUDIT_2025-12-23.md"
+  },
+  {
+    "filename": "COMPREHENSIVE_PROJECT_CLEANUP_PLAN.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "COMPREHENSIVE_PROJECT_CLEANUP_PLAN.md"
+  },
+  {
+    "filename": "CONTEXT_HANDOFF_2025-12-21_23h.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/CONTEXT_HANDOFF_2025-12-21_23h.md"
+  },
+  {
+    "filename": "CONTEXT_SNAPSHOT.md",
+    "category": "delete",
+    "reason": "Superseded or obsolete",
+    "targetPath": ""
+  },
+  {
+    "filename": "COURSES_TEST_COVERAGE_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/COURSES_TEST_COVERAGE_REPORT.md"
+  },
+  {
+    "filename": "COVERAGE_BASELINE_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/COVERAGE_BASELINE_REPORT.md"
+  },
+  {
+    "filename": "DATABASE_ARCHITECT_QUICK_START.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DATABASE_ARCHITECT_QUICK_START.md"
+  },
+  {
+    "filename": "DATABASE_COMPLETE_GUIDE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DATABASE_COMPLETE_GUIDE.md"
+  },
+  {
+    "filename": "DATABASE_INTEGRATION_COMPLETE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DATABASE_INTEGRATION_COMPLETE.md"
+  },
+  {
+    "filename": "DATABASE_OPTIMIZATION_QUICK_START.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DATABASE_OPTIMIZATION_QUICK_START.md"
+  },
+  {
+    "filename": "DATABASE_OPTIMIZATION_ROADMAP.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DATABASE_OPTIMIZATION_ROADMAP.md"
+  },
+  {
+    "filename": "DATABASE_SEED_MANUAL_GUIDE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DATABASE_SEED_MANUAL_GUIDE.md"
+  },
+  {
+    "filename": "DATABASE_SEED_TESTING_EXECUTION.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/DATABASE_SEED_TESTING_EXECUTION.md"
+  },
+  {
+    "filename": "DATABASE_SEED_TESTING_PLAN.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/DATABASE_SEED_TESTING_PLAN.md"
+  },
+  {
+    "filename": "DATABASE_SEED_TROUBLESHOOTING.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DATABASE_SEED_TROUBLESHOOTING.md"
+  },
+  {
+    "filename": "DEBUG_SPEC.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "DEBUG_SPEC.md"
+  },
+  {
+    "filename": "DEPLOYMENT_SUMMARY.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/DEPLOYMENT_SUMMARY.md"
+  },
+  {
+    "filename": "DEV_SERVER_GUIDE.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/DEV_SERVER_GUIDE.md"
+  },
+  {
+    "filename": "DEVOPS_EPIC_TASKS_BEADS_PLAN.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/DEVOPS_EPIC_TASKS_BEADS_PLAN.md"
+  },
+  {
+    "filename": "DEVOPS_GUIDE.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/DEVOPS_GUIDE.md"
+  },
+  {
+    "filename": "DEVOPS_INFRASTRUCTURE_AUDIT_2025-12-23.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/DEVOPS_INFRASTRUCTURE_AUDIT_2025-12-23.md"
+  },
+  {
+    "filename": "DOCKER_DB_QUICK_FIX.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DOCKER_DB_QUICK_FIX.md"
+  },
+  {
+    "filename": "DOCUMENTATION_CLEANUP_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "DOCUMENTATION_CLEANUP_PLAN.md"
+  },
+  {
+    "filename": "DOCUMENTATION_REVIEW_2026-01-03.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "DOCUMENTATION_REVIEW_2026-01-03.md"
+  },
+  {
+    "filename": "DOCUMENTATION_UPDATES_2026-01-03.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "DOCUMENTATION_UPDATES_2026-01-03.md"
+  },
+  {
+    "filename": "E2B_ORCHESTRATION_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "E2B_ORCHESTRATION_PLAN.md"
+  },
+  {
+    "filename": "E2B_TESTING_STRATEGY.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/E2B_TESTING_STRATEGY.md"
+  },
+  {
+    "filename": "E2E_DATABASE_SKIP_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "E2E_DATABASE_SKIP_REPORT.md"
+  },
+  {
+    "filename": "E2E_TESTING_GUIDE.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/E2E_TESTING_GUIDE.md"
+  },
+  {
+    "filename": "EPIC_DATABASE_OPTIMIZATION_CONTINUATION.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/EPIC_DATABASE_OPTIMIZATION_CONTINUATION.md"
+  },
+  {
+    "filename": "EPIC_VPS_PRODUCTION_DEPLOYMENT.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/EPIC_VPS_PRODUCTION_DEPLOYMENT.md"
+  },
+  {
+    "filename": "F007_FIX_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "F007_FIX_REPORT.md"
+  },
+  {
+    "filename": "F009_FIX_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "F009_FIX_REPORT.md"
+  },
+  {
+    "filename": "FEASIBILITY_ANALYSIS_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "FEASIBILITY_ANALYSIS_REPORT.md"
+  },
+  {
+    "filename": "FIRST_E2E_TEST_RUN.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/FIRST_E2E_TEST_RUN.md"
+  },
+  {
+    "filename": "FIX_TEST_ERROR.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/FIX_TEST_ERROR.md"
+  },
+  {
+    "filename": "GAMIFICATION_TEST_REPORT.md",
+    "category": "edtech",
+    "reason": "EdTech behavioral design test report",
+    "targetPath": "docs/behavioral-design/test-reports/GAMIFICATION_TEST_REPORT.md"
+  },
+  {
+    "filename": "GIT_AUDIT_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "GIT_AUDIT_REPORT.md"
+  },
+  {
+    "filename": "GIT_CLEANUP_EXECUTION_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "GIT_CLEANUP_EXECUTION_REPORT.md"
+  },
+  {
+    "filename": "GIT_FINAL_AUDIT_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "GIT_FINAL_AUDIT_REPORT.md"
+  },
+  {
+    "filename": "GIT_SYNC_ERROR_RESOLUTION_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "GIT_SYNC_ERROR_RESOLUTION_PLAN.md"
+  },
+  {
+    "filename": "GIT_SYNC_EXECUTION_GUIDE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "GIT_SYNC_EXECUTION_GUIDE.md"
+  },
+  {
+    "filename": "GITHUB_WORKFLOW_FIX_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "GITHUB_WORKFLOW_FIX_REPORT.md"
+  },
+  {
+    "filename": "GOOGLE_AI_500K_STRATEGY.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "GOOGLE_AI_500K_STRATEGY.md"
+  },
+  {
+    "filename": "GOOGLE_GEMINI_API_FOR_TESTING.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/GOOGLE_GEMINI_API_FOR_TESTING.md"
+  },
+  {
+    "filename": "HANDOFF_CONTEXT.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/HANDOFF_CONTEXT.md"
+  },
+  {
+    "filename": "implementation_plan.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "implementation_plan.md"
+  },
+  {
+    "filename": "INSTALL_SKILLS_QUICK_START.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "INSTALL_SKILLS_QUICK_START.md"
+  },
+  {
+    "filename": "ISSUES_SUMMARY_2025-12-22.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "ISSUES_SUMMARY_2025-12-22.md"
+  },
+  {
+    "filename": "LOSS_AVERSION_TEST_REPORT.md",
+    "category": "edtech",
+    "reason": "EdTech behavioral design test report",
+    "targetPath": "docs/behavioral-design/test-reports/LOSS_AVERSION_TEST_REPORT.md"
+  },
+  {
+    "filename": "MARKET_SIMULATION_TEST_REPORT.md",
+    "category": "edtech",
+    "reason": "EdTech behavioral design test report",
+    "targetPath": "docs/behavioral-design/test-reports/MARKET_SIMULATION_TEST_REPORT.md"
+  },
+  {
+    "filename": "MASTER_TESTING_PLAN.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/MASTER_TESTING_PLAN.md"
+  },
+  {
+    "filename": "MULTI_AGENT_INTEGRATION_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "MULTI_AGENT_INTEGRATION_PLAN.md"
+  },
+  {
+    "filename": "MULTI_AGENT_SKILL_COMPLETE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "MULTI_AGENT_SKILL_COMPLETE.md"
+  },
+  {
+    "filename": "MULTI_AGENT_SKILL_V2_COMPLETE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "MULTI_AGENT_SKILL_V2_COMPLETE.md"
+  },
+  {
+    "filename": "NEW_SESSION_HANDOFF_2025-12-22.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/NEW_SESSION_HANDOFF_2025-12-22.md"
+  },
+  {
+    "filename": "NEW_THREAD_AI_SKILLS_OPTIMIZATION.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "NEW_THREAD_AI_SKILLS_OPTIMIZATION.md"
+  },
+  {
+    "filename": "NEW_THREAD_DATABASE_OPTIMIZATION.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "NEW_THREAD_DATABASE_OPTIMIZATION.md"
+  },
+  {
+    "filename": "NEW_THREAD_HANDOFF_2025-12-21.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/NEW_THREAD_HANDOFF_2025-12-21.md"
+  },
+  {
+    "filename": "NEW_THREAD_HANDOFF_2025-12-22.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/NEW_THREAD_HANDOFF_2025-12-22.md"
+  },
+  {
+    "filename": "NEW_THREAD_HANDOFF_2025-12-22_01h30.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/NEW_THREAD_HANDOFF_2025-12-22_01h30.md"
+  },
+  {
+    "filename": "NEW_THREAD_HANDOFF_2025-12-22_Session2.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/NEW_THREAD_HANDOFF_2025-12-22_Session2.md"
+  },
+  {
+    "filename": "NEW_THREAD_START_GUIDE.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "NEW_THREAD_START_GUIDE.md"
+  },
+  {
+    "filename": "NEXT_STEPS.md",
+    "category": "delete",
+    "reason": "Superseded or obsolete",
+    "targetPath": ""
+  },
+  {
+    "filename": "NUDGE_TRIGGER_TEST_REPORT.md",
+    "category": "edtech",
+    "reason": "EdTech behavioral design test report",
+    "targetPath": "docs/behavioral-design/test-reports/NUDGE_TRIGGER_TEST_REPORT.md"
+  },
+  {
+    "filename": "OPTION_B_TESTING_COMPLETE.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/OPTION_B_TESTING_COMPLETE.md"
+  },
+  {
+    "filename": "P0_BLOCKERS_EXECUTION_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "P0_BLOCKERS_EXECUTION_PLAN.md"
+  },
+  {
+    "filename": "PHASE_COMPLETION_CRITERIA.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "PHASE_COMPLETION_CRITERIA.md"
+  },
+  {
+    "filename": "PHASE0_AGENT_DEPLOYMENT_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "PHASE0_AGENT_DEPLOYMENT_PLAN.md"
+  },
+  {
+    "filename": "PHASE0_QUICK_START.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "PHASE0_QUICK_START.md"
+  },
+  {
+    "filename": "PHASE1_INFRASTRUCTURE_AUDIT_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "PHASE1_INFRASTRUCTURE_AUDIT_REPORT.md"
+  },
+  {
+    "filename": "PHASE1_TEST_FIX_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/PHASE1_TEST_FIX_REPORT.md"
+  },
+  {
+    "filename": "PHASE2_DATABASE_OPTIMIZATION_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "PHASE2_DATABASE_OPTIMIZATION_REPORT.md"
+  },
+  {
+    "filename": "PHASE3_E2E_OPTIMIZATION_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "PHASE3_E2E_OPTIMIZATION_REPORT.md"
+  },
+  {
+    "filename": "PROJECT_AUDIT_2026-01-03.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "PROJECT_AUDIT_2026-01-03.md"
+  },
+  {
+    "filename": "PROJECT_STATUS.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "PROJECT_STATUS.md"
+  },
+  {
+    "filename": "PROJECT_TIMELINE_GANTT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "PROJECT_TIMELINE_GANTT.md"
+  },
+  {
+    "filename": "QUALITY_GATE_STANDARDS.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "QUALITY_GATE_STANDARDS.md"
+  },
+  {
+    "filename": "QUICK_START_COMMANDS.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "QUICK_START_COMMANDS.md"
+  },
+  {
+    "filename": "QUICK_START_TESTING.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/QUICK_START_TESTING.md"
+  },
+  {
+    "filename": "R2_AUTO_SETUP_README.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "R2_AUTO_SETUP_README.md"
+  },
+  {
+    "filename": "README.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "README.md"
+  },
+  {
+    "filename": "RESOURCE_ALLOCATION_MATRIX.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "RESOURCE_ALLOCATION_MATRIX.md"
+  },
+  {
+    "filename": "SECURITY_AUDIT_REPORT_2025-12-23.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/SECURITY_AUDIT_REPORT_2025-12-23.md"
+  },
+  {
+    "filename": "SECURITY_FIX_REPORT.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/SECURITY_FIX_REPORT.md"
+  },
+  {
+    "filename": "SECURITY_FIXES_COMPLETE_2025-12-23.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/SECURITY_FIXES_COMPLETE_2025-12-23.md"
+  },
+  {
+    "filename": "SECURITY_SECRETS_SETUP.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/SECURITY_SECRETS_SETUP.md"
+  },
+  {
+    "filename": "SESSION_HANDOFF_2025-12-22.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/SESSION_HANDOFF_2025-12-22.md"
+  },
+  {
+    "filename": "SESSION_HANDOFF_2025-12-22_02h00.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/SESSION_HANDOFF_2025-12-22_02h00.md"
+  },
+  {
+    "filename": "SESSION_PROGRESS_2025-12-22_01h15.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/SESSION_PROGRESS_2025-12-22_01h15.md"
+  },
+  {
+    "filename": "SESSION_PROGRESS_2025-12-22_02h30.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/SESSION_PROGRESS_2025-12-22_02h30.md"
+  },
+  {
+    "filename": "SESSION_SUMMARY_2025-12-21_22h.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/SESSION_SUMMARY_2025-12-21_22h.md"
+  },
+  {
+    "filename": "SESSION_SUMMARY_2025-12-21_23h.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/SESSION_SUMMARY_2025-12-21_23h.md"
+  },
+  {
+    "filename": "SKILLS_INVENTORY_2026-01-03.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "SKILLS_INVENTORY_2026-01-03.md"
+  },
+  {
+    "filename": "SKILLS_INVENTORY_COMPLETE_2026-01-03.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "SKILLS_INVENTORY_COMPLETE_2026-01-03.md"
+  },
+  {
+    "filename": "SKILLS_INVENTORY_EXECUTION_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "SKILLS_INVENTORY_EXECUTION_REPORT.md"
+  },
+  {
+    "filename": "SKIPPED_TESTS_ANALYSIS.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/SKIPPED_TESTS_ANALYSIS.md"
+  },
+  {
+    "filename": "SOCIAL_PROOF_TEST_REPORT.md",
+    "category": "edtech",
+    "reason": "EdTech behavioral design test report",
+    "targetPath": "docs/behavioral-design/test-reports/SOCIAL_PROOF_TEST_REPORT.md"
+  },
+  {
+    "filename": "SPEC.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "SPEC.md"
+  },
+  {
+    "filename": "START_HERE_BEADS_OPTIMIZATION.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "START_HERE_BEADS_OPTIMIZATION.md"
+  },
+  {
+    "filename": "STRATEGIC_DEBT_PAYDOWN_PLAN.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "STRATEGIC_DEBT_PAYDOWN_PLAN.md"
+  },
+  {
+    "filename": "STRESS_TEST_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/STRESS_TEST_REPORT.md"
+  },
+  {
+    "filename": "SWARM_TESTING_PLAN.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/SWARM_TESTING_PLAN.md"
+  },
+  {
+    "filename": "task.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "task.md"
+  },
+  {
+    "filename": "TASK_EXECUTION_GUIDE.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "TASK_EXECUTION_GUIDE.md"
+  },
+  {
+    "filename": "TECHNICAL_DEBT_ELIMINATION_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "TECHNICAL_DEBT_ELIMINATION_PLAN.md"
+  },
+  {
+    "filename": "TEST_ANALYSIS_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/TEST_ANALYSIS_REPORT.md"
+  },
+  {
+    "filename": "TEST_COVERAGE_100_PERCENT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/TEST_COVERAGE_100_PERCENT.md"
+  },
+  {
+    "filename": "TEST_COVERAGE_ANALYSIS_2025-12-23.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/TEST_COVERAGE_ANALYSIS_2025-12-23.md"
+  },
+  {
+    "filename": "TEST_COVERAGE_PLAN.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/TEST_COVERAGE_PLAN.md"
+  },
+  {
+    "filename": "TEST_DB_SETUP.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/TEST_DB_SETUP.md"
+  },
+  {
+    "filename": "TEST_ENVIRONMENT_GUIDE.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/TEST_ENVIRONMENT_GUIDE.md"
+  },
+  {
+    "filename": "TEST_FIX_ANALYSIS_REPORT.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/TEST_FIX_ANALYSIS_REPORT.md"
+  },
+  {
+    "filename": "TEST_FIX_SESSION_HANDOFF.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/TEST_FIX_SESSION_HANDOFF.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_14_SKILLS_COMPLETE.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_14_SKILLS_COMPLETE.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_2025-12-22_02h45.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_2025-12-22_02h45.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_2025-12-22_03h30.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_2025-12-22_03h30.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_2025-12-22_04h00.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_2025-12-22_04h00.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_2025-12-22_12h.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_2025-12-22_12h.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_AUTO_WORKFLOW_TESTING.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_AUTO_WORKFLOW_TESTING.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_COMPLETE.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_COMPLETE.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_OPTIMIZATION.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_OPTIMIZATION.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_OPTIMIZATION_COMPLETE.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_OPTIMIZATION_COMPLETE.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_OPTIMIZATION_PHASE2.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_OPTIMIZATION_PHASE2.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_PHASE2_SESSION1.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_PHASE2_SESSION1.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_PHASE2_SESSION2.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_PHASE2_SESSION2.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_PHASE2_SESSION3.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_PHASE2_SESSION3.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_SPEED.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_SPEED.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DATABASE_TOOLS.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DATABASE_TOOLS.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_DB_OPTIMIZATION.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_DB_OPTIMIZATION.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_GUIDE.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_GUIDE.md"
+  },
+  {
+    "filename": "THREAD_HANDOFF_VPS_DEPLOYMENT.md",
+    "category": "archive",
+    "subcategory": "session-reports",
+    "reason": "Session/handoff report from 2025-12",
+    "targetPath": "docs/archive/2025-12/session-reports/THREAD_HANDOFF_VPS_DEPLOYMENT.md"
+  },
+  {
+    "filename": "TOP_3_EPIC_COMPLETION_PLAN.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "TOP_3_EPIC_COMPLETION_PLAN.md"
+  },
+  {
+    "filename": "TOP_3_EPIC_COMPLETION_REPORT.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "TOP_3_EPIC_COMPLETION_REPORT.md"
+  },
+  {
+    "filename": "TYPESCRIPT_FIXES_COMPLETE_2025-12-22.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "TYPESCRIPT_FIXES_COMPLETE_2025-12-22.md"
+  },
+  {
+    "filename": "VED-296_COMPLETION_REPORT.md",
+    "category": "archive",
+    "subcategory": "completion-reports",
+    "reason": "Task completion report",
+    "targetPath": "docs/archive/2025-12/completion-reports/VED-296_COMPLETION_REPORT.md"
+  },
+  {
+    "filename": "VED-3JQ_PARTIAL_COMPLETION_REPORT.md",
+    "category": "archive",
+    "subcategory": "completion-reports",
+    "reason": "Task completion report",
+    "targetPath": "docs/archive/2025-12/completion-reports/VED-3JQ_PARTIAL_COMPLETION_REPORT.md"
+  },
+  {
+    "filename": "VED-7P4_COMPLETION_REPORT.md",
+    "category": "archive",
+    "subcategory": "completion-reports",
+    "reason": "Task completion report",
+    "targetPath": "docs/archive/2025-12/completion-reports/VED-7P4_COMPLETION_REPORT.md"
+  },
+  {
+    "filename": "VED-9YX_COMPLETION_REPORT.md",
+    "category": "archive",
+    "subcategory": "completion-reports",
+    "reason": "Task completion report",
+    "targetPath": "docs/archive/2025-12/completion-reports/VED-9YX_COMPLETION_REPORT.md"
+  },
+  {
+    "filename": "VED-AOR_COMPLETION_REPORT.md",
+    "category": "archive",
+    "subcategory": "completion-reports",
+    "reason": "Task completion report",
+    "targetPath": "docs/archive/2025-12/completion-reports/VED-AOR_COMPLETION_REPORT.md"
+  },
+  {
+    "filename": "VED-SM0_FIX_92_TESTS_COMPLETE.md",
+    "category": "testing",
+    "reason": "Testing documentation",
+    "targetPath": "docs/testing/VED-SM0_FIX_92_TESTS_COMPLETE.md"
+  },
+  {
+    "filename": "VED-WF9_COMPLETION_REPORT.md",
+    "category": "archive",
+    "subcategory": "completion-reports",
+    "reason": "Task completion report",
+    "targetPath": "docs/archive/2025-12/completion-reports/VED-WF9_COMPLETION_REPORT.md"
+  },
+  {
+    "filename": "VPS_DEPLOYMENT_GUIDE.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/VPS_DEPLOYMENT_GUIDE.md"
+  },
+  {
+    "filename": "VPS_MANUAL_COMMANDS.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/VPS_MANUAL_COMMANDS.md"
+  },
+  {
+    "filename": "VPS_MANUAL_PGVECTOR.md",
+    "category": "devops",
+    "reason": "DevOps documentation",
+    "targetPath": "docs/devops/VPS_MANUAL_PGVECTOR.md"
+  },
+  {
+    "filename": "WAVE_1_BATCH_4_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE_1_BATCH_4_REPORT.md"
+  },
+  {
+    "filename": "WAVE_3_5_SUMMARY.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE_3_5_SUMMARY.md"
+  },
+  {
+    "filename": "WAVE1_BATCH2_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE1_BATCH2_REPORT.md"
+  },
+  {
+    "filename": "WAVE1_BATCH3_CONTROLLER_TESTS_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE1_BATCH3_CONTROLLER_TESTS_REPORT.md"
+  },
+  {
+    "filename": "WAVE2_BATCH1_SERVICE_TEST_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE2_BATCH1_SERVICE_TEST_REPORT.md"
+  },
+  {
+    "filename": "WAVE2_BATCH2_SERVICE_TEST_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE2_BATCH2_SERVICE_TEST_REPORT.md"
+  },
+  {
+    "filename": "WAVE2_BATCH3_FINAL_SUMMARY.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE2_BATCH3_FINAL_SUMMARY.md"
+  },
+  {
+    "filename": "WAVE2_BATCH3_SERVICE_TESTS_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE2_BATCH3_SERVICE_TESTS_REPORT.md"
+  },
+  {
+    "filename": "WAVE3_BATCH1_INTEGRATION_TESTS_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH1_INTEGRATION_TESTS_REPORT.md"
+  },
+  {
+    "filename": "WAVE3_BATCH2_CHECKLIST.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH2_CHECKLIST.md"
+  },
+  {
+    "filename": "WAVE3_BATCH2_DELIVERY_SUMMARY.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH2_DELIVERY_SUMMARY.md"
+  },
+  {
+    "filename": "WAVE3_BATCH2_INTEGRATION_TESTS_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH2_INTEGRATION_TESTS_REPORT.md"
+  },
+  {
+    "filename": "WAVE3_BATCH2_QUICK_START.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH2_QUICK_START.md"
+  },
+  {
+    "filename": "WAVE3_BATCH2_SCHEMA_MIGRATION_PLAN.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH2_SCHEMA_MIGRATION_PLAN.md"
+  },
+  {
+    "filename": "WAVE3_BATCH3_INTEGRATION_TESTS_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH3_INTEGRATION_TESTS_REPORT.md"
+  },
+  {
+    "filename": "WAVE3_BATCH4_INTEGRATION_TESTS_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH4_INTEGRATION_TESTS_REPORT.md"
+  },
+  {
+    "filename": "WAVE3_BATCH5_INTEGRATION_TESTS_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE3_BATCH5_INTEGRATION_TESTS_REPORT.md"
+  },
+  {
+    "filename": "WAVE4_BATCH1_E2E_DELIVERY_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE4_BATCH1_E2E_DELIVERY_REPORT.md"
+  },
+  {
+    "filename": "WAVE4_BATCH2_E2E_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE4_BATCH2_E2E_REPORT.md"
+  },
+  {
+    "filename": "WAVE4_BATCH3_E2E_TESTS_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE4_BATCH3_E2E_TESTS_REPORT.md"
+  },
+  {
+    "filename": "WAVE4_BATCH4_E2E_SUMMARY.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE4_BATCH4_E2E_SUMMARY.md"
+  },
+  {
+    "filename": "WAVE4_BATCH5_E2E_FINAL_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE4_BATCH5_E2E_FINAL_REPORT.md"
+  },
+  {
+    "filename": "WAVE5_BATCH1_QUALITY_GATES_FAILURE_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE5_BATCH1_QUALITY_GATES_FAILURE_REPORT.md"
+  },
+  {
+    "filename": "WAVE5_BATCH2_QUALITY_GATES_REPORT.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE5_BATCH2_QUALITY_GATES_REPORT.md"
+  },
+  {
+    "filename": "WAVE5_BATCH3_QUALITY_CERTIFICATION.md",
+    "category": "archive",
+    "subcategory": "test-waves",
+    "reason": "Test wave report from 2025-12",
+    "targetPath": "docs/archive/2025-12/test-waves/WAVE5_BATCH3_QUALITY_CERTIFICATION.md"
+  },
+  {
+    "filename": "ZERO_DEBT_100_AGENT_ROADMAP.md",
+    "category": "core",
+    "reason": "Unknown - needs manual review",
+    "targetPath": "ZERO_DEBT_100_AGENT_ROADMAP.md"
+  },
+  {
+    "filename": "ZERO_DEBT_CERTIFICATE.md",
+    "category": "core",
+    "reason": "Core documentation - keep in root",
+    "targetPath": "ZERO_DEBT_CERTIFICATE.md"
+  }
+]

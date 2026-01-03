@@ -144,3 +144,6 @@ AUTO_*.ps1
 
 # Batch startup scripts
 START_*.bat 
+
+# bv (beads viewer) local config and caches
+.bv/

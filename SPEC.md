@@ -279,6 +279,42 @@ This project uses **Beads Trinity Architecture** for multi-agent task orchestrat
 
 See [BEADS_INTEGRATION_DEEP_DIVE.md](BEADS_INTEGRATION_DEEP_DIVE.md) for complete workflow.
 
+### 10.6 Project Health Status (2026-01-03)
+
+**Latest Audit:** [PROJECT_AUDIT_2026-01-03.md](PROJECT_AUDIT_2026-01-03.md)  
+**Current Phase:** 🔴 **PHASE 0 - Emergency Stabilization**  
+**Health Score:** 🟡 **TESTS PASSING, BUILD BLOCKED**
+
+#### Build Status
+```
+🔴 Web Build:     BLOCKED - Missing lucide-react (ved-6bdg)
+⚠️  API Build:    UNKNOWN - Needs verification (ved-o1cw)
+⚠️  Drizzle ORM:  OUT OF SYNC - Schema drift (ved-gdvp)
+```
+
+#### Test Status
+```
+✅ Test Suite:    1811/1834 passing (98.7%)
+✅ VED-SM0:       Fixed 170 failures → 98.7% pass rate
+⚠️  Integration:  23 tests skipped (need TEST_DATABASE_URL)
+⚠️  TypeScript:   35 errors in test files (non-blocking)
+```
+
+#### Zero-Debt Compliance
+```
+✅ Beads Trinity:     OPERATIONAL (200+ tasks tracked)
+✅ Session Protocol:  FOLLOWED (VED-SM0 success)
+⚠️  Coverage:         UNKNOWN (need verification)
+🔴 Deployment:        BLOCKED (3 P0 blockers)
+```
+
+#### Critical Path (50 minutes to unblock)
+1. **ved-6bdg** - Add lucide-react to Web (5 min)
+2. **ved-gdvp** - Regenerate Drizzle schema (30 min)
+3. **ved-o1cw** - Verify all builds pass (15 min)
+
+**Action Required:** Execute Phase 0 tasks BEFORE any new development
+
 ---
 
 ## 11. Long-term Governance / Quản trị Dự án / 长期治理
