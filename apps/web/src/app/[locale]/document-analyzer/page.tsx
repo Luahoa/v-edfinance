@@ -1,7 +1,7 @@
 'use client';
 
+import { AlertTriangle, FileSearch, Upload } from 'lucide-react';
 import { useState } from 'react';
-import { FileSearch, Upload, AlertTriangle } from 'lucide-react';
 
 interface DocumentInsight {
   summary: string;
@@ -47,9 +47,7 @@ export default function DocumentAnalyzerPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-teal-500 to-cyan-500 mb-4">
             <FileSearch className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Phân Tích Tài Liệu Tài Chính
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Phân Tích Tài Liệu Tài Chính</h1>
           <p className="text-gray-600">AI giúp bạn hiểu rõ tài liệu trong vài giây</p>
         </div>
 
@@ -136,9 +134,7 @@ export default function DocumentAnalyzerPage() {
                         <span className="font-medium">{item.category}</span>
                       </div>
                       <div className="text-right">
-                        <div className="font-semibold">
-                          {item.amount.toLocaleString('vi-VN')} ₫
-                        </div>
+                        <div className="font-semibold">{item.amount.toLocaleString('vi-VN')} ₫</div>
                         <div className="text-sm text-gray-500">{item.percentage}%</div>
                       </div>
                     </div>
@@ -150,9 +146,7 @@ export default function DocumentAnalyzerPage() {
             {/* Suggested Lessons */}
             {insight.suggestedLessons.length > 0 && (
               <div className="bg-gradient-to-r from-teal-500 to-cyan-500 rounded-2xl shadow-lg p-6 text-white">
-                <h3 className="font-semibold text-lg mb-3">
-                  Khóa học gợi ý dành cho bạn
-                </h3>
+                <h3 className="font-semibold text-lg mb-3">Khóa học gợi ý dành cho bạn</h3>
                 <ul className="space-y-2">
                   {insight.suggestedLessons.map((lesson, idx) => (
                     <li key={idx} className="flex items-center gap-2">

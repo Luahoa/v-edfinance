@@ -1,7 +1,7 @@
 'use client';
 
+import { Play, TrendingDown, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
-import { TrendingUp, TrendingDown, Play } from 'lucide-react';
 
 interface SimulationResult {
   scenarioTitle: string;
@@ -61,7 +61,7 @@ export default function MarketSimulatorPage() {
                 type="number"
                 value={params.startingBudget}
                 onChange={(e) =>
-                  setParams({ ...params, startingBudget: parseInt(e.target.value) })
+                  setParams({ ...params, startingBudget: Number.parseInt(e.target.value) })
                 }
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
               />
@@ -88,9 +88,7 @@ export default function MarketSimulatorPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Thời gian
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Thời gian</label>
               <select
                 value={params.duration}
                 onChange={(e) =>
