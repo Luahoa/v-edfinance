@@ -95,6 +95,7 @@ export function CommandPalette() {
                     className="flex-1 bg-transparent outline-none text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
                   />
                   <button
+                    type="button"
                     onClick={() => setIsOpen(false)}
                     className="p-1 rounded hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                   >
@@ -106,7 +107,7 @@ export function CommandPalette() {
                 <div className="max-h-96 overflow-y-auto">
                   {filteredCommands.length === 0 ? (
                     <div className="p-8 text-center text-zinc-500">
-                      No commands found for "{search}"
+                      No commands found for &ldquo;{search}&rdquo;
                     </div>
                   ) : (
                     <div className="p-2">
@@ -114,6 +115,7 @@ export function CommandPalette() {
                         const Icon = cmd.icon;
                         return (
                           <button
+                            type="button"
                             key={cmd.id}
                             onClick={() => handleSelect(cmd.href)}
                             className={cn(

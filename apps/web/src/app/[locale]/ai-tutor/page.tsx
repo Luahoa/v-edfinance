@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { Send, Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useState } from 'react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -20,7 +20,7 @@ export default function AiTutorPage() {
     if (!input.trim()) return;
 
     const userMessage: Message = { role: 'user', content: input };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setInput('');
     setLoading(true);
 
@@ -36,14 +36,17 @@ export default function AiTutorPage() {
       });
 
       const data = await response.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.reply }]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
       setCreditsRemaining(data.creditsRemaining);
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại.' 
-      }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại.',
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -79,12 +82,12 @@ export default function AiTutorPage() {
               <div className="text-center text-gray-400 mt-20">
                 <Sparkles className="w-16 h-16 mx-auto mb-4 opacity-50" />
                 <p className="text-lg">Hỏi tôi bất cứ điều gì về tài chính!</p>
-                <p className="text-sm mt-2">Ví dụ: "Giải thích lãi kép bằng ví dụ đơn giản"</p>
+                <p className="text-sm mt-2">Ví dụ: &ldquo;Giải thích lãi kép bằng ví dụ đơn giản&rdquo;</p>
               </div>
             )}
-            {messages.map((msg, idx) => (
+            {messages.map((msg) => (
               <div
-                key={idx}
+                key={msg.content + msg.role}
                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
@@ -123,6 +126,7 @@ export default function AiTutorPage() {
               disabled={loading || creditsRemaining <= 0}
             />
             <button
+              type="button"
               onClick={sendMessage}
               disabled={loading || !input.trim() || creditsRemaining <= 0}
               className="px-6 py-3 bg-gradient-to-br from-violet-500 to-purple-500 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
