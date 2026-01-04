@@ -13756,3 +13756,16 @@ fatal: couldn't find remote ref beads-sync
 [2026-01-05 00:58:22] JSONL removed/renamed, re-establishing watch
 [2026-01-05 00:58:22] Successfully re-established JSONL watch after 50ms
 [2026-01-05 00:58:22] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 00:58:23] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:58:23] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:58:23] Import triggered by file change
+[2026-01-05 00:58:23] Starting auto-import...
+[2026-01-05 00:58:23] Skipping auto-import: JSONL content unchanged
+[2026-01-05 00:58:24] Import triggered by file change
+[2026-01-05 00:58:24] Starting auto-import...
+[2026-01-05 00:58:24] Skipping auto-import: JSONL content unchanged
+[2026-01-05 00:58:31] JSONL removed/renamed, re-establishing watch
+[2026-01-05 00:58:31] Successfully re-established JSONL watch after 50ms
+[2026-01-05 00:58:31] JSONL removed/renamed, re-establishing watch
+[2026-01-05 00:58:31] Successfully re-established JSONL watch after 50ms
+[2026-01-05 00:58:31] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
