@@ -232,7 +232,64 @@ A task or feature is considered **COMPLETE** only when:
 | **Daily Backup** | Automated VPS snapshot | Dokploy/Cron | Automatically at 02:00 AM daily. |
 | **Seed Data Check** | Verify app with dummy data | `npx prisma db seed` | After a major schema change. |
 
-### 10.4 Refactoring Protocol (Anti-Tech Debt)
+### 10.4 Git Operations with Beads Integration
+
+**CRITICAL:** This project uses [beads_viewer](https://github.com/Dicklesworthstone/beads_viewer) for task tracking. Follow these protocols to prevent git conflicts:
+
+#### Never Run Beads Daemon During Git Operations
+```bash
+# ✅ CORRECT: Use --no-daemon flag
+beads sync --no-daemon
+
+# ❌ WRONG: Daemon will lock .beads/daemon.lock
+beads sync
+```
+
+#### Gitignore Beads Daemon Files
+Add to `.gitignore`:
+```gitignore
+# beads daemon files
+.beads/daemon.lock
+.beads/daemon.pid
+.beads/daemon.log
+.beads/beads.db*
+.beads/bd.sock
+```
+
+#### Pre-Merge Checklist
+Before merging branches (especially spike branches to main):
+1. ✅ Run `beads sync --no-daemon` to commit beads state
+2. ✅ Check for large files: `git ls-files -s | awk '$5 > 100000000'`
+3. ✅ Kill any beads daemon processes: `tasklist | findstr beads` (Windows) or `ps aux | grep beads` (Linux)
+4. ✅ Create agent-mail notification for blocking operations
+5. ✅ Use git worktrees for complex merges to avoid stash conflicts
+
+#### Agent-Mail Protocol for Critical Git Operations
+For merge/cleanup/deployment operations, create `.beads/agent-mail/<operation>.json`:
+```json
+{
+  "task": "ved-xxxx",
+  "status": "in_progress",
+  "issue": "Brief description",
+  "blocking": ["ved-yyyy"],
+  "eta": "X minutes",
+  "agent": "Agent Name"
+}
+```
+
+Update to `completed` with `resolution` and `actions_completed` when done.
+
+#### Lessons Learned: Git + Beads Conflicts (2026-01-05)
+**Issue:** Beads daemon locked `.beads/daemon.lock` during merge, blocking git operations.
+
+**Prevention:**
+- Always use `--no-daemon` during git operations
+- Kill daemon before complex git operations
+- Add daemon files to `.gitignore` immediately after setup
+- Use P0 beads tasks for git cleanup operations
+- Check file sizes before commit (GitHub limit: 100MB)
+
+### 10.5 Refactoring Protocol (Anti-Tech Debt)
 Before starting a complex new feature (estimated > 2 hours), issue this prompt to the AI:
 > "Analyze the current codebase for potential duplications or messy logic in [Target Module]. Refactor and clean up first before implementing [New Feature]."
 
