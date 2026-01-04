@@ -91,6 +91,7 @@ model User {
   moderationStrikes    Int                    @default(0)  // NEW: Content moderation tracking
   failedLoginAttempts  Int                    @default(0)  // VED-IU3: Failed login tracking
   lockedUntil          DateTime?              // VED-IU3: Account lockout expiry
+  stripeCustomerId     String?                @unique // Stripe Customer ID for payment processing
   metadata             Json?
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
@@ -113,6 +114,7 @@ model User {
   followers         UserRelationship[]     @relation("followers")
   quizAttempts      QuizAttempt[]          // Phase 1 MVP: Quiz system
   certificates      Certificate[]          // Phase 1 MVP: Certificate system
+  transactions      Transaction[]          // Phase 1 MVP: Payment system
 
   @@index([email])
   @@index([role])
@@ -133,6 +135,7 @@ model Course {
   updatedAt    DateTime @updatedAt
   lessons      Lesson[]
   certificates Certificate[] // Phase 1 MVP: Certificate system
+  transactions Transaction[] // Phase 1 MVP: Payment system
 
   @@index([slug])
   @@index([published, level])
@@ -548,4 +551,52 @@ model Certificate {
   @@index([courseId])
   @@index([completedAt])
   @@map("Certificate")
+}
+
+// ============================================================================
+// PAYMENT SYSTEM (Phase 1 MVP - Track 3)
+// ============================================================================
+
+model Transaction {
+  id                 String            @id @default(uuid())
+  userId             String
+  courseId           String?           // Nullable for non-course transactions
+  amount             Int               // Amount in smallest currency unit (VND = whole number)
+  currency           String            @default("vnd")
+  status             TransactionStatus @default(PENDING)
+  type               TransactionType   @default(COURSE_PURCHASE)
+  stripeSessionId    String?           @unique // Stripe Checkout Session ID
+  stripePaymentIntentId String?        @unique // Stripe Payment Intent ID
+  metadata           Json?             // Additional transaction data
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  completedAt        DateTime?         // When payment succeeded
+  failedAt           DateTime?         // When payment failed
+  refundedAt         DateTime?         // When payment was refunded
+  user               User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course             Course?           @relation(fields: [courseId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([courseId])
+  @@index([status])
+  @@index([stripeSessionId])
+  @@index([stripePaymentIntentId])
+  @@index([createdAt])
+  @@map("Transaction")
+}
+
+enum TransactionStatus {
+  PENDING       // Payment initiated but not completed
+  PROCESSING    // Payment being processed by Stripe
+  COMPLETED     // Payment succeeded
+  FAILED        // Payment failed
+  REFUNDED      // Payment refunded
+  CANCELLED     // Payment cancelled by user
+}
+
+enum TransactionType {
+  COURSE_PURCHASE   // One-time course purchase
+  SUBSCRIPTION      // Recurring subscription (future)
+  CREDITS           // Platform credits (future)
+  DONATION          // Donations (future)
 }

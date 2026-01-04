@@ -27,6 +27,7 @@ import { MarketSimulatorModule } from './modules/market-simulator/market-simulat
 import { DocumentAnalyzerModule } from './modules/document-analyzer/document-analyzer.module';
 import { QuizModule } from './modules/quiz/quiz.module'; // Phase 1 MVP: Quiz System
 import { CertificateModule } from './modules/certificates/certificate.module'; // Phase 1 MVP: Certificate System
+import { PaymentModule } from './modules/payment/payment.module'; // Phase 1 MVP: Payment System
 import { KyselyModule } from './database/kysely.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StorageModule } from './storage/storage.module';
@@ -80,6 +81,7 @@ import { UsersModule } from './users/users.module';
     SocialModule,
     QuizModule, // Phase 1 MVP: Quiz System
     CertificateModule, // Phase 1 MVP: Certificate System
+    PaymentModule, // Phase 1 MVP: Payment System
     DebugModule,
   ],
   controllers: [AppController],

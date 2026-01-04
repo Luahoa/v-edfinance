@@ -140,6 +140,11 @@ erDiagram
 
     }
   
+
+  "Transaction" {
+
+    }
+  
     "BuddyMember" }o--|| "BuddyGroup" : "group"
     "BuddyMember" }o--|| "User" : "user"
     "BuddyChallenge" }o--|| "BuddyGroup" : "group"
@@ -169,4 +174,6 @@ erDiagram
     "QuizAttempt" }o--|| "Quiz" : "quiz"
     "Certificate" }o--|| "User" : "user"
     "Certificate" }o--|| "Course" : "course"
+    "Transaction" }o--|| "User" : "user"
+    "Transaction" }o--|o "Course" : "course"
 ```
