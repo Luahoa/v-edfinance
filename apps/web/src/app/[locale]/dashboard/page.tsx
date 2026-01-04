@@ -2,37 +2,37 @@
 
 import { SmartNudgeBanner } from '@/components/molecules/SmartNudgeBanner';
 import { QuickActionsGrid } from '@/components/organisms/QuickActionsGrid';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { useAuthStore } from '@/store/useAuthStore';
 import type { BuddyGroup, DashboardStats, Post as SocialPostType } from '@/types';
-import { Award, BookOpen, ListTodo, Loader2, TrendingUp, Users, Zap } from 'lucide-react';
+import { Award, BookOpen, ListTodo, TrendingUp, Users, Zap } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 
+// Lazy load heavy components
 const AiMentor = dynamic(() => import('@/components/AiMentor'), {
-  loading: () => <div className="h-32 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  loading: () => <Skeleton className="h-32 w-full rounded-xl" />,
 });
 const InteractiveChecklist = dynamic(() => import('@/components/organisms/InteractiveChecklist'), {
   ssr: false,
-  loading: () => <div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+  loading: () => <Skeleton className="h-64 w-full rounded-xl" />,
 });
 const SocialFeed = dynamic(
   () => import('@/components/organisms/SocialFeed').then((mod) => mod.SocialFeed),
   {
-    loading: () => <div className="h-96 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+    loading: () => <Skeleton className="h-96 w-full rounded-xl" />,
   }
 );
 const BuddyRecommendations = dynamic(
   () =>
     import('@/components/molecules/BuddyRecommendations').then((mod) => mod.BuddyRecommendations),
   {
-    loading: () => <div className="h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
+    loading: () => <Skeleton className="h-48 w-full rounded-xl" />,
   }
 );
-const QuickActions = dynamic(() => import('@/components/molecules/QuickActions'), {
-  loading: () => <div className="h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
-});
 
 export default function Dashboard() {
   const t = useTranslations('Dashboard');
@@ -58,14 +58,11 @@ export default function Dashboard() {
   }, [startTime, trackEvent]);
 
   useEffect(() => {
-    // Wait for hydration if using zustand persist
     const checkAuth = async () => {
       if (!token) {
-        // Give it a moment to hydrate from localStorage
         await new Promise((resolve) => setTimeout(resolve, 500));
         if (!useAuthStore.getState().token) {
-          console.log('No token found in Dashboard, redirecting...');
-          setLoading(false); // Stop loading to show "Welcome" which might be handled by middleware anyway
+          setLoading(false);
           return;
         }
       }
@@ -106,26 +103,22 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-50 dark:bg-black p-6 text-zinc-900 dark:text-zinc-100">
-        <div className="mx-auto max-w-6xl">
-          <div className="h-8 w-48 mb-8 animate-pulse bg-zinc-200 dark:bg-zinc-800 rounded" />
-          
-          {/* Stats skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="min-h-screen bg-zinc-50 dark:bg-black p-6">
+        <div className="container mx-auto max-w-7xl space-y-8">
+          <Skeleton className="h-10 w-48" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
+              <Skeleton key={i} className="h-32 rounded-xl" />
             ))}
           </div>
-
-          {/* Content skeleton */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
-              <div className="h-64 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
-              <div className="h-96 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
+              <Skeleton className="h-64 rounded-xl" />
+              <Skeleton className="h-96 rounded-xl" />
             </div>
             <div className="lg:col-span-1 space-y-6">
-              <div className="h-48 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
-              <div className="h-32 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />
+              <Skeleton className="h-48 rounded-xl" />
+              <Skeleton className="h-32 rounded-xl" />
             </div>
           </div>
         </div>
@@ -135,13 +128,18 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black p-6 text-zinc-900 dark:text-zinc-100">
-      <div className="mx-auto max-w-6xl">
-        <h1 className="text-2xl font-bold mb-8">{t('welcome')}!</h1>
+      <div className="container mx-auto max-w-7xl space-y-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight">{t('welcome')}!</h1>
+          <span className="text-sm text-zinc-500">
+            {new Date().toLocaleDateString('vi-VN', { dateStyle: 'full' })}
+          </span>
+        </div>
 
         <SmartNudgeBanner />
         <QuickActionsGrid />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             icon={<BookOpen className="text-blue-600" />}
             title={t('enrolledCourses')}
@@ -167,21 +165,29 @@ export default function Dashboard() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="rounded-xl border bg-white p-6 dark:bg-zinc-900 dark:border-zinc-800">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <ListTodo className="text-blue-600" size={20} />
-                {t('interactiveChecklist')}
-              </h2>
-              <InteractiveChecklist />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <ListTodo className="text-blue-600" size={20} />
+                  {t('interactiveChecklist')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <InteractiveChecklist />
+              </CardContent>
+            </Card>
 
-            <div className="rounded-xl border bg-white p-6 dark:bg-zinc-900 dark:border-zinc-800">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Users className="text-amber-600" size={20} />
-                {ts('feed')}
-              </h2>
-              <SocialFeed initialPosts={feedPosts} />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Users className="text-amber-600" size={20} />
+                  {ts('feed')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SocialFeed initialPosts={feedPosts} />
+              </CardContent>
+            </Card>
           </div>
 
           <div className="lg:col-span-1 space-y-6">
@@ -194,29 +200,21 @@ export default function Dashboard() {
   );
 }
 
-const StatCard = dynamic(() => Promise.resolve(StatCardComponent), {
-  ssr: true,
-  loading: () => <div className="h-24 animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-xl" />,
-});
-
-function StatCardComponent({
+function StatCard({
   icon,
   title,
   value,
   testId,
 }: { icon: React.ReactNode; title: string; value: string | number; testId?: string }) {
   return (
-    <div
-      className="rounded-xl border bg-white p-6 shadow-sm dark:bg-zinc-900 dark:border-zinc-800"
-      data-testid={testId}
-    >
-      <div className="flex items-center gap-4">
+    <Card data-testid={testId}>
+      <CardContent className="p-6 flex items-center gap-4">
         <div className="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">{icon}</div>
         <div>
-          <p className="text-xs text-zinc-500 uppercase font-bold tracking-wider">{title}</p>
+          <p className="text-sm font-medium text-zinc-500 uppercase tracking-wider">{title}</p>
           <p className="text-2xl font-bold">{value}</p>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
