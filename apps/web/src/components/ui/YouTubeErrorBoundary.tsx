@@ -1,6 +1,6 @@
 'use client';
 
-import { Component, type ErrorInfo, type ReactNode } from 'react';
+import React, { Component, type ErrorInfo, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 
 interface YouTubeErrorBoundaryProps {

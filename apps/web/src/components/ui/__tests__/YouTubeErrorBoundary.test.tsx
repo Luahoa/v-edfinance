@@ -1,7 +1,12 @@
+/**
+ * @vitest-environment jsdom
+ */
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { YouTubeErrorBoundary } from '../YouTubeErrorBoundary';
 import { describe, it, expect, vi } from 'vitest';
+import '@testing-library/jest-dom/vitest';
 
 const messages = {
     YouTube: {
@@ -20,8 +25,9 @@ const messages = {
 };
 
 // Component that throws error for testing
-function ThrowError({ message }: { message: string }) {
+function ThrowError({ message }: { message: string }): React.ReactElement {
     throw new Error(message);
+    return <></>; // Never reached, but satisfies TypeScript
 }
 
 describe('YouTubeErrorBoundary', () => {

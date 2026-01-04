@@ -1,0 +1,19 @@
+Student logs in to platform
+Navigate to quiz
+Start taking quiz
+Answer question 1: "Interest on principal + previous interest"
+Verify answer is saved in store
+Refresh the page (F5)
+Verify quiz reloads with same question 1
+Verify previously selected answer is still selected
+Verify progress bar shows correct position
+Click "Next"
+Answer question 2: "True"
+Refresh the page again
+Verify quiz reloads
+Verify question 1 answer persisted
+Verify question 2 answer persisted
+Verify can continue from where left off
+Complete remaining questions
+Submit quiz
+Verify submission succeeds with persisted answers

@@ -1,0 +1,20 @@
+Student logs in to platform
+Navigate to Courses page
+Click on a course that has lessons
+Click on a lesson that has a quiz
+Click "Take Quiz" button
+Verify quiz loads with title displayed
+Verify question 1 appears (Multiple Choice)
+Select answer "Interest on principal + previous interest"
+Click "Next" button
+Verify question 2 appears (True/False)
+Select answer "True"
+Click "Next" button
+Verify question 3 appears (Short Answer)
+Type answer "Exchange Traded Fund"
+Click "Submit Quiz" button
+Wait for submission to complete
+Verify results page shows
+Verify score is 3/3 (100%)
+Verify message "Quiz Complete!" is displayed
+Verify individual question results show all correct

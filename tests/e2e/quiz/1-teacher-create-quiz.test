@@ -1,0 +1,23 @@
+Teacher logs in to admin panel
+Navigate to Lessons page
+Click on a lesson
+Click "Create Quiz" button
+Enter quiz title "Financial Literacy Quiz" in Vietnamese
+Enter quiz description "Test your financial knowledge" in Vietnamese
+Click "Add Question" for Multiple Choice
+Enter question "What is compound interest?"
+Add 4 options: "Interest on principal only", "Interest on principal + previous interest", "Fixed interest rate", "Simple interest"
+Set correct answer to "Interest on principal + previous interest"
+Set points to 1
+Click "Add Question" for True/False
+Enter question "Diversification reduces investment risk"
+Set correct answer to "True"
+Set points to 1
+Click "Add Question" for Short Answer
+Enter question "What does ETF stand for?"
+Set correct answer to "Exchange Traded Fund"
+Set points to 1
+Click "Save Quiz"
+Verify quiz appears in lesson's quiz list
+Verify quiz has 3 questions
+Verify quiz shows correct total points (3)

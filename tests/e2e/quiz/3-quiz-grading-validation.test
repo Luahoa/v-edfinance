@@ -1,0 +1,15 @@
+Student logs in to platform
+Navigate to quiz
+Start taking quiz
+Answer question 1: "Interest on principal + previous interest" (correct)
+Click "Next"
+Answer question 2: "False" (incorrect - correct is "True")
+Click "Next"
+Answer question 3: "ETF" (incorrect - correct is "Exchange Traded Fund")
+Click "Submit Quiz"
+Wait for grading
+Verify score is 1/3 (33.33%)
+Verify question 1 marked as correct
+Verify question 2 marked as incorrect
+Verify question 3 marked as incorrect
+Verify total points is 1 out of 3

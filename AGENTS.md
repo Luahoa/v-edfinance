@@ -276,6 +276,51 @@ v-edfinance/
 
 ---
 
+## 🎨 Frontend Development Skills
+
+We use ClaudeKit Frontend Skills to ensure consistent, beautiful, and performant UI.
+
+### frontend-design
+**When to use:** Creating new pages/components, redesigning existing UI
+**Key principle:** Avoid generic AI aesthetics - create distinctive, polished designs.
+- Use whitespace generously
+- Focus on typography hierarchy
+- Use F-pattern for data presentation
+
+### frontend-development
+**When to use:** Implementing components, optimizing performance
+**Patterns:**
+- **Suspense:** Always wrap async components in Suspense with Skeleton fallback
+- **Lazy Loading:** Use `lazy(() => import())` for below-fold content
+- **Server Components:** Default choice for data fetching
+
+### ui-styling
+**When to use:** Styling components, creating layouts
+**Stack:** shadcn/ui + Tailwind CSS
+- Use `cn()` for class merging
+- Use design system tokens (colors, spacing)
+- Do NOT use arbitrary values (e.g., `w-[350px]`)
+
+### aesthetic
+**When to use:** Design reviews, ensuring visual hierarchy
+**Framework:**
+1. **BEAUTIFUL:** Visual balance, color harmony, consistent spacing
+2. **RIGHT:** Accessibility (WCAG AA), functionality, responsiveness
+3. **SATISFYING:** Micro-interactions, smooth animations, hover states
+4. **PEAK:** Storytelling elements, social proof, delight factors
+
+### web-frameworks
+**When to use:** App Router patterns, SSR/SSG decisions
+**Tech:** Next.js 15, React Server Components (RSC), Partial Prerendering (PPR)
+
+### V-EdFinance Specific Guidelines
+- **Color Palette:** Green primary (growth), Blue secondary (trust), Red accents (alerts)
+- **Typography:** Inter (works well for both Vietnamese and English)
+- **Metaphors:** Use farming metaphors for savings/investment (rice fields, harvest)
+- **Data Display:** High contrast, clear hierarchy for financial numbers
+
+---
+
 ## i18n Guidelines
 
 ### Translation Files
