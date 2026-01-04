@@ -10,3 +10,9 @@ node_modules
 .beads/daemon.log
 .beads/beads.db*
 .beads/bd.sock
+
+*_private_key.txt
+
+amp_vps_private_key.txt
+
+amp_vps_private_key
