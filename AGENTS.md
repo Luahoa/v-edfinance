@@ -238,6 +238,92 @@ Since this project is 100% Agent-coded, follow these rules to prevent "Hallucina
 
 ---
 
+## Beads Workflow Integration
+
+This project uses [beads_viewer](https://github.com/Dicklesworthstone/beads_viewer) for issue tracking. Issues are stored in `.beads/` and tracked in git.
+
+### Beads Trinity Protocol
+
+The **Beads Trinity** consists of three components working together:
+1. **`bd`** (beads CLI) - Task management and sync
+2. **`bv`** (beads viewer) - Visual interface for task browsing
+3. **Agent Mail** - Inter-agent communication via `.beads/agent-mail/*.json`
+
+### Critical Rules for Git + Beads Operations
+
+**NEVER enable beads daemon during git operations** - This causes lock conflicts:
+```bash
+# ✅ CORRECT: Use --no-daemon flag
+beads sync --no-daemon
+
+# ❌ WRONG: Daemon will hold .beads/daemon.lock
+beads sync
+```
+
+**Add beads daemon files to .gitignore** to prevent conflicts:
+```gitignore
+# beads daemon files
+.beads/daemon.lock
+.beads/daemon.pid
+.beads/daemon.log
+.beads/beads.db*
+.beads/bd.sock
+```
+
+**Use Beads Trinity for complex git operations** instead of manual git commands:
+```bash
+# Sync beads state before/after git operations
+beads sync --no-daemon
+
+# For git cleanup tasks, create beads task first
+bd create "Git cleanup: <description>" --priority 0
+bd edit <task-id> --status in_progress
+
+# After completion
+bd close <task-id> --reason "Detailed completion notes"
+```
+
+### Agent Mail Coordination
+
+When performing blocking operations (merge, cleanup, deployment), create agent-mail notifications:
+
+```json
+{
+  "task": "ved-xxxx",
+  "status": "in_progress",
+  "issue": "Brief description",
+  "blocking": ["ved-yyyy", "ved-zzzz"],
+  "eta": "5 minutes",
+  "agent": "Agent Name"
+}
+```
+
+Update to `completed` when done with detailed `resolution` and `actions_completed`.
+
+### Lessons Learned from Git Issues (2026-01-05)
+
+**Incident:** Git state broken after spike/simplified-nav → main merge
+- Beads daemon held `.beads/daemon.lock`, blocking git operations
+- Stash pop failed due to worktree vs working directory mismatch
+- Large files (243MB) exceeded GitHub limits
+
+**Resolution:**
+1. Killed beads daemon processes (may respawn - kill again)
+2. Removed `daemon.lock` manually
+3. Added daemon files to `.gitignore`
+4. Used `beads sync --no-daemon` for commit
+5. Removed large files before push
+6. Created agent-mail notifications for transparency
+
+**Prevention:**
+- Always use `--no-daemon` flag during git operations
+- Add `.beads/daemon.*` to `.gitignore` immediately
+- Check file sizes before commit (GitHub limit: 100MB)
+- Use agent-mail for multi-agent coordination
+- Create P0 beads task for critical fixes
+
+---
+
 ### 1. Nudge Orchestration (Richard Thaler)
 - **Engine Design**: Centralized service to calculate and deliver psychological triggers.
 - **Key Tactics**:
