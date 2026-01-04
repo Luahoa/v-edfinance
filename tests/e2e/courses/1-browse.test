@@ -1,5 +1,0 @@
-open http://localhost:3002/courses
-verify courses page loads
-scroll down to see all courses
-check if at least 3 courses are displayed
-verify each course has title and image

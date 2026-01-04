@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: v-edfinance-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Halinh!@34
+      POSTGRES_DB: vedfinance
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - /root/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

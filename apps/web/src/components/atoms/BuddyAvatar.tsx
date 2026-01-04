@@ -20,26 +20,23 @@ export const BuddyAvatar = ({ displayName, avatarUrl, size = 'md' }: BuddyAvatar
   };
 
   const initials = displayName
-    ? displayName
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .substring(0, 2)
+    ? displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)
     : '?';
 
   return (
-    <div
-      className={`relative inline-block ${sizeClasses[size]} rounded-full bg-blue-100 flex items-center justify-center border-2 border-white overflow-hidden`}
-    >
+    <div className={`relative inline-block ${sizeClasses[size]} rounded-full bg-blue-100 flex items-center justify-center border-2 border-white overflow-hidden`}>
       {avatarUrl ? (
-        <Image
-          src={avatarUrl}
-          alt={displayName || 'Avatar'}
+        <Image 
+          src={avatarUrl} 
+          alt={displayName || 'Avatar'} 
           width={dimensions[size]}
           height={dimensions[size]}
+<<<<<<< Updated upstream
           loading="lazy"
           className="w-full h-full object-cover"
+=======
+          className="w-full h-full object-cover" 
+>>>>>>> Stashed changes
         />
       ) : (
         <span className="font-medium text-blue-600">{initials}</span>

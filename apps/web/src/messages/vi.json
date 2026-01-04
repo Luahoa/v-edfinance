@@ -4,7 +4,6 @@
     "register": "Đăng ký",
     "email": "Email",
     "password": "Mật khẩu",
-    "name": "Họ và tên",
     "submit": "Xác nhận",
     "noAccount": "Chưa có tài khoản?",
     "hasAccount": "Đã có tài khoản?"
@@ -25,10 +24,6 @@
     "noCourses": "Chưa có khóa học nào",
     "startLearning": "Bắt đầu học",
     "viewCourse": "Xem chi tiết",
-    "backToCourse": "Quay lại khóa học",
-    "prevLesson": "Bài trước",
-    "nextLesson": "Bài tiếp",
-    "markComplete": "Hoàn thành bài học",
     "free": "Miễn phí",
     "level": "Cấp độ"
   },
@@ -40,6 +35,7 @@
     "register": "Đăng ký",
     "leaderboard": "Xếp hạng",
     "store": "Cửa hàng",
+<<<<<<< Updated upstream
     "simulation": "Giả lập",
     "settings": "Cài đặt",
     "profile": "Trang cá nhân",
@@ -49,6 +45,9 @@
     "social": "Cộng đồng",
     "more": "Thêm",
     "help": "Trợ giúp"
+=======
+    "simulation": "Giả lập"
+>>>>>>> Stashed changes
   },
   "Dashboard": {
     "title": "Bảng điều khiển",
@@ -64,6 +63,7 @@
     "enrolledCourses": "Khóa học đã đăng ký",
     "completedLessons": "Bài học đã hoàn thành",
     "currentLearning": "Khóa học đang học",
+<<<<<<< Updated upstream
     "interactiveChecklist": "Danh sách kiểm tra tương tác",
     "continueLearning": "Tiếp tục học",
     "setGoal": "Đặt mục tiêu",
@@ -80,6 +80,9 @@
     "predictSuccess": "Dự đoán kết quả",
     "marketSimulator": "Mô phỏng thị trường",
     "analyzeDocument": "Phân tích tài liệu"
+=======
+    "interactiveChecklist": "Danh sách kiểm tra tương tác"
+>>>>>>> Stashed changes
   },
   "Checklist": {
     "title": "Danh sách kiểm tra tương tác",
@@ -88,37 +91,95 @@
     "noActiveChecklists": "Không có danh sách kiểm tra nào hoạt động",
     "taskCompleted": "Nhiệm vụ đã hoàn thành",
     "taskPending": "Nhiệm vụ đang chờ"
-  },
-  "Gamification": {
+    },
+    "Gamification": {
     "achievementUnlocked": "Đã mở khóa thành tựu!",
     "streakTitle": "Chuỗi {days} ngày!",
     "streakLost": "Bạn đã mất chuỗi! Hãy bắt đầu lại ngay hôm nay.",
     "pointsEarned": "+{points} điểm",
     "close": "Đóng",
     "viewAllAchievements": "Xem tất cả thành tựu"
-  },
-  "Leaderboard": {
-    "title": "Bảng xếp hạng",
-    "points": "Theo điểm số",
-    "streaks": "Theo chuỗi ngày",
-    "rank": "Hạng",
-    "user": "Người dùng",
-    "value": "Giá trị",
-    "pointsSuffix": "điểm",
-    "daysSuffix": "ngày"
-  },
-  "Store": {
-    "title": "Cửa hàng vật phẩm",
-    "balance": "Số dư của bạn: {points} điểm",
-    "buy": "Mua",
-    "insufficientPoints": "Không đủ điểm",
-    "purchaseSuccess": "Mua hàng thành công!",
-    "items": {
-      "streak-freeze": {
-        "name": "Đóng băng chuỗi",
-        "description": "Giữ cho chuỗi ngày học của bạn không bị mất nếu bạn lỡ một ngày."
+    },
+    "Leaderboard": {
+      "title": "Bảng xếp hạng",
+      "points": "Theo điểm số",
+      "streaks": "Theo chuỗi ngày",
+      "rank": "Hạng",
+      "user": "Người dùng",
+      "value": "Giá trị",
+      "pointsSuffix": "điểm",
+      "daysSuffix": "ngày"
+    },
+    "Store": {
+      "title": "Cửa hàng vật phẩm",
+      "balance": "Số dư của bạn: {points} điểm",
+      "buy": "Mua",
+      "insufficientPoints": "Không đủ điểm",
+      "purchaseSuccess": "Mua hàng thành công!",
+      "items": {
+        "streak-freeze": {
+          "name": "Đóng băng chuỗi",
+          "description": "Giữ cho chuỗi ngày học của bạn không bị mất nếu bạn lỡ một ngày."
+        }
+      }
+    },
+    "Simulation": {
+      "title": "Hệ sinh thái giả lập",
+      "trade": {
+        "title": "Giao dịch ảo",
+        "balance": "Số dư: {amount} Lúa Coin",
+        "buy": "Mua",
+        "sell": "Bán",
+        "portfolio": "Danh mục tài sản"
+      },
+      "life": {
+        "title": "Kịch bản cuộc đời",
+        "start": "Bắt đầu hành trình",
+        "age": "Tuổi: {age}",
+        "job": "Công việc: {job}"
+      },
+      "budget": {
+        "title": "Cuộc chiến ngân sách",
+        "rule": "Quy tắc 50/30/20",
+        "needs": "Nhu cầu (50%)",
+        "wants": "Mong muốn (30%)",
+        "savings": "Tiết kiệm (20%)"
+      },
+      "commitment": {
+        "title": "Công cụ cam kết",
+        "lock": "Khóa quỹ tiết kiệm",
+        "penalty": "Phạt 10% nếu rút sớm",
+        "withdraw": "Rút tiền",
+        "locked": "Đã khóa: {amount}"
+      }
+    },
+    "Social": {
+      "feed": "Bảng tin cộng đồng",
+      "emptyFeed": "Chưa có hoạt động nào trong cộng đồng của bạn.",
+      "buddySystem": "Hệ thống Buddy",
+      "noGroups": "Bạn chưa tham gia nhóm học tập nào.",
+      "createGroup": "Tạo nhóm mới",
+      "joinGroup": "Tham gia nhóm",
+      "recommendations": "Gợi ý cho bạn",
+      "groupDetails": "Chi tiết nhóm",
+      "members": "Thành viên",
+      "challenges": "Thử thách",
+      "createChallenge": "Tạo thử thách",
+      "points": "Điểm nhóm",
+      "streak": "Chuỗi nhóm",
+      "types": {
+        "LEARNING": "Học tập",
+        "SAVING": "Tiết kiệm",
+        "INVESTING": "Đầu tư"
+      },
+      "postTypes": {
+        "ACHIEVEMENT": "Thành tựu",
+        "MILESTONE": "Cột mốc",
+        "NUDGE": "Nhắc nhở",
+        "DISCUSSION": "Thảo luận"
       }
     }
+<<<<<<< Updated upstream
   },
   "Simulation": {
     "title": "Hệ sinh thái giả lập",
@@ -206,5 +267,6 @@
     "errorDetails": "Chi Tiết Lỗi",
     "retryButton": "Thử Lại",
     "watchOnYouTube": "Xem trên YouTube"
+=======
+>>>>>>> Stashed changes
   }
-}

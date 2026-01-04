@@ -7,34 +7,23 @@ export const useAnalytics = () => {
   const { user, token } = useAuthStore();
   const pathname = usePathname();
 
-  const trackEvent = async (
-    eventType: string,
-    actionCategory = 'GENERAL',
-    payload: Record<string, unknown> = {},
-    duration?: number
-  ) => {
+  const trackEvent = async (eventType: string, payload: Record<string, unknown> = {}) => {
     try {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/behavior/log`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
-          sessionId: `session-${user?.id || 'guest'}`,
+          sessionId: 'session-' + (user?.id || 'guest'),
           path: pathname,
           eventType,
-          actionCategory,
           payload,
-          duration,
-          deviceInfo: {
-            userAgent: navigator.userAgent,
-            screen: `${window.screen.width}x${window.screen.height}`,
-          },
         }),
       });
     } catch {
-      // Fail silently
+      // Fail silently to not interrupt user experience
     }
   };
 
