@@ -1,5 +1,5 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { StripeService } from './stripe.service';
 import { TransactionService } from './transaction.service';
 import { TransactionStatus, TransactionType } from '../dto/payment.dto';
@@ -291,20 +291,14 @@ export class WebhookService {
     );
 
     try {
-      // Get course with first lesson
+      // Get course with first lesson (schema has lessons directly under course, no chapters)
       const course = await this.prisma.course.findUnique({
         where: { id: courseId },
         include: {
-          chapters: {
+          lessons: {
             orderBy: { order: 'asc' },
             take: 1,
-            include: {
-              lessons: {
-                orderBy: { order: 'asc' },
-                take: 1,
-                select: { id: true },
-              },
-            },
+            select: { id: true },
           },
         },
       });
@@ -315,7 +309,7 @@ export class WebhookService {
       }
 
       // Get first lesson
-      const firstLesson = course.chapters[0]?.lessons[0];
+      const firstLesson = course.lessons[0];
 
       if (!firstLesson) {
         this.logger.warn(
@@ -346,9 +340,7 @@ export class WebhookService {
         where: {
           userId,
           lesson: {
-            chapter: {
-              courseId,
-            },
+            courseId,
           },
         },
       });

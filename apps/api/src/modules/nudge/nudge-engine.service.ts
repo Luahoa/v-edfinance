@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AnalyticsService } from '../analytics/analytics.service';
 import { AiService } from '../../ai/ai.service';
@@ -20,6 +20,8 @@ export enum NudgeType {
  */
 @Injectable()
 export class NudgeEngineService {
+  private readonly logger = new Logger(NudgeEngineService.name);
+  
   constructor(
     private prisma: PrismaService,
     private analytics: AnalyticsService,

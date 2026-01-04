@@ -31,12 +31,8 @@ export const BuddyAvatar = ({ displayName, avatarUrl, size = 'md' }: BuddyAvatar
           alt={displayName || 'Avatar'} 
           width={dimensions[size]}
           height={dimensions[size]}
-<<<<<<< Updated upstream
           loading="lazy"
           className="w-full h-full object-cover"
-=======
-          className="w-full h-full object-cover" 
->>>>>>> Stashed changes
         />
       ) : (
         <span className="font-medium text-blue-600">{initials}</span>

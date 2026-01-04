@@ -1,4 +1,3 @@
-<<<<<<< Updated upstream
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,7 +10,7 @@ import { notFound } from 'next/navigation';
 async function getCourse(id: string): Promise<Course | null> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`, {
-      cache: 'no-store', // Consider 'force-cache' with revalidate for prod
+      cache: 'no-store',
     });
     if (!res.ok) return null;
     return res.json();
@@ -19,16 +18,6 @@ async function getCourse(id: string): Promise<Course | null> {
     console.error('Failed to fetch course:', error);
     return null;
   }
-=======
-import { PlayCircle, FileText } from 'lucide-react';
-import Link from 'next/link';
-import { Course, Lesson } from '@/types';
-
-async function getCourse(id: string): Promise<Course | null> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`, { cache: 'no-store' });
-  if (!res.ok) return null;
-  return res.json();
->>>>>>> Stashed changes
 }
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
@@ -47,7 +36,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
   const localizedDesc = course.description[locale as keyof typeof course.description] || course.description['en'] || course.description['vi'];
 
   return (
-<<<<<<< Updated upstream
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       {/* Hero Section */}
       <div className="bg-white dark:bg-zinc-900 border-b dark:border-zinc-800">
@@ -119,23 +107,10 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 </div>
               </div>
             </div>
-=======
-    <div className="min-h-screen bg-white dark:bg-black">
-      <div className="bg-zinc-900 py-12 text-white">
-        <div className="mx-auto max-w-6xl px-6">
-          <h1 className="text-4xl font-bold">{course.title.vi || course.title.en}</h1>
-          <p className="mt-4 text-lg text-zinc-400 max-w-2xl">
-            {course.description.vi || course.description.en}
-          </p>
-          <div className="mt-8 flex items-center gap-6 text-sm">
-            <span className="flex items-center gap-1"><PlayCircle className="h-4 w-4"/> {course.lessons.length} Bài học</span>
-            <span className="font-semibold text-blue-400">{course.level}</span>
->>>>>>> Stashed changes
           </div>
         </div>
       </div>
 
-<<<<<<< Updated upstream
       {/* Content Tabs */}
       <div className="container mx-auto max-w-7xl px-4 py-12">
         <Tabs defaultValue="curriculum" className="space-y-8">
@@ -193,28 +168,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
             </Card>
           </TabsContent>
         </Tabs>
-=======
-      <div className="mx-auto max-w-6xl px-6 py-12">
-        <h2 className="text-2xl font-bold mb-6">Nội dung khóa học</h2>
-        <div className="divide-y rounded-xl border">
-          {course.lessons.map((lesson: Lesson, index: number) => (
-            <Link 
-              key={lesson.id}
-              href={`/${locale}/courses/${id}/lessons/${lesson.id}`}
-              className="flex items-center justify-between p-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors"
-            >
-              <div className="flex items-center gap-4">
-                <span className="text-zinc-400 font-medium">{index + 1}.</span>
-                <div>
-                  <p className="font-medium">{lesson.title.vi || lesson.title.en}</p>
-                  <p className="text-xs text-zinc-500 uppercase">{lesson.type}</p>
-                </div>
-              </div>
-              {lesson.type === 'VIDEO' ? <PlayCircle className="h-5 w-5 text-zinc-400"/> : <FileText className="h-5 w-5 text-zinc-400"/>}
-            </Link>
-          ))}
-        </div>
->>>>>>> Stashed changes
       </div>
     </div>
   );

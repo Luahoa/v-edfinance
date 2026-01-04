@@ -12,11 +12,6 @@ ON "User" USING GIN (metadata jsonb_path_ops);
 CREATE INDEX IF NOT EXISTS "BehaviorLog_payload_gin_idx"
 ON "BehaviorLog" USING GIN (payload jsonb_path_ops);
 
--- GIN index for BehaviorLog deviceInfo
--- Use case: Filter by device type, browser, OS
-CREATE INDEX IF NOT EXISTS "BehaviorLog_deviceInfo_gin_idx"
-ON "BehaviorLog" USING GIN ("deviceInfo" jsonb_path_ops);
-
 -- GIN index for SocialPost content
 -- Use case: Search post content (multilingual)
 CREATE INDEX IF NOT EXISTS "SocialPost_content_gin_idx"
@@ -25,5 +20,4 @@ ON "SocialPost" USING GIN (content jsonb_path_ops);
 -- Comments for documentation
 COMMENT ON INDEX "User_metadata_gin_idx" IS 'GIN index for fast JSONB containment queries on user metadata';
 COMMENT ON INDEX "BehaviorLog_payload_gin_idx" IS 'GIN index for event payload searches - 10x faster';
-COMMENT ON INDEX "BehaviorLog_deviceInfo_gin_idx" IS 'GIN index for device-based analytics';
 COMMENT ON INDEX "SocialPost_content_gin_idx" IS 'GIN index for multilingual content searches';

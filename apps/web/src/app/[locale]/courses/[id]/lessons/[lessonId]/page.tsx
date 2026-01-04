@@ -1,7 +1,6 @@
 'use client';
 
-<<<<<<< Updated upstream
-import Button from '@/components/atoms/Button';
+import { Button } from '@/components/ui/button';
 import YouTubeEmbed from '@/components/molecules/YouTubeEmbed';
 import {
   ResizableHandle,
@@ -11,8 +10,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Link, useRouter } from '@/i18n/routing';
-import { useAuthStore } from '@/store/useAuthStore';
+import { Link } from '@/i18n/routing';
 import type { Course, Lesson } from '@/types';
 import { motion } from 'framer-motion';
 import {
@@ -20,19 +18,11 @@ import {
   ChevronLeft,
   ChevronRight,
   FileText,
-  Loader2,
   PlayCircle,
   Menu
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { use, useEffect, useState } from 'react';
-=======
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
->>>>>>> Stashed changes
-
-import { Course, Lesson } from '@/types';
+import { useEffect, useState } from 'react';
 
 export default function LessonPage({ params }: { params: Promise<{ id: string; lessonId: string; locale: string }> }) {
   const [id, setId] = useState<string>('');
@@ -42,6 +32,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string; l
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
+  const t = useTranslations('Lessons');
 
   useEffect(() => {
     params.then(p => {
@@ -90,7 +81,6 @@ export default function LessonPage({ params }: { params: Promise<{ id: string; l
   const currentContent = lesson.content[locale as keyof typeof lesson.content] || lesson.content.vi || lesson.content.en;
 
   return (
-<<<<<<< Updated upstream
     <div className="h-screen bg-white dark:bg-black overflow-hidden flex flex-col">
       {/* Mobile Header */}
       <div className="lg:hidden p-4 border-b flex items-center justify-between bg-white dark:bg-zinc-900 z-10">
@@ -101,63 +91,6 @@ export default function LessonPage({ params }: { params: Promise<{ id: string; l
         <Button variant="ghost" size="sm" className="p-2">
           <Menu className="w-5 h-5" />
         </Button>
-=======
-    <div className="flex h-screen bg-white dark:bg-black">
-      {/* Sidebar - Lesson List */}
-      <div className="w-80 border-r overflow-y-auto hidden md:block">
-        <div className="p-4 border-b">
-          <Link href={`/${locale}/courses/${id}`} className="text-sm text-blue-600 hover:underline flex items-center gap-1">
-            <ChevronLeft className="h-4 w-4"/> Quay lại khóa học
-          </Link>
-          <h2 className="mt-2 font-bold">{course?.title[locale as keyof typeof course.title] || course?.title.vi}</h2>
-        </div>
-        <div className="divide-y">
-          {course?.lessons.map((l: Lesson, idx: number) => (
-            <Link 
-              key={l.id} 
-              href={`/${locale}/courses/${id}/lessons/${l.id}`}
-              className={`block p-4 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-900 ${l.id === lessonId ? 'bg-blue-50 dark:bg-zinc-800 font-semibold text-blue-600' : ''}`}
-            >
-              {idx + 1}. {l.title[locale as keyof typeof l.title] || l.title.vi}
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-6 md:p-12">
-          <div className="mx-auto max-w-4xl">
-            <h1 className="text-3xl font-bold mb-6">{currentTitle}</h1>
-            
-            {lesson.type === 'VIDEO' && (
-              <div className="aspect-video w-full rounded-xl bg-black mb-8 flex items-center justify-center text-white">
-                {/* Video Player Placeholder */}
-                <p>Video Player for: {lesson.videoKey}</p>
-              </div>
-            )}
-
-            <div className="prose prose-zinc dark:prose-invert max-w-none">
-              {currentContent}
-            </div>
-
-            <div className="mt-12 pt-8 border-t flex justify-between">
-              <button className="flex items-center gap-2 px-4 py-2 rounded-md border hover:bg-zinc-50">
-                <ChevronLeft className="h-4 w-4"/> Bài trước
-              </button>
-              <button 
-                onClick={markAsComplete}
-                className="flex items-center gap-2 px-6 py-2 rounded-md bg-green-600 text-white hover:bg-green-700"
-              >
-                <CheckCircle className="h-4 w-4"/> Hoàn thành
-              </button>
-              <button className="flex items-center gap-2 px-4 py-2 rounded-md border hover:bg-zinc-50">
-                Bài tiếp <ChevronRight className="h-4 w-4"/>
-              </button>
-            </div>
-          </div>
-        </div>
->>>>>>> Stashed changes
       </div>
 
       <ResizablePanelGroup direction="horizontal" className="flex-1 h-full">
@@ -265,19 +198,19 @@ export default function LessonPage({ params }: { params: Promise<{ id: string; l
                 <Separator className="my-8" />
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <Button variant="outline" className="w-full sm:w-auto gap-2 h-12 text-base">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto gap-2 h-12 text-base">
                     <ChevronLeft size={18} /> {t('prevLesson') || 'Previous'}
                   </Button>
 
                   <Button
                     onClick={markAsComplete}
+                    size="sm"
                     className="w-full sm:w-auto px-8 gap-2 bg-green-600 hover:bg-green-700 text-white font-bold h-12 text-base shadow-lg shadow-green-900/20"
-                    isLoading={progressing}
                   >
                     <CheckCircle size={20} /> {t('markComplete') || 'Mark as Complete'}
                   </Button>
 
-                  <Button variant="outline" className="w-full sm:w-auto gap-2 h-12 text-base">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto gap-2 h-12 text-base">
                     {t('nextLesson') || 'Next'} <ChevronRight size={18} />
                   </Button>
                 </div>
