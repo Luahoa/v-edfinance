@@ -1,0 +1,22 @@
+# V-EdFinance Security Audit Cron Configuration
+# Epic: VED-DEPLOY | Bead: VED-A02
+# 
+# Schedule: Weekly on Sunday at 2 AM
+# Reports: ./security-reports/
+#
+# Installation:
+#   sudo crontab -e
+#   Paste the line below (update path to match your installation)
+
+# Run security audit every Sunday at 2 AM
+0 2 * * 0 cd /path/to/v-edfinance && /bin/bash scripts/security-audit.sh
+
+# Alternative: Run daily at 2 AM (stricter security posture)
+# 0 2 * * * cd /path/to/v-edfinance && /bin/bash scripts/security-audit.sh
+
+# Alternative: Run bi-weekly (first and third Sunday)
+# 0 2 1-7,15-21 * 0 cd /path/to/v-edfinance && /bin/bash scripts/security-audit.sh
+
+# Clean up old reports (keep last 30 days)
+0 3 * * 0 find /path/to/v-edfinance/security-reports -name "security-audit-*.txt" -mtime +30 -delete
+0 3 * * 0 find /path/to/v-edfinance/security-reports -name "security-audit-*.pdf" -mtime +30 -delete

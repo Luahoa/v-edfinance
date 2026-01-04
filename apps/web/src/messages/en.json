@@ -188,5 +188,18 @@
     "back": "Back",
     "next": "Next",
     "complete": "Complete"
+  },
+  "YouTube": {
+    "adBlockerTitle": "YouTube Blocked",
+    "adBlockerMessage": "It looks like your ad blocker is preventing the video from loading. Please disable it or watch directly on YouTube.",
+    "deletedVideoTitle": "Video Unavailable",
+    "deletedVideoMessage": "This video is no longer available. It may have been deleted or made private. Please contact the instructor.",
+    "networkErrorTitle": "Connection Failed",
+    "networkErrorMessage": "We couldn't load the video due to a network error. Please check your connection and try again.",
+    "unknownErrorTitle": "Something Went Wrong",
+    "unknownErrorMessage": "We encountered an unexpected error while loading the video player.",
+    "errorDetails": "Error Details",
+    "retryButton": "Try Again",
+    "watchOnYouTube": "Watch on YouTube"
   }
 }

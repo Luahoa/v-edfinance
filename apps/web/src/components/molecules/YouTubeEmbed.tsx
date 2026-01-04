@@ -32,15 +32,18 @@ export default function YouTubeEmbed({
   const t = useTranslations('Courses');
   const [error, setError] = useState(false);
   const [timeoutError, setTimeoutError] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
     // 5s timeout detection for ad blockers
     const timeout = setTimeout(() => {
-      setTimeoutError(true);
+      if (!videoLoaded) {
+        setTimeoutError(true);
+      }
     }, 5000);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [videoLoaded]);
 
   if (error || timeoutError) {
     return (
@@ -76,6 +79,7 @@ export default function YouTubeEmbed({
         onProgress={onProgress}
         onEnded={onEnded}
         onError={() => setError(true)}
+        onReady={() => setVideoLoaded(true)}
         config={{
           youtube: {
             playerVars: {

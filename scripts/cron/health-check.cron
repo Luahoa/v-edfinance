@@ -1,0 +1,21 @@
+# V-EdFinance Health Check Cron Configuration
+# Epic: VED-DEPLOY | Bead: VED-A01
+# 
+# Schedule: Every 4 hours (0, 4, 8, 12, 16, 20)
+# Logs: /var/log/health.log
+#
+# Installation:
+#   sudo crontab -e
+#   Paste the line below (update path to match your installation)
+
+# Run health check every 4 hours
+0 */4 * * * /bin/bash /path/to/v-edfinance/scripts/health-check-report.sh >> /var/log/health.log 2>&1
+
+# Alternative: Run every hour (more frequent monitoring)
+# 0 * * * * /bin/bash /path/to/v-edfinance/scripts/health-check-report.sh >> /var/log/health.log 2>&1
+
+# Alternative: Run every 30 minutes (aggressive monitoring)
+# */30 * * * * /bin/bash /path/to/v-edfinance/scripts/health-check-report.sh >> /var/log/health.log 2>&1
+
+# Rotate logs weekly (prevent disk space issues)
+0 0 * * 0 truncate -s 0 /var/log/health.log

@@ -152,5 +152,18 @@
     "noGroups": "您尚未加入任何学习小组。",
     "createGroup": "创建新小组",
     "joinGroup": "加入小组"
+  },
+  "YouTube": {
+    "adBlockerTitle": "YouTube 被屏蔽",
+    "adBlockerMessage": "广告拦截器阻止了视频加载。请禁用它或直接在 YouTube 上观看。",
+    "deletedVideoTitle": "视频不可用",
+    "deletedVideoMessage": "此视频不再可用。可能已被删除或设为私密。请联系讲师。",
+    "networkErrorTitle": "连接失败",
+    "networkErrorMessage": "由于网络错误，无法加载视频。请检查您的连接并重试。",
+    "unknownErrorTitle": "出现错误",
+    "unknownErrorMessage": "加载视频播放器时遇到意外错误。",
+    "errorDetails": "错误详情",
+    "retryButton": "重试",
+    "watchOnYouTube": "在 YouTube 上观看"
   }
 }

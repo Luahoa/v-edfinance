@@ -193,5 +193,18 @@
     "back": "Quay lại",
     "next": "Tiếp theo",
     "complete": "Hoàn tất"
+  },
+  "YouTube": {
+    "adBlockerTitle": "YouTube Bị Chặn",
+    "adBlockerMessage": "Tiện ích chặn quảng cáo đang ngăn video tải. Vui lòng tắt nó hoặc xem trực tiếp trên YouTube.",
+    "deletedVideoTitle": "Video Không Khả Dụng",
+    "deletedVideoMessage": "Video này không còn khả dụng. Nó có thể đã bị xóa hoặc chuyển sang chế độ riêng tư. Vui lòng liên hệ giảng viên.",
+    "networkErrorTitle": "Lỗi Kết Nối",
+    "networkErrorMessage": "Không thể tải video do lỗi mạng. Vui lòng kiểm tra kết nối và thử lại.",
+    "unknownErrorTitle": "Đã Có Lỗi Xảy Ra",
+    "unknownErrorMessage": "Đã xảy ra lỗi không mong muốn khi tải trình phát video.",
+    "errorDetails": "Chi Tiết Lỗi",
+    "retryButton": "Thử Lại",
+    "watchOnYouTube": "Xem trên YouTube"
   }
 }

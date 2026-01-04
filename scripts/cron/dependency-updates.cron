@@ -1,0 +1,21 @@
+# V-EdFinance Dependency Update Check Cron Configuration
+# Epic: VED-DEPLOY | Bead: VED-A04
+# 
+# Schedule: Weekly on Monday at 9 AM
+# Reports: ./dependency-reports/
+#
+# Installation:
+#   sudo crontab -e
+#   Paste the line below (update path to match your installation)
+
+# Run dependency check every Monday at 9 AM
+0 9 * * 1 cd /path/to/v-edfinance && /bin/bash scripts/check-updates.sh
+
+# Alternative: Run bi-weekly (every other Monday)
+# 0 9 1-7,15-21 * 1 cd /path/to/v-edfinance && /bin/bash scripts/check-updates.sh
+
+# Alternative: Run monthly (first Monday of each month)
+# 0 9 1-7 * 1 cd /path/to/v-edfinance && /bin/bash scripts/check-updates.sh
+
+# Clean up old reports (keep last 90 days)
+0 10 * * 1 find /path/to/v-edfinance/dependency-reports -name "dependency-check-*.txt" -mtime +90 -delete
