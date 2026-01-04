@@ -1,0 +1,56 @@
+{
+  "vi": {
+    "seed": {
+      "courses": "Khóa học",
+      "users": "Người dùng",
+      "lessons": "Bài học",
+      "achievements": "Thành tựu"
+    },
+    "levels": {
+      "BEGINNER": "Cơ bản",
+      "INTERMEDIATE": "Trung cấp",
+      "ADVANCED": "Nâng cao"
+    },
+    "roles": {
+      "STUDENT": "Học viên",
+      "INSTRUCTOR": "Giảng viên",
+      "ADMIN": "Quản trị viên"
+    }
+  },
+  "en": {
+    "seed": {
+      "courses": "Courses",
+      "users": "Users",
+      "lessons": "Lessons",
+      "achievements": "Achievements"
+    },
+    "levels": {
+      "BEGINNER": "Beginner",
+      "INTERMEDIATE": "Intermediate",
+      "ADVANCED": "Advanced"
+    },
+    "roles": {
+      "STUDENT": "Student",
+      "INSTRUCTOR": "Instructor",
+      "ADMIN": "Administrator"
+    }
+  },
+  "zh": {
+    "seed": {
+      "courses": "课程",
+      "users": "用户",
+      "lessons": "课时",
+      "achievements": "成就"
+    },
+    "levels": {
+      "BEGINNER": "初级",
+      "INTERMEDIATE": "中级",
+      "ADVANCED": "高级"
+    },
+    "roles": {
+      "STUDENT": "学生",
+      "INSTRUCTOR": "讲师",
+      "ADMIN": "管理员"
+    }
+  }
+}

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V-EdFinance Certificate</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+      width: 297mm;
+      height: 210mm;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative Border - Golden Rice Fields Pattern */
+    .certificate-border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 24px solid #16a34a; /* Green-600 */
+      border-image: linear-gradient(135deg, 
+        #15803d 0%,   /* Green-700 */
+        #16a34a 25%,  /* Green-600 */
+        #fbbf24 50%,  /* Golden */
+        #16a34a 75%,  /* Green-600 */
+        #15803d 100%  /* Green-700 */
+      ) 1;
+      box-shadow: 
+        inset 0 0 40px rgba(22, 163, 74, 0.15),
+        0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Inner Border - Trust Blue Accent */
+    .certificate-inner-border {
+      position: absolute;
+      top: 36px;
+      left: 36px;
+      width: calc(100% - 72px);
+      height: calc(100% - 72px);
+      border: 3px solid #2563eb; /* Blue-600 */
+      border-radius: 4px;
+    }
+
+    /* Background Pattern - Subtle Rice Field Texture */
+    .background-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(135deg, 
+          rgba(240, 253, 244, 0.95) 0%,   /* Green-50 */
+          rgba(255, 255, 255, 1) 50%,
+          rgba(239, 246, 255, 0.95) 100%  /* Blue-50 */
+        );
+      opacity: 0.9;
+      z-index: -1;
+    }
+
+    /* Content Container */
+    .certificate-content {
+      position: relative;
+      padding: 60px 80px;
+      text-align: center;
+      z-index: 10;
+    }
+
+    /* Logo Area */
+    .logo-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .logo-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 36px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+    }
+
+    .logo-text {
+      font-size: 32px;
+      font-weight: 700;
+      color: #14532d; /* Green-900 */
+      letter-spacing: -0.5px;
+    }
+
+    /* Title Section */
+    .certificate-title {
+      font-size: 48px;
+      font-weight: 700;
+      color: #1e3a8a; /* Blue-900 */
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .certificate-subtitle {
+      font-size: 20px;
+      color: #16a34a; /* Green-600 */
+      font-weight: 600;
+      margin-bottom: 40px;
+    }
+
+    /* Recipient Section */
+    .presented-to {
+      font-size: 18px;
+      color: #64748b; /* Gray-500 */
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+
+    .recipient-name {
+      font-size: 56px;
+      font-weight: 700;
+      color: #14532d; /* Green-900 */
+      margin-bottom: 32px;
+      text-decoration: underline;
+      text-decoration-color: #fbbf24; /* Golden */
+      text-decoration-thickness: 4px;
+      text-underline-offset: 8px;
+    }
+
+    /* Course Section */
+    .completion-text {
+      font-size: 18px;
+      color: #334155; /* Gray-700 */
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    .course-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #2563eb; /* Blue-600 */
+      margin-bottom: 40px;
+      line-height: 1.3;
+    }
+
+    /* Date and Signature Section */
+    .footer-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 48px;
+      padding-top: 32px;
+      border-top: 2px solid #e2e8f0; /* Gray-200 */
+    }
+
+    .date-section {
+      text-align: left;
+    }
+
+    .date-label {
+      font-size: 14px;
+      color: #64748b; /* Gray-500 */
+      margin-bottom: 4px;
+    }
+
+    .date-value {
+      font-size: 18px;
+      font-weight: 600;
+      color: #14532d; /* Green-900 */
+    }
+
+    .signature-section {
+      text-align: right;
+    }
+
+    .signature-line {
+      width: 240px;
+      border-bottom: 2px solid #14532d; /* Green-900 */
+      margin-bottom: 8px;
+      height: 60px;
+      position: relative;
+    }
+
+    .signature-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #14532d; /* Green-900 */
+      margin-bottom: 4px;
+    }
+
+    .signature-title {
+      font-size: 14px;
+      color: #64748b; /* Gray-500 */
+    }
+
+    /* Verification Code */
+    .verification-code {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: #94a3b8; /* Gray-400 */
+      font-family: 'Courier New', monospace;
+    }
+
+    /* Cultural Elements - Golden Rice Stalks (decorative corners) */
+    .rice-stalk-tl,
+    .rice-stalk-tr,
+    .rice-stalk-bl,
+    .rice-stalk-br {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      opacity: 0.15;
+    }
+
+    .rice-stalk-tl {
+      top: 48px;
+      left: 48px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      clip-path: polygon(0 0, 50% 0, 0 50%);
+    }
+
+    .rice-stalk-tr {
+      top: 48px;
+      right: 48px;
+      background: linear-gradient(225deg, #fbbf24, #f59e0b);
+      clip-path: polygon(100% 0, 100% 50%, 50% 0);
+    }
+
+    .rice-stalk-bl {
+      bottom: 48px;
+      left: 48px;
+      background: linear-gradient(45deg, #fbbf24, #f59e0b);
+      clip-path: polygon(0 50%, 0 100%, 50% 100%);
+    }
+
+    .rice-stalk-br {
+      bottom: 48px;
+      right: 48px;
+      background: linear-gradient(315deg, #fbbf24, #f59e0b);
+      clip-path: polygon(100% 50%, 50% 100%, 100% 100%);
+    }
+
+    /* Achievement Badge */
+    .achievement-badge {
+      position: absolute;
+      top: 60px;
+      right: 80px;
+      width: 96px;
+      height: 96px;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 16px rgba(22, 163, 74, 0.3);
+      border: 4px solid #fbbf24;
+    }
+
+    .achievement-icon {
+      font-size: 48px;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Decorative Borders -->
+  <div class="certificate-border"></div>
+  <div class="certificate-inner-border"></div>
+  <div class="background-pattern"></div>
+
+  <!-- Cultural Corner Elements -->
+  <div class="rice-stalk-tl"></div>
+  <div class="rice-stalk-tr"></div>
+  <div class="rice-stalk-bl"></div>
+  <div class="rice-stalk-br"></div>
+
+  <!-- Achievement Badge -->
+  <div class="achievement-badge">
+    <div class="achievement-icon">🏆</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="certificate-content">
+    <!-- Logo Area -->
+    <div class="logo-area">
+      <div class="logo-icon">V</div>
+      <div class="logo-text">V-EdFinance</div>
+    </div>
+
+    <!-- Title -->
+    <div class="certificate-title">{{title}}</div>
+    <div class="certificate-subtitle">{{subtitle}}</div>
+
+    <!-- Recipient -->
+    <div class="presented-to">{{presentedTo}}</div>
+    <div class="recipient-name">{{recipientName}}</div>
+
+    <!-- Course Completion -->
+    <div class="completion-text">{{completionText}}</div>
+    <div class="course-title">{{courseTitle}}</div>
+
+    <!-- Footer -->
+    <div class="footer-section">
+      <!-- Date -->
+      <div class="date-section">
+        <div class="date-label">{{dateLabel}}</div>
+        <div class="date-value">{{dateValue}}</div>
+      </div>
+
+      <!-- Signature -->
+      <div class="signature-section">
+        <div class="signature-line"></div>
+        <div class="signature-name">{{signerName}}</div>
+        <div class="signature-title">{{signerTitle}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification Code -->
+  <div class="verification-code">{{verificationCode}}</div>
+</body>
+</html>

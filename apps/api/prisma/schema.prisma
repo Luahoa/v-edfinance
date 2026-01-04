@@ -1,0 +1,551 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider        = "prisma-erd-generator"
+  output          = "../docs/erd.md"
+  theme           = "forest"
+  mmdcPath        = false
+  tableOnly       = true
+  ignoreEnums     = false
+  includeRelationFromFields = true
+}
+
+generator kysely {
+  provider     = "prisma-kysely"
+  output       = "../src/database"
+  fileName     = "types.ts"
+  enumFileName = "enums.ts"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BuddyGroup {
+  id          String           @id @default(uuid())
+  name        String?
+  description String?
+  type        BuddyGroupType   @default(LEARNING)
+  totalPoints Int              @default(0)
+  streak      Int              @default(0)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  challenges  BuddyChallenge[]
+  members     BuddyMember[]
+  feedPosts   SocialPost[]
+}
+
+model BuddyMember {
+  id       String     @id @default(uuid())
+  groupId  String
+  userId   String
+  role     BuddyRole  @default(MEMBER)
+  joinedAt DateTime   @default(now())
+  group    BuddyGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@index([userId])
+}
+
+model BuddyChallenge {
+  id           String     @id @default(uuid())
+  groupId      String
+  title        Json
+  target       Int
+  rewardPoints Int
+  expiresAt    DateTime
+  group        BuddyGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([groupId])
+}
+
+model SocialPost {
+  id         String      @id @default(uuid())
+  userId     String
+  groupId    String?
+  type       PostType    @default(ACHIEVEMENT)
+  content    Json?
+  likesCount Int         @default(0)
+  createdAt  DateTime    @default(now())
+  group      BuddyGroup? @relation(fields: [groupId], references: [id])
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([groupId])
+  @@index([userId])
+}
+
+model User {
+  id                   String                 @id @default(uuid())
+  email                String                 @unique
+  passwordHash         String
+  name                 Json?
+  role                 Role                   @default(STUDENT)
+  points               Int                    @default(0)
+  preferredLocale      String                 @default("vi")
+  preferredLanguage    String?                // NEW: Multi-language support
+  dateOfBirth          DateTime?              // NEW: For demographic segmentation
+  moderationStrikes    Int                    @default(0)  // NEW: Content moderation tracking
+  failedLoginAttempts  Int                    @default(0)  // VED-IU3: Failed login tracking
+  lockedUntil          DateTime?              // VED-IU3: Account lockout expiry
+  metadata             Json?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  behaviorLogs      BehaviorLog[]
+  buddyMemberships  BuddyMember[]
+  chatThreads       ChatThread[]
+  investmentProfile InvestmentProfile?
+  refreshTokens     RefreshToken[]
+  commitments       SimulationCommitment[]
+  simulations       SimulationScenario[]
+  socialPosts       SocialPost[]
+  achievements      UserAchievement[]
+  checklists        UserChecklist[]
+  progress          UserProgress[]
+  streaks           UserStreak?
+  virtualPortfolio  VirtualPortfolio?
+  moderationLogs    ModerationLog[]        // NEW: Relation to moderation logs
+  moderatedLogs     ModerationLog[]        @relation("moderator")  // NEW: Logs where user was moderator
+  following         UserRelationship[]     @relation("following")
+  followers         UserRelationship[]     @relation("followers")
+  quizAttempts      QuizAttempt[]          // Phase 1 MVP: Quiz system
+  certificates      Certificate[]          // Phase 1 MVP: Certificate system
+
+  @@index([email])
+  @@index([role])
+  @@index([createdAt])
+  @@index([points])
+}
+
+model Course {
+  id           String   @id @default(uuid())
+  slug         String   @unique
+  title        Json
+  description  Json
+  thumbnailKey String
+  price        Int
+  level        Level    @default(BEGINNER)
+  published    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lessons      Lesson[]
+  certificates Certificate[] // Phase 1 MVP: Certificate system
+
+  @@index([slug])
+  @@index([published, level])
+}
+
+model Lesson {
+  id        String         @id @default(uuid())
+  courseId  String
+  order     Int
+  title     Json
+  content   Json
+  videoKey  Json?
+  type      LessonType     @default(VIDEO)
+  duration  Int?
+  published Boolean        @default(false)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress  UserProgress[]
+  quizzes   Quiz[]         // Phase 1 MVP: Quiz system
+
+  @@unique([courseId, order])
+  @@index([courseId, published])
+}
+
+model UserProgress {
+  id                 String         @id @default(uuid())
+  userId             String
+  lessonId           String
+  status             ProgressStatus @default(STARTED)
+  durationSpent      Int            @default(0)
+  progressPercentage Float?         @default(0)  // NEW: For analytics reporting
+  completedAt        DateTime?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  lesson             Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user               User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, lessonId])
+  @@index([userId, status])
+  @@index([lessonId, status])
+  @@index([userId, createdAt])  // NEW: For timeline queries (user progress history)
+  @@index([completedAt])        // NEW: For completion rate analytics
+}
+
+model ChatThread {
+  id        String        @id @default(uuid())
+  userId    String
+  title     String
+  module    String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  messages  ChatMessage[]
+  user      User          @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model ChatMessage {
+  id        String     @id @default(uuid())
+  threadId  String
+  role      ChatRole
+  content   String
+  metadata  Json?
+  createdAt DateTime   @default(now())
+  thread    ChatThread @relation(fields: [threadId], references: [id])
+
+  @@index([threadId])
+}
+
+model BehaviorLog {
+  id             String   @id @default(uuid())
+  userId         String?
+  sessionId      String
+  path           String
+  eventType      String
+  actionCategory String?  @default("GENERAL")
+  duration       Int?     @default(0)
+  deviceInfo     Json?
+  payload        Json?
+  timestamp      DateTime @default(now())
+  user           User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId, timestamp])
+  @@index([sessionId])
+  @@index([sessionId, eventType])
+  @@index([actionCategory])
+  @@index([eventType, timestamp])
+  @@index([eventType, userId])  // NEW: For eventType filtering by user (analytics queries)
+}
+
+model InvestmentProfile {
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  riskScore            Int      @default(50)
+  investmentPhilosophy Json
+  financialGoals       Json
+  currentKnowledge     Level    @default(BEGINNER)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserChecklist {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  category  String?
+  items     Json
+  progress  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model UserAchievement {
+  id          String   @id @default(uuid())
+  userId      String
+  type        String
+  name        Json
+  description Json
+  iconKey     String
+  awardedAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([awardedAt])
+  @@index([userId, awardedAt])
+}
+
+model SystemSettings {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+}
+
+model UserStreak {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  currentStreak    Int      @default(0)
+  longestStreak    Int      @default(0)
+  lastActivityDate DateTime @default(now())
+  streakFrozen     Boolean  @default(false)
+  freezesRemaining Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([currentStreak])
+  @@index([lastActivityDate])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model VirtualPortfolio {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  balance    Float    @default(100000.0)
+  assets     Json
+  totalValue Float    @default(100000.0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SimulationScenario {
+  id            String   @id @default(uuid())
+  userId        String
+  type          String
+  currentStatus Json
+  decisions     Json
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+model SimulationCommitment {
+  id           String   @id @default(uuid())
+  userId       String
+  goalName     String
+  targetAmount Float
+  lockedAmount Float
+  penaltyRate  Float    @default(0.1)
+  unlockDate   DateTime
+  isCompleted  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+
+model ModerationLog {
+  id          String   @id @default(uuid())
+  userId      String
+  action      String   // WARN, MUTE, BAN, CONTENT_REMOVAL
+  reason      String
+  moderatorId String?
+  severity    String?  // NONE, LOW, MEDIUM, HIGH, CRITICAL
+  metadata    Json?    // Additional context
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  moderator   User?    @relation("moderator", fields: [moderatorId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([action])
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  key         String   @unique  // Unique identifier for the achievement
+  name        Json     // Localized name
+  description Json     // Localized description
+  iconKey     String   // Asset storage key for icon
+  criteria    Json     // Achievement unlock criteria (JSON structure)
+  points      Int      @default(0)  // Points awarded for earning this achievement
+  tier        String   @default("BRONZE")  // BRONZE, SILVER, GOLD, PLATINUM
+  category    String   // LEARNING, SOCIAL, STREAK, FINANCIAL, etc.
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([tier])
+  @@index([isActive])
+}
+
+enum BuddyGroupType {
+  LEARNING
+  SAVING
+  INVESTING
+}
+
+enum BuddyRole {
+  LEADER
+  MEMBER
+}
+
+enum PostType {
+  ACHIEVEMENT
+  MILESTONE
+  NUDGE
+  DISCUSSION
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  EXPERT
+}
+
+enum LessonType {
+  VIDEO
+  READING
+  QUIZ
+  INTERACTIVE
+}
+
+enum ProgressStatus {
+  STARTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+model UserRelationship {
+  id         String           @id @default(uuid())
+  followerId String
+  followedId String
+  status     RelationStatus   @default(FOLLOWING)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  follower   User             @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
+  followed   User             @relation("followers", fields: [followedId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followedId])
+  @@index([followerId])
+  @@index([followedId])
+}
+
+enum RelationStatus {
+  FOLLOWING
+  FRIEND_REQUESTED
+  FRIENDS
+  BLOCKED
+}
+
+model OptimizationLog {
+  id              String   @id @default(uuid())
+  queryText       String   @db.Text
+  recommendation  String   @db.Text
+  performanceGain Float?
+  confidence      Float?
+  source          String?  // 'rag' | 'heuristic' | 'generic'
+  embedding       Unsupported("vector(384)")?
+  createdAt       DateTime @default(now())
+  appliedAt       DateTime?
+  
+  @@index([createdAt])
+  @@map("OptimizationLog")
+}
+
+// ============================================================================
+// QUIZ SYSTEM (Phase 1 MVP - Track 1)
+// ============================================================================
+
+model Quiz {
+  id          String         @id @default(uuid())
+  lessonId    String
+  title       Json           // Localized: { vi: "...", en: "...", zh: "..." }
+  description Json?          // Localized
+  published   Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  lesson      Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questions   QuizQuestion[]
+  attempts    QuizAttempt[]
+
+  @@index([lessonId])
+  @@index([published])
+}
+
+model QuizQuestion {
+  id            String       @id @default(uuid())
+  quizId        String
+  type          QuestionType
+  question      Json         // Localized question text
+  options       Json?        // For MULTIPLE_CHOICE, MATCHING: array of strings/objects
+  correctAnswer Json         // Can be string, boolean, or array (for MATCHING)
+  points        Int          @default(1)
+  order         Int
+  explanation   Json?        // Localized explanation shown after submission
+  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@unique([quizId, order])
+  @@index([quizId])
+}
+
+model QuizAttempt {
+  id          String    @id @default(uuid())
+  userId      String
+  quizId      String
+  answers     Json      // { questionId: userAnswer }
+  score       Int       // Points earned
+  percentage  Float     // Percentage score (0-100)
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz        Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([userId, quizId])
+  @@index([quizId])
+  @@index([userId, completedAt])
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  SHORT_ANSWER
+  MATCHING
+}
+
+// ============================================================================
+// CERTIFICATE SYSTEM (Phase 1 MVP - Track 2)
+// ============================================================================
+
+model Certificate {
+  id          String   @id @default(uuid())
+  userId      String
+  courseId    String
+  studentName Json     // Localized: { vi: "...", en: "...", zh: "..." }
+  courseTitle Json     // Localized: { vi: "...", en: "...", zh: "..." }
+  completedAt DateTime @default(now())
+  pdfUrl      String?  // Cloudflare R2 URL
+  metadata    Json?    // PDFKit generation metadata: { generationTime, fileSize, fontUsed }
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([completedAt])
+  @@map("Certificate")
+}

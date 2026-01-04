@@ -1,0 +1,35 @@
+# VED-DRX: AI Database Architect - Dockerfile
+# Lightweight Node.js image for running AI optimization script
+
+FROM node:20-alpine
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY apps/api ./apps/api
+COPY tsconfig.json ./
+
+# Build application
+WORKDIR /app/apps/api
+RUN pnpm build
+
+# Set environment variables
+ENV NODE_ENV=production
+
+# Health check (optional)
+HEALTHCHECK --interval=5m --timeout=3s \
+  CMD node -e "console.log('AI Agent is healthy')" || exit 1
+
+# Default command: run AI optimization
+CMD ["node", "dist/modules/ai/scripts/optimize-database.js"]

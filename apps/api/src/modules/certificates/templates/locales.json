@@ -1,0 +1,32 @@
+{
+  "vi": {
+    "title": "CHỨNG NHẬN HOÀN THÀNH",
+    "subtitle": "Giáo Dục Tài Chính Hành Vi",
+    "presentedTo": "Chứng nhận này được trao cho",
+    "completionText": "đã hoàn thành xuất sắc khóa học",
+    "dateLabel": "Ngày hoàn thành",
+    "signerName": "Nguyễn Văn A",
+    "signerTitle": "Giám đốc Học thuật, V-EdFinance",
+    "verificationPrefix": "Mã xác thực"
+  },
+  "en": {
+    "title": "CERTIFICATE OF COMPLETION",
+    "subtitle": "Behavioral Finance Education",
+    "presentedTo": "This certificate is proudly presented to",
+    "completionText": "for successfully completing the course",
+    "dateLabel": "Date of Completion",
+    "signerName": "Nguyen Van A",
+    "signerTitle": "Academic Director, V-EdFinance",
+    "verificationPrefix": "Verification Code"
+  },
+  "zh": {
+    "title": "结业证书",
+    "subtitle": "行为金融教育",
+    "presentedTo": "特此授予",
+    "completionText": "成功完成课程",
+    "dateLabel": "完成日期",
+    "signerName": "阮文A",
+    "signerTitle": "学术总监，V-EdFinance",
+    "verificationPrefix": "验证码"
+  }
+}

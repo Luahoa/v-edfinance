@@ -1,0 +1,77 @@
+[
+  {
+    "title": {
+      "vi": "Tài Chính Cá Nhân Cơ Bản",
+      "en": "Personal Finance Basics",
+      "zh": "个人理财基础"
+    },
+    "description": {
+      "vi": "Học cách quản lý tiền bạc hiệu quả, lập ngân sách và tiết kiệm thông minh",
+      "en": "Learn how to manage money effectively, budget and save smartly",
+      "zh": "学习如何有效管理资金、预算和智能储蓄"
+    },
+    "level": "BEGINNER",
+    "estimatedDuration": 300,
+    "lessons": 10
+  },
+  {
+    "title": {
+      "vi": "Đầu Tư Chứng Khoán Việt Nam",
+      "en": "Vietnamese Stock Market Investment",
+      "zh": "越南股市投资"
+    },
+    "description": {
+      "vi": "Hiểu rõ thị trường chứng khoán Việt Nam, phân tích cổ phiếu và chiến lược đầu tư",
+      "en": "Understand Vietnamese stock market, stock analysis and investment strategies",
+      "zh": "了解越南股市、股票分析和投资策略"
+    },
+    "level": "INTERMEDIATE",
+    "estimatedDuration": 480,
+    "lessons": 16
+  },
+  {
+    "title": {
+      "vi": "Quản Lý Rủi Ro Tài Chính",
+      "en": "Financial Risk Management",
+      "zh": "财务风险管理"
+    },
+    "description": {
+      "vi": "Nhận diện, đánh giá và quản lý các rủi ro tài chính trong đầu tư và kinh doanh",
+      "en": "Identify, assess and manage financial risks in investment and business",
+      "zh": "识别、评估和管理投资及商业中的财务风险"
+    },
+    "level": "EXPERT",
+    "estimatedDuration": 600,
+    "lessons": 20
+  },
+  {
+    "title": {
+      "vi": "Tiết Kiệm Và Đầu Tư Thông Minh",
+      "en": "Smart Saving and Investment",
+      "zh": "智能储蓄与投资"
+    },
+    "description": {
+      "vi": "Xây dựng quỹ khẩn cấp, đa dạng hóa danh mục đầu tư và đầu tư dài hạn",
+      "en": "Build emergency fund, diversify investment portfolio and long-term investing",
+      "zh": "建立应急基金、多元化投资组合和长期投资"
+    },
+    "level": "BEGINNER",
+    "estimatedDuration": 360,
+    "lessons": 12
+  },
+  {
+    "title": {
+      "vi": "Phân Tích Kỹ Thuật Cơ Bản",
+      "en": "Basic Technical Analysis",
+      "zh": "基础技术分析"
+    },
+    "description": {
+      "vi": "Học các chỉ báo kỹ thuật, đọc biểu đồ và xác định xu hướng thị trường",
+      "en": "Learn technical indicators, chart reading and market trend identification",
+      "zh": "学习技术指标、图表阅读和市场趋势识别"
+    },
+    "level": "INTERMEDIATE",
+    "estimatedDuration": 420,
+    "lessons": 14
+  }
+]

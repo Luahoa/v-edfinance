@@ -1,0 +1,7 @@
+
+> api@0.0.1 build C:\Users\luaho\Demo project\v-edfinance\apps\api
+> nest build
+
+Found 16 error(s).
+
+ ELIFECYCLE  Command failed with exit code 1.

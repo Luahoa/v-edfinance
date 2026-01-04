@@ -1,0 +1,122 @@
+[
+  {
+    "name": {
+      "vi": "Người Mới Bắt Đầu",
+      "en": "First Step",
+      "zh": "初学者"
+    },
+    "description": {
+      "vi": "Hoàn thành bài học đầu tiên",
+      "en": "Complete your first lesson",
+      "zh": "完成第一堂课"
+    },
+    "icon": "🎯",
+    "points": 10,
+    "category": "LEARNING"
+  },
+  {
+    "name": {
+      "vi": "Chuỗi Ngày Học Tập",
+      "en": "Learning Streak",
+      "zh": "学习连续"
+    },
+    "description": {
+      "vi": "Học liên tục 7 ngày",
+      "en": "Study for 7 consecutive days",
+      "zh": "连续学习7天"
+    },
+    "icon": "🔥",
+    "points": 50,
+    "category": "STREAK"
+  },
+  {
+    "name": {
+      "vi": "Bậc Thầy Tài Chính",
+      "en": "Finance Master",
+      "zh": "财务大师"
+    },
+    "description": {
+      "vi": "Hoàn thành 10 khóa học",
+      "en": "Complete 10 courses",
+      "zh": "完成10门课程"
+    },
+    "icon": "🏆",
+    "points": 200,
+    "category": "MILESTONE"
+  },
+  {
+    "name": {
+      "vi": "Nhà Đầu Tư Thông Minh",
+      "en": "Smart Investor",
+      "zh": "智能投资者"
+    },
+    "description": {
+      "vi": "Đạt điểm cao trong mô phỏng đầu tư",
+      "en": "Achieve high score in investment simulation",
+      "zh": "在投资模拟中获得高分"
+    },
+    "icon": "📈",
+    "points": 100,
+    "category": "SIMULATION"
+  },
+  {
+    "name": {
+      "vi": "Người Dẫn Đầu",
+      "en": "Top Learner",
+      "zh": "领先者"
+    },
+    "description": {
+      "vi": "Lọt top 10 bảng xếp hạng",
+      "en": "Reach top 10 leaderboard",
+      "zh": "进入排行榜前10名"
+    },
+    "icon": "⭐",
+    "points": 150,
+    "category": "SOCIAL"
+  },
+  {
+    "name": {
+      "vi": "Kết Nối Xã Hội",
+      "en": "Social Connector",
+      "zh": "社交连接"
+    },
+    "description": {
+      "vi": "Tham gia 1 nhóm học tập",
+      "en": "Join a study group",
+      "zh": "加入学习小组"
+    },
+    "icon": "👥",
+    "points": 30,
+    "category": "SOCIAL"
+  },
+  {
+    "name": {
+      "vi": "Người Chia Sẻ",
+      "en": "Knowledge Sharer",
+      "zh": "知识分享者"
+    },
+    "description": {
+      "vi": "Trả lời 10 câu hỏi trong diễn đàn",
+      "en": "Answer 10 questions in forum",
+      "zh": "在论坛回答10个问题"
+    },
+    "icon": "💬",
+    "points": 80,
+    "category": "SOCIAL"
+  },
+  {
+    "name": {
+      "vi": "Cao Thủ Quiz",
+      "en": "Quiz Champion",
+      "zh": "测验冠军"
+    },
+    "description": {
+      "vi": "Đạt 100% trong 5 bài quiz",
+      "en": "Score 100% in 5 quizzes",
+      "zh": "在5次测验中得100分"
+    },
+    "icon": "🎓",
+    "points": 120,
+    "category": "LEARNING"
+  }
+]
