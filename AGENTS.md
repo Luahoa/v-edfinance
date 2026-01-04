@@ -319,6 +319,8 @@ We use ClaudeKit Frontend Skills to ensure consistent, beautiful, and performant
 - **Metaphors:** Use farming metaphors for savings/investment (rice fields, harvest)
 - **Data Display:** High contrast, clear hierarchy for financial numbers
 
+**Detailed Guide:** See [docs/FRONTEND_SKILLS_INTEGRATION_GUIDE.md](docs/FRONTEND_SKILLS_INTEGRATION_GUIDE.md)
+
 ---
 
 ## i18n Guidelines
