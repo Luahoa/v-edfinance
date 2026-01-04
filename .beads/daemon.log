@@ -13777,3 +13777,13 @@ fatal: couldn't find remote ref beads-sync
 [2026-01-05 00:58:33] Import triggered by file change
 [2026-01-05 00:58:33] Starting auto-import...
 [2026-01-05 00:58:33] Skipping auto-import: JSONL content unchanged
+[2026-01-05 00:59:37] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:59:37] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:59:38] Import triggered by file change
+[2026-01-05 00:59:38] Starting auto-import...
+[2026-01-05 00:59:38] Skipping auto-import: JSONL content unchanged
+[2026-01-05 00:59:49] JSONL removed/renamed, re-establishing watch
+[2026-01-05 00:59:49] Successfully re-established JSONL watch after 50ms
+[2026-01-05 00:59:49] JSONL removed/renamed, re-establishing watch
+[2026-01-05 00:59:49] Successfully re-established JSONL watch after 50ms
+[2026-01-05 00:59:49] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
