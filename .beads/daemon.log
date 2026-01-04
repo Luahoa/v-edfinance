@@ -13731,3 +13731,18 @@ fatal: couldn't find remote ref beads-sync
 [2026-01-04 23:39:36] Import triggered by file change
 [2026-01-04 23:39:36] Starting auto-import...
 [2026-01-04 23:39:36] Skipping auto-import: JSONL content unchanged
+[2026-01-05 00:08:03] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:08:03] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:08:04] Import triggered by file change
+[2026-01-05 00:08:04] Starting auto-import...
+[2026-01-05 00:08:04] Skipping auto-import: JSONL content unchanged
+[2026-01-05 00:42:40] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:42:40] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:42:41] Import triggered by file change
+[2026-01-05 00:42:41] Starting auto-import...
+[2026-01-05 00:42:41] Skipping auto-import: JSONL content unchanged
+[2026-01-05 00:47:33] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:47:33] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 00:47:34] Import triggered by file change
+[2026-01-05 00:47:34] Starting auto-import...
+[2026-01-05 00:47:34] Skipping auto-import: JSONL content unchanged
