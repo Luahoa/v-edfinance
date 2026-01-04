@@ -1,0 +1,48 @@
+﻿{
+    "Summary":  {
+                    "Passed":  0,
+                    "Failed":  3
+                },
+    "Timestamp":  "2025-12-23 06:45:41",
+    "Results":  {
+                    "Phase3":  {
+                                   "Status":  "FAILED",
+                                   "EndTime":  {
+                                                   "value":  "\/Date(1766447141159)\/",
+                                                   "DisplayHint":  2,
+                                                   "DateTime":  "Tuesday, December 23, 2025 6:45:41 AM"
+                                               },
+                                   "StartTime":  {
+                                                     "value":  "\/Date(1766447138472)\/",
+                                                     "DisplayHint":  2,
+                                                     "DateTime":  "Tuesday, December 23, 2025 6:45:38 AM"
+                                                 }
+                               },
+                    "Phase1":  {
+                                   "Status":  "FAILED",
+                                   "EndTime":  {
+                                                   "value":  "\/Date(1766447135247)\/",
+                                                   "DisplayHint":  2,
+                                                   "DateTime":  "Tuesday, December 23, 2025 6:45:35 AM"
+                                               },
+                                   "StartTime":  {
+                                                     "value":  "\/Date(1766447116524)\/",
+                                                     "DisplayHint":  2,
+                                                     "DateTime":  "Tuesday, December 23, 2025 6:45:16 AM"
+                                                 }
+                               },
+                    "Phase2":  {
+                                   "Status":  "FAILED",
+                                   "EndTime":  {
+                                                   "value":  "\/Date(1766447138467)\/",
+                                                   "DisplayHint":  2,
+                                                   "DateTime":  "Tuesday, December 23, 2025 6:45:38 AM"
+                                               },
+                                   "StartTime":  {
+                                                     "value":  "\/Date(1766447135283)\/",
+                                                     "DisplayHint":  2,
+                                                     "DateTime":  "Tuesday, December 23, 2025 6:45:35 AM"
+                                                 }
+                               }
+                }
+}

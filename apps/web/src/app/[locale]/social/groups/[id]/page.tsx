@@ -1,21 +1,18 @@
-import { BuddyAvatar } from '@/components/atoms/BuddyAvatar';
-import type { BuddyChallenge, BuddyGroup, BuddyMember } from '@/types';
-import { Calendar, Trophy, Users, Zap } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { cookies } from 'next/headers';
+import { Users, Trophy, Zap, Calendar } from 'lucide-react';
+import { BuddyAvatar } from '@/components/atoms/BuddyAvatar';
+import type { BuddyGroup, BuddyMember, BuddyChallenge } from '@/types';
 
 async function getGroupDetails(id: string): Promise<BuddyGroup | null> {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
-
+  
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/social/groups/${id}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-        next: { revalidate: 60 },
-      }
-    );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/social/groups/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+      next: { revalidate: 60 },
+    });
     if (!res.ok) return null;
     return res.json();
   } catch (err) {
@@ -24,9 +21,7 @@ async function getGroupDetails(id: string): Promise<BuddyGroup | null> {
   }
 }
 
-export default async function GroupDetailsPage({
-  params,
-}: { params: Promise<{ locale: string; id: string }> }) {
+export default async function GroupDetailsPage({ params }: { params: Promise<{ locale: string, id: string }> }) {
   const { id, locale } = await params;
   const ts = await getTranslations('Social');
   const group = await getGroupDetails(id);
@@ -45,18 +40,18 @@ export default async function GroupDetailsPage({
               <h1 className="text-3xl font-bold">{group.name}</h1>
               <p className="text-zinc-500 mt-2">{group.description}</p>
             </div>
-
+            
             <div className="flex gap-4">
-              <div className="text-center bg-zinc-50 dark:bg-zinc-800 p-4 rounded-xl min-w-[100px]">
-                <p className="text-xs text-zinc-500 uppercase font-bold">{ts('streak')}</p>
-                <p className="text-2xl font-bold flex items-center justify-center gap-1 text-orange-500">
-                  <Zap size={20} fill="currentColor" /> {group.streak}
-                </p>
-              </div>
-              <div className="text-center bg-zinc-50 dark:bg-zinc-800 p-4 rounded-xl min-w-[100px]">
-                <p className="text-xs text-zinc-500 uppercase font-bold">{ts('points')}</p>
-                <p className="text-2xl font-bold text-blue-600">{group.totalPoints}</p>
-              </div>
+               <div className="text-center bg-zinc-50 dark:bg-zinc-800 p-4 rounded-xl min-w-[100px]">
+                 <p className="text-xs text-zinc-500 uppercase font-bold">{ts('streak')}</p>
+                 <p className="text-2xl font-bold flex items-center justify-center gap-1 text-orange-500">
+                   <Zap size={20} fill="currentColor" /> {group.streak}
+                 </p>
+               </div>
+               <div className="text-center bg-zinc-50 dark:bg-zinc-800 p-4 rounded-xl min-w-[100px]">
+                 <p className="text-xs text-zinc-500 uppercase font-bold">{ts('points')}</p>
+                 <p className="text-2xl font-bold text-blue-600">{group.totalPoints}</p>
+               </div>
             </div>
           </div>
         </div>
@@ -72,12 +67,8 @@ export default async function GroupDetailsPage({
                   <div key={c.id} className="border dark:border-zinc-800 rounded-xl p-4 mb-4">
                     <h3 className="font-bold">{c.title[locale] || c.title.en}</h3>
                     <div className="flex items-center gap-4 mt-2 text-sm text-zinc-500">
-                      <span className="flex items-center gap-1">
-                        <Zap size={14} /> {c.target} pts
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Calendar size={14} /> {new Date(c.expiresAt).toLocaleDateString(locale)}
-                      </span>
+                      <span className="flex items-center gap-1"><Zap size={14} /> {c.target} pts</span>
+                      <span className="flex items-center gap-1"><Calendar size={14} /> {new Date(c.expiresAt).toLocaleDateString(locale)}</span>
                     </div>
                   </div>
                 ))
@@ -97,12 +88,8 @@ export default async function GroupDetailsPage({
                   <div key={m.id} className="flex items-center gap-3">
                     <BuddyAvatar displayName={m.user.metadata?.displayName || m.user.email} />
                     <div>
-                      <p className="text-sm font-bold">
-                        {m.user.metadata?.displayName || m.user.email.split('@')[0]}
-                      </p>
-                      <p className="text-xs text-zinc-500">
-                        {m.user.points} pts • {m.user.streaks?.currentStreak || 0} day streak
-                      </p>
+                      <p className="text-sm font-bold">{m.user.metadata?.displayName || m.user.email.split('@')[0]}</p>
+                      <p className="text-xs text-zinc-500">{m.user.points} pts • {m.user.streaks?.currentStreak || 0} day streak</p>
                     </div>
                   </div>
                 ))}

@@ -1,0 +1,268 @@
+{
+  "name": "Zalo OA - User Registration Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "user-registered",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-user-registered",
+      "name": "Webhook - User Registered",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "user-registered"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "userId",
+              "value": "={{ $json.body.userId }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.body.phone }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.body.name }}"
+            },
+            {
+              "name": "email",
+              "value": "={{ $json.body.email }}"
+            },
+            {
+              "name": "phoneFormatted",
+              "value": "={{ $json.body.phone.startsWith('0') ? '84' + $json.body.phone.slice(1) : $json.body.phone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-user-data",
+      "name": "Transform User Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openapi.zalo.me/v3.0/oa/message/cs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "zaloOaApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "recipient",
+              "value": "={{ { \"user_id\": $json.phoneFormatted } }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ { \"text\": \"🎉 Chào mừng \" + $json.name + \" đến với V-EdFinance!\\n\\n✅ Tài khoản của bạn đã được tạo thành công.\\n📧 Email: \" + $json.email + \"\\n\\nHãy bắt đầu hành trình học tập tài chính của bạn ngay hôm nay!\\n\\n👉 Truy cập: https://v-edfinance.com\\n\\n💡 Tip: Hoàn thiện hồ sơ để nhận 100 điểm thưởng!\" } }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "send-zalo-message",
+      "name": "Send Zalo OA Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "zalo-success-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-zalo-response",
+      "name": "Check Zalo Response",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO \"BehaviorLog\" (\"userId\", \"sessionId\", \"action\", \"context\", \"timestamp\", \"createdAt\", \"updatedAt\")\nVALUES (\n  '{{ $('Transform User Data').item.json.userId }}',\n  'zalo-notification',\n  'zalo_welcome_sent',\n  '{{ JSON.stringify({ phone: $('Transform User Data').item.json.phone, zaloDocs: $json }) }}',\n  NOW(),\n  NOW(),\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "log-to-database-success",
+      "name": "Log Success to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1050, 200],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-vedfinance",
+          "name": "V-EdFinance Database"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "{{ $env.SLACK_WEBHOOK_URL }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "🚨 Zalo OA Notification Failed\n\nUser: {{ $('Transform User Data').item.json.name }}\nPhone: {{ $('Transform User Data').item.json.phone }}\nError: {{ $json.error }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "alert-to-slack",
+      "name": "Alert to Slack",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1050, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Zalo notification sent successfully' } }}",
+        "options": {}
+      },
+      "id": "webhook-response-success",
+      "name": "Webhook Response - Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1250, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, message: 'Zalo notification failed but logged' } }}",
+        "responseCode": 500,
+        "options": {}
+      },
+      "id": "webhook-response-error",
+      "name": "Webhook Response - Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1250, 400]
+    }
+  ],
+  "connections": {
+    "Webhook - User Registered": {
+      "main": [
+        [
+          {
+            "node": "Transform User Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform User Data": {
+      "main": [
+        [
+          {
+            "node": "Send Zalo OA Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Zalo OA Message": {
+      "main": [
+        [
+          {
+            "node": "Check Zalo Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Zalo Response": {
+      "main": [
+        [
+          {
+            "node": "Log Success to Database",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Alert to Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Success to Database": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response - Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alert to Slack": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response - Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-23T00:00:00.000Z",
+  "versionId": "1"
+}

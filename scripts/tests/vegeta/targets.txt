@@ -1,3 +1,0 @@
-GET http://103.54.153.248:3001/api/health
-GET http://103.54.153.248:3001/api/courses
-GET http://103.54.153.248:3001/api/auth/profile

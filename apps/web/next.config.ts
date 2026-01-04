@@ -1,19 +1,12 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 import createNextIntlPlugin from 'next-intl/plugin';
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
-  },
-  // Standalone output for Docker deployment
-  // Reduces image size from ~1GB to ~150MB
-  // output: 'standalone', // Temporarily disabled to test build
-  // Disable telemetry in production
-  outputFileTracingIncludes: {
-    '/': ['./public/**/*'],
-  },
+  }
 };
 
 export default withNextIntl(nextConfig);

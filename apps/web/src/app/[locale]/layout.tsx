@@ -1,21 +1,21 @@
-import { routing } from '@/i18n/routing';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import {NextIntlClientProvider} from 'next-intl';
+import {getMessages} from 'next-intl/server';
 import { notFound } from 'next/navigation';
-import './../globals.css';
+import { routing } from '@/i18n/routing';
+import "./../globals.css";
+import { Geist, Geist_Mono } from "next/font/google";
+import Header from "@/components/organisms/Header";
+import Footer from "@/components/organisms/Footer";
 import { GlobalErrorBoundary } from '@/components/atoms/GlobalErrorBoundary';
-import Footer from '@/components/organisms/Footer';
-import { DesktopNav, MobileMenu, MobileNav } from '@/components/organisms/Navigation';
-import { Geist, Geist_Mono } from 'next/font/google';
 
 const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export function generateStaticParams() {
@@ -27,28 +27,26 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<{ locale: string }>;
+  params: Promise<{locale: string}>;
 }) {
-  const { locale } = await params;
-
+  const {locale} = await params;
+  
   if (!routing.locales.includes(locale as 'vi' | 'en' | 'zh')) {
     notFound();
   }
 
-  const messages = await getMessages({ locale });
+  const messages = await getMessages();
 
   return (
     <html lang={locale}>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-zinc-50 dark:bg-black`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
         <NextIntlClientProvider messages={messages}>
           <GlobalErrorBoundary>
-            <DesktopNav />
-            <MobileMenu />
-            <main className="flex-grow pb-16 lg:pb-0">{children}</main>
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
             <Footer />
-            <MobileNav />
           </GlobalErrorBoundary>
         </NextIntlClientProvider>
       </body>
