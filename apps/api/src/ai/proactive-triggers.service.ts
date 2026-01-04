@@ -97,7 +97,7 @@ export class ProactiveTriggersService {
     // FIXED: courseProgress → userProgress (model was renamed in schema)
     const almostDone = await this.prisma.userProgress.findMany({
       where: {
-        progress: { gte: 80, lt: 100 },
+        progressPercentage: { gte: 80, lt: 100 },
         updatedAt: { lt: sevenDaysAgo },
       },
       include: {
@@ -105,10 +105,21 @@ export class ProactiveTriggersService {
           select: { 
             id: true, 
             email: true, 
-            preferredLocale: true  // FIXED: locale → preferredLocale
+            preferredLocale: true
           } 
         },
-        course: { select: { id: true, title: true } },
+        lesson: { 
+          select: { 
+            id: true, 
+            title: true,
+            course: { 
+              select: { 
+                id: true, 
+                title: true 
+              } 
+            } 
+          } 
+        },
       },
       take: 50,
     });
@@ -120,26 +131,25 @@ export class ProactiveTriggersService {
         cp.user.id,
         'COURSE_COMPLETION',
         {
-          courseTitle: cp.course.title,
-          progress: cp.progress,
+          courseTitle: cp.lesson.course.title,
+          progress: cp.progressPercentage,
         },
       );
 
       if (nudge) {
         this.logger.log(`📲 Sending course reminder to ${cp.user.email}`);
 
-        // FIXED: Added required sessionId and path fields
         await this.prisma.behaviorLog.create({
           data: {
             userId: cp.user.id,
-            sessionId: 'system-cron',  // System-generated session
-            path: '/proactive/course-completion',  // Virtual path for tracking
+            sessionId: 'system-cron',
+            path: '/proactive/course-completion',
             eventType: 'PROACTIVE_NUDGE_SENT',
             actionCategory: 'LEARNING',
             payload: {
-              courseId: cp.course.id,
-              progress: cp.progress,
-              message: nudge.message[cp.user.preferredLocale || 'vi'],  // FIXED: locale → preferredLocale
+              courseId: cp.lesson.course.id,
+              progress: cp.progressPercentage,
+              message: nudge.message[cp.user.preferredLocale || 'vi'],
             },
           },
         });

@@ -11,7 +11,7 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { CertificateService } from './services/certificate.service';
 import { GenerateCertificateDto, CertificateResponseDto } from './dto/certificate.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('certificates')
 @Controller('certificates')

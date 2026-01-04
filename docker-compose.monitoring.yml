@@ -1,34 +1,4 @@
 services:
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: vedfinance-prometheus
-    volumes:
-      - ./monitoring/prometheus:/etc/prometheus
-      - prometheus_data:/prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
-    ports:
-      - "9090:9090"
-    networks:
-      - vedfinance-network
-
-  grafana:
-    image: grafana/grafana:latest
-    container_name: vedfinance-grafana
-    ports:
-      - "3001:3000"
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=[REDACTED:password]
-    volumes:
-      - grafana_data:/var/lib/grafana
-    depends_on:
-      - prometheus
-    networks:
-      - vedfinance-network
-
   # Prometheus - Time series database for metrics
   prometheus:
     image: prom/prometheus:latest
@@ -77,19 +47,9 @@ services:
       - prometheus
 
 volumes:
-<<<<<<< Updated upstream
-  netdataconfig:
-  netdatalib:
-  netdatacache:
-  uptime-kuma-data:
-  beszel-data:
   prometheus-data:
   grafana-data:
-=======
-  prometheus_data:
-  grafana_data:
->>>>>>> Stashed changes
 
 networks:
-  vedfinance-network:
+  monitoring:
     driver: bridge

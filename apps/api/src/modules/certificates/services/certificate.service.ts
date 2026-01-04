@@ -1,5 +1,5 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { PdfGeneratorService } from './pdf-generator.service';
 import { R2StorageService } from './r2-storage.service';
 
@@ -72,28 +72,43 @@ export class CertificateService {
       return this.mapToResponse(existingCertificate);
     }
 
-    // 2. Validate course completion
-    const userProgress = await this.prisma.userProgress.findUnique({
+    // 2. Validate course completion - Get user and course data
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const course = await this.prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    // Verify user has completed all lessons in the course
+    const allLessons = await this.prisma.lesson.findMany({
+      where: { courseId, published: true },
+    });
+
+    const completedLessons = await this.prisma.userProgress.count({
       where: {
-        userId_courseId: { userId, courseId },
-      },
-      include: {
-        user: true,
-        course: true,
+        userId,
+        lesson: { courseId },
+        status: 'COMPLETED',
       },
     });
 
-    if (!userProgress) {
-      throw new NotFoundException('Course progress not found');
-    }
-
-    if (!userProgress.completed) {
-      throw new Error('Course not completed yet');
+    if (completedLessons < allLessons.length) {
+      throw new Error(`Course not completed yet. Completed ${completedLessons}/${allLessons.length} lessons.`);
     }
 
     // 3. Extract localized names
-    const studentName = this.extractLocalizedString(userProgress.user.name, locale);
-    const courseTitle = this.extractLocalizedString(userProgress.course.title, locale);
+    const studentName = this.extractLocalizedString(user.name, locale);
+    const courseTitle = this.extractLocalizedString(course.title, locale);
 
     // 4. Generate certificate ID
     const certificateId = this.generateCertificateId();
@@ -102,7 +117,7 @@ export class CertificateService {
     const pdfResult = await this.pdfGenerator.generateCertificatePdf({
       recipientName: studentName,
       courseTitle,
-      completedAt: userProgress.completedAt || new Date(),
+      completedAt: new Date(),
       certificateId,
       locale,
     });
@@ -122,16 +137,16 @@ export class CertificateService {
         userId,
         courseId,
         studentName: {
-          vi: this.extractLocalizedString(userProgress.user.name, 'vi'),
-          en: this.extractLocalizedString(userProgress.user.name, 'en'),
-          zh: this.extractLocalizedString(userProgress.user.name, 'zh'),
+          vi: this.extractLocalizedString(user.name, 'vi'),
+          en: this.extractLocalizedString(user.name, 'en'),
+          zh: this.extractLocalizedString(user.name, 'zh'),
         },
         courseTitle: {
-          vi: this.extractLocalizedString(userProgress.course.title, 'vi'),
-          en: this.extractLocalizedString(userProgress.course.title, 'en'),
-          zh: this.extractLocalizedString(userProgress.course.title, 'zh'),
+          vi: this.extractLocalizedString(course.title, 'vi'),
+          en: this.extractLocalizedString(course.title, 'en'),
+          zh: this.extractLocalizedString(course.title, 'zh'),
         },
-        completedAt: userProgress.completedAt || new Date(),
+        completedAt: new Date(),
         pdfUrl: uploadResult.url,
         metadata: pdfResult.metadata,
       },
@@ -166,7 +181,7 @@ export class CertificateService {
       orderBy: { completedAt: 'desc' },
     });
 
-    return certificates.map(cert => this.mapToResponse(cert));
+    return certificates.map((cert: any) => this.mapToResponse(cert));
   }
 
   /**
@@ -178,7 +193,7 @@ export class CertificateService {
       orderBy: { completedAt: 'desc' },
     });
 
-    return certificates.map(cert => this.mapToResponse(cert));
+    return certificates.map((cert: any) => this.mapToResponse(cert));
   }
 
   /**

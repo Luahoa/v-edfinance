@@ -1,5 +1,4 @@
 {
-<<<<<<< Updated upstream
   "name": "v-edfinance",
   "private": true,
   "packageManager": "pnpm@9.15.0",
@@ -23,10 +22,15 @@
     "monitoring:stop": "docker compose -f docker-compose.monitoring.yml down",
     "prepare": "husky"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "pnpm": {
     "overrides": {
       "minimist": "1.2.8",
-      "esbuild": "0.25.0"
+      "esbuild": "0.25.0",
+      "@smithy/types": "4.11.0"
     }
   },
   "devDependencies": {
@@ -34,7 +38,7 @@
     "@e2b/code-interpreter": "^2.3.3",
     "@playwright/test": "^1.57.0",
     "@types/bcrypt": "^6.0.0",
-    "@types/node": "^25.0.3",
+    "@types/node": "^22.10.7",
     "@vitest/coverage-v8": "^2.1.9",
     "@vitest/ui": "^2.1.9",
     "autocannon": "^7.15.0",
@@ -57,36 +61,13 @@
     "unplugin-swc": "1.5.9",
     "vitest": "^2.1.9"
   },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
   "ava": {
     "extensions": [
       "ts"
-=======
-    "name": "v-edfinance",
-    "private": true,
-    "packageManager": "pnpm@9.15.0",
-    "scripts": {
-        "build": "turbo run build",
-        "dev": "turbo run dev",
-        "lint": "turbo run lint",
-        "test:orchestrate": "node scripts/e2b-e2e-orchestrator.js",
-        "format": "prettier --write \"**/*.{ts,tsx,md}\""
-    },
-    "devDependencies": {
-        "@e2b/code-interpreter": "^2.3.3",
-        "@playwright/test": "^1.57.0",
-        "ava": "^6.4.1",
-        "dotenv": "^17.2.3",
-        "jest-coverage-badges": "^1.1.2",
-        "prettier": "latest",
-        "turbo": "latest"
-    },
-    "workspaces": [
-        "apps/*",
-        "packages/*"
->>>>>>> Stashed changes
-    ],
-    "dependencies": {
-        "react": "18.3.1",
-        "react-dom": "18.3.1"
-    }
+    ]
+  }
 }

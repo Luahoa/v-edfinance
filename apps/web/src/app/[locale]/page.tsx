@@ -1,7 +1,3 @@
-import {getTranslations} from 'next-intl/server';
-import Link from 'next/link';
-
-import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 import { ArrowRight, Users, TrendingUp, ShieldCheck } from 'lucide-react';
@@ -11,7 +7,6 @@ export default async function Index({ params }: { params: Promise<{ locale: stri
   const t = await getTranslations('Index');
 
   return (
-<<<<<<< Updated upstream
     <div className="flex min-h-screen flex-col">
       {/* Hero Section with Farming Metaphor */}
       <section className="relative overflow-hidden bg-green-50 dark:bg-green-950/20 py-20 sm:py-32 lg:pb-32 xl:pb-36">
@@ -134,17 +129,6 @@ export default async function Index({ params }: { params: Promise<{ locale: stri
           </div>
         </div>
       </section>
-=======
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 p-6 text-center dark:bg-black">
-      <h1 className="text-4xl font-bold text-zinc-900 dark:text-zinc-50">{t('title')}</h1>
-      <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-400">{t('description')}</p>
-      <Link 
-        href={`/${locale}/courses`}
-        className="mt-8 rounded-full bg-blue-600 px-8 py-3 font-medium text-white transition-colors hover:bg-blue-700"
-      >
-        {t('getStarted')}
-      </Link>
->>>>>>> Stashed changes
     </div>
   );
 }
