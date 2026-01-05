@@ -14406,3 +14406,76 @@ fatal: couldn't find remote ref beads-sync
 [2026-01-05 12:27:37] Import triggered by file change
 [2026-01-05 12:27:37] Starting auto-import...
 [2026-01-05 12:27:37] Skipping auto-import: JSONL content unchanged
+[2026-01-05 12:29:27] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 12:29:27] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 12:29:28] Import triggered by file change
+[2026-01-05 12:29:28] Starting auto-import...
+[2026-01-05 12:29:28] Skipping auto-import: JSONL content unchanged
+[2026-01-05 12:30:13] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 12:30:13] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 12:30:14] Import triggered by file change
+[2026-01-05 12:30:14] Starting auto-import...
+[2026-01-05 12:30:14] Skipping auto-import: JSONL content unchanged
+[2026-01-05 12:31:05] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 12:31:05] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 12:31:06] Import triggered by file change
+[2026-01-05 12:31:06] Starting auto-import...
+[2026-01-05 12:31:06] Skipping auto-import: JSONL content unchanged
+[2026-01-05 13:57:14] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:14] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:14] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:14] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:14] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 13:57:15] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:15] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:15] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:15] Import triggered by file change
+[2026-01-05 13:57:15] Starting auto-import...
+[2026-01-05 13:57:15] Skipping auto-import: JSONL content unchanged
+[2026-01-05 13:57:15] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:15] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 13:57:16] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:16] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:16] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:16] Import triggered by file change
+[2026-01-05 13:57:16] Starting auto-import...
+[2026-01-05 13:57:16] Skipping auto-import: JSONL content unchanged
+[2026-01-05 13:57:16] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:16] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 13:57:17] Import triggered by file change
+[2026-01-05 13:57:17] Starting auto-import...
+[2026-01-05 13:57:17] Skipping auto-import: JSONL content unchanged
+[2026-01-05 13:57:17] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:18] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:18] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:18] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:18] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 13:57:19] Import triggered by file change
+[2026-01-05 13:57:19] Starting auto-import...
+[2026-01-05 13:57:19] Skipping auto-import: JSONL content unchanged
+[2026-01-05 13:57:30] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:31] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:31] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:31] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:31] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 13:57:32] Import triggered by file change
+[2026-01-05 13:57:32] Starting auto-import...
+[2026-01-05 13:57:32] Skipping auto-import: JSONL content unchanged
+[2026-01-05 13:57:40] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:41] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:41] JSONL removed/renamed, re-establishing watch
+[2026-01-05 13:57:41] Successfully re-established JSONL watch after 50ms
+[2026-01-05 13:57:41] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 13:57:42] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 13:57:42] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 13:57:42] Import triggered by file change
+[2026-01-05 13:57:42] Starting auto-import...
+[2026-01-05 13:57:42] Skipping auto-import: JSONL content unchanged
+[2026-01-05 13:57:43] Import triggered by file change
+[2026-01-05 13:57:43] Starting auto-import...
+[2026-01-05 13:57:43] Skipping auto-import: JSONL content unchanged
+[2026-01-05 13:58:10] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 13:58:10] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 13:58:11] Import triggered by file change
+[2026-01-05 13:58:11] Starting auto-import...
+[2026-01-05 13:58:11] Skipping auto-import: JSONL content unchanged
