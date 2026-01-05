@@ -164,7 +164,7 @@ describe('DynamicConfigService', () => {
       expect(service.get('app.maintenance_mode')).toBe('false');
 
       const updatedSettings = [
-        { ...mockSystemSettings[0], value: 'true' },
+        { key: mockSystemSettings[0].key, value: 'true', description: null, updatedAt: mockSystemSettings[0].updatedAt },
         mockSystemSettings[1],
         mockSystemSettings[2],
       ];

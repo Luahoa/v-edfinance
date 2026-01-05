@@ -13,6 +13,15 @@ export const SchemaRegistry = {
     details: z.record(z.string(), z.any()).optional(),
   }),
 
+  // BehaviorLog.deviceInfo
+  DEVICE_INFO: z.object({
+    userAgent: z.string().optional(),
+    platform: z.string().optional(),
+    screenResolution: z.string().optional(),
+    language: z.string().optional(),
+    timezone: z.string().optional(),
+  }),
+
   // User.metadata
   USER_METADATA: z.object({
     displayName: z.string().optional(),

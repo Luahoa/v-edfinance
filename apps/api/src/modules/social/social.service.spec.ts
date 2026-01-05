@@ -310,6 +310,7 @@ describe('SocialService', () => {
         throw new Error('Expected result to be defined');
       }
 
+      expect(result.id).toBe('g1');
       expect(mockPrisma.buddyGroup.findUnique).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: 'g1' },
