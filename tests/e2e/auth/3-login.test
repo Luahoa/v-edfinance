@@ -1,6 +1,0 @@
-open http://localhost:3002/login
-fill email field with "testuser@example.com"
-fill password field with "SecurePass123!"
-click "Login" button
-verify dashboard or home page is visible
-verify user is logged in successfully

@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/components/atoms/Button';
+import { Button } from '@/components/ui/button';
 import YouTubeEmbed from '@/components/molecules/YouTubeEmbed';
 import {
   ResizableHandle,
@@ -10,8 +10,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Link, useRouter } from '@/i18n/routing';
-import { useAuthStore } from '@/store/useAuthStore';
+import { Link } from '@/i18n/routing';
 import type { Course, Lesson } from '@/types';
 import { motion } from 'framer-motion';
 import {
@@ -19,98 +18,67 @@ import {
   ChevronLeft,
   ChevronRight,
   FileText,
-  Loader2,
   PlayCircle,
   Menu
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function LessonPage({
-  params: paramsPromise,
-}: { params: Promise<{ id: string; lessonId: string; locale: string }> }) {
-  const params = use(paramsPromise);
-  const { id, lessonId, locale } = params;
-  const t = useTranslations('Courses');
-  const router = useRouter();
-  const { token } = useAuthStore();
-
+export default function LessonPage({ params }: { params: Promise<{ id: string; lessonId: string; locale: string }> }) {
+  const [id, setId] = useState<string>('');
+  const [lessonId, setLessonId] = useState<string>('');
+  const [locale, setLocale] = useState<string>('');
+  
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
-  const [progressing, setProgressing] = useState(false);
+  const t = useTranslations('Lessons');
 
   useEffect(() => {
-    if (!lessonId || !id || !token) return;
+    params.then(p => {
+      setId(p.id);
+      setLessonId(p.lessonId);
+      setLocale(p.locale);
+    });
+  }, [params]);
 
+  useEffect(() => {
+    if (!lessonId || !id) return;
+    
     const fetchData = async () => {
-      setLoading(true);
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       try {
         const [lessonRes, courseRes] = await Promise.all([
-          fetch(`${API_URL}/courses/lessons/${lessonId}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch(`${API_URL}/courses/${id}`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/lessons/${lessonId}`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`)
         ]);
-
-        if (lessonRes.ok) setLesson(await lessonRes.json());
-        if (courseRes.ok) setCourse(await courseRes.json());
-      } catch (err) {
-        console.error('Error fetching lesson data:', err);
+        setLesson(await lessonRes.json());
+        setCourse(await courseRes.json());
+      } catch {
+        console.error('Error fetching lesson data');
       } finally {
         setLoading(false);
       }
     };
     fetchData();
-  }, [lessonId, id, token]);
+  }, [lessonId, id]);
 
   const markAsComplete = async () => {
-    if (progressing) return;
-    setProgressing(true);
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
-    try {
-      const response = await fetch(`${API_URL}/courses/lessons/${lessonId}/progress`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: 'COMPLETED', durationSpent: 60 }),
-      });
-
-      if (response.ok) {
-        // Find next lesson
-        const currentIndex = course?.lessons.findIndex((l) => l.id === lessonId) ?? -1;
-        if (currentIndex !== -1 && currentIndex < (course?.lessons.length ?? 0) - 1) {
-          const nextLesson = course?.lessons[currentIndex + 1];
-          router.push(`/courses/${id}/lessons/${nextLesson?.id}`);
-        } else {
-          router.push(`/courses/${id}`);
-        }
-      }
-    } catch (err) {
-      console.error('Progress update error:', err);
-    } finally {
-      setProgressing(false);
-    }
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/lessons/${lessonId}/progress`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ status: 'COMPLETED', durationSpent: 60 }),
+    });
+    alert('Bài học đã hoàn thành!');
   };
 
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-white dark:bg-black">
-        <Loader2 className="h-10 w-10 animate-spin text-blue-600" />
-      </div>
-    );
-  }
-
+  if (loading) return <div className="p-10 text-center">Loading...</div>;
   if (!lesson) return <div className="p-10 text-center">Lesson not found</div>;
 
-  const currentTitle = lesson.title[locale as keyof typeof lesson.title] || lesson.title.vi;
-  const currentContent = lesson.content[locale as keyof typeof lesson.content] || lesson.content.vi;
+  const currentTitle = lesson.title[locale as keyof typeof lesson.title] || lesson.title.vi || lesson.title.en;
+  const currentContent = lesson.content[locale as keyof typeof lesson.content] || lesson.content.vi || lesson.content.en;
 
   return (
     <div className="h-screen bg-white dark:bg-black overflow-hidden flex flex-col">
@@ -230,19 +198,19 @@ export default function LessonPage({
                 <Separator className="my-8" />
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <Button variant="outline" className="w-full sm:w-auto gap-2 h-12 text-base">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto gap-2 h-12 text-base">
                     <ChevronLeft size={18} /> {t('prevLesson') || 'Previous'}
                   </Button>
 
                   <Button
                     onClick={markAsComplete}
+                    size="sm"
                     className="w-full sm:w-auto px-8 gap-2 bg-green-600 hover:bg-green-700 text-white font-bold h-12 text-base shadow-lg shadow-green-900/20"
-                    isLoading={progressing}
                   >
                     <CheckCircle size={20} /> {t('markComplete') || 'Mark as Complete'}
                   </Button>
 
-                  <Button variant="outline" className="w-full sm:w-auto gap-2 h-12 text-base">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto gap-2 h-12 text-base">
                     {t('nextLesson') || 'Next'} <ChevronRight size={18} />
                   </Button>
                 </div>

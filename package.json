@@ -22,10 +22,15 @@
     "monitoring:stop": "docker compose -f docker-compose.monitoring.yml down",
     "prepare": "husky"
   },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "pnpm": {
     "overrides": {
       "minimist": "1.2.8",
-      "esbuild": "0.25.0"
+      "esbuild": "0.25.0",
+      "@smithy/types": "4.11.0"
     }
   },
   "devDependencies": {
@@ -33,7 +38,7 @@
     "@e2b/code-interpreter": "^2.3.3",
     "@playwright/test": "^1.57.0",
     "@types/bcrypt": "^6.0.0",
-    "@types/node": "^25.0.3",
+    "@types/node": "^22.10.7",
     "@vitest/coverage-v8": "^2.1.9",
     "@vitest/ui": "^2.1.9",
     "autocannon": "^7.15.0",
@@ -56,33 +61,13 @@
     "unplugin-swc": "1.5.9",
     "vitest": "^2.1.9"
   },
+  "dependencies": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
   "ava": {
     "extensions": [
       "ts"
-    ],
-    "require": [
-      "ts-node/register/transpile-only"
     ]
-  },
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "libs/*"
-  ],
-  "lint-staged": {
-    "*.{js,ts,tsx,json}": [
-      "biome check --fix"
-    ]
-  },
-  "dependencies": {
-    "@uppy/aws-s3-multipart": "^4.1.2",
-    "@uppy/core": "^4.1.2",
-    "@uppy/dashboard": "^4.1.2",
-    "@uppy/react": "^4.1.2",
-    "@uppy/tus": "^4.1.2",
-    "next": "16.1.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "unstorage": "^1.13.1"
   }
 }

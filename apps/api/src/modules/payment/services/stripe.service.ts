@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 
@@ -17,7 +17,7 @@ export class StripeService implements OnModuleInit {
     }
 
     this.stripe = new Stripe(secretKey, {
-      apiVersion: '2024-12-18.acacia',
+      apiVersion: '2025-12-15.clover',
       typescript: true,
     });
 
@@ -116,7 +116,11 @@ export class StripeService implements OnModuleInit {
    * Retrieve a customer
    */
   async retrieveCustomer(customerId: string): Promise<Stripe.Customer> {
-    return this.stripe.customers.retrieve(customerId);
+    const result = await this.stripe.customers.retrieve(customerId);
+    if (result.deleted) {
+      throw new NotFoundException(`Customer ${customerId} has been deleted`);
+    }
+    return result;
   }
 
   /**

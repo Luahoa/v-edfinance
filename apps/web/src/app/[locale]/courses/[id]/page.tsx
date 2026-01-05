@@ -10,7 +10,7 @@ import { notFound } from 'next/navigation';
 async function getCourse(id: string): Promise<Course | null> {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`, {
-      cache: 'no-store', // Consider 'force-cache' with revalidate for prod
+      cache: 'no-store',
     });
     if (!res.ok) return null;
     return res.json();
@@ -20,9 +20,7 @@ async function getCourse(id: string): Promise<Course | null> {
   }
 }
 
-export default async function CourseDetailPage({
-  params,
-}: { params: Promise<{ id: string; locale: string }> }) {
+export default async function CourseDetailPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
   const { id, locale } = await params;
   const course = await getCourse(id);
 

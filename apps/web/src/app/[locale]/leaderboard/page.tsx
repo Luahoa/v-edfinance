@@ -1,9 +1,9 @@
 'use client';
 
-import { api } from '@/lib/api-client';
-import { Flame, Target, Trophy } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Trophy, Flame, Target } from 'lucide-react';
+import { api } from '@/lib/api-client';
 
 import Image from 'next/image';
 
@@ -65,101 +65,65 @@ export default function LeaderboardPage() {
         <table className="w-full text-left">
           <thead className="bg-zinc-50 dark:bg-zinc-800/50">
             <tr>
-              <th className="px-6 py-4 font-semibold text-zinc-600 dark:text-zinc-400">
-                {t('rank')}
-              </th>
-              <th className="px-6 py-4 font-semibold text-zinc-600 dark:text-zinc-400">
-                {t('user')}
-              </th>
-              <th className="px-6 py-4 font-semibold text-zinc-600 dark:text-zinc-400 text-right">
-                {t('value')}
-              </th>
+              <th className="px-6 py-4 font-semibold text-zinc-600 dark:text-zinc-400">{t('rank')}</th>
+              <th className="px-6 py-4 font-semibold text-zinc-600 dark:text-zinc-400">{t('user')}</th>
+              <th className="px-6 py-4 font-semibold text-zinc-600 dark:text-zinc-400 text-right">{t('value')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-            {loading
-              ? Array.from({ length: 5 }).map((_, i) => (
-                  <tr key={i} className="animate-pulse">
-                    <td className="px-6 py-4">
-                      <div className="h-4 w-4 bg-zinc-200 dark:bg-zinc-700 rounded" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 bg-zinc-200 dark:bg-zinc-700 rounded-full" />
-                        <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-700 rounded" />
+            {loading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <tr key={i} className="animate-pulse">
+                  <td className="px-6 py-4"><div className="h-4 w-4 bg-zinc-200 dark:bg-zinc-700 rounded" /></td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 bg-zinc-200 dark:bg-zinc-700 rounded-full" />
+                      <div className="h-4 w-24 bg-zinc-200 dark:bg-zinc-700 rounded" />
+                    </div>
+                  </td>
+                  <td className="px-6 py-4"><div className="h-4 w-12 bg-zinc-200 dark:bg-zinc-700 rounded ml-auto" /></td>
+                </tr>
+              ))
+            ) : (
+              data.map((it, index) => {
+                const item = it as { id?: string; userId: string; avatar?: string; displayName: string; points: number; longestStreak: number };
+                return (
+                  <tr key={item.id || item.userId} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+                  <td className="px-6 py-4 font-medium">
+                    {index === 0 ? <span className="text-2xl">🥇</span> : 
+                     index === 1 ? <span className="text-2xl">🥈</span> :
+                     index === 2 ? <span className="text-2xl">🥉</span> : 
+                     index + 1}
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 font-bold border-2 border-white dark:border-zinc-800 shadow-sm relative overflow-hidden">
+                        {item.avatar ? (
+                          <Image src={item.avatar} alt={item.displayName} fill className="object-cover" />
+                        ) : (
+                          item.displayName.charAt(0).toUpperCase()
+                        )}
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="h-4 w-12 bg-zinc-200 dark:bg-zinc-700 rounded ml-auto" />
-                    </td>
-                  </tr>
-                ))
-              : data.map((it, index) => {
-                  const item = it as {
-                    id?: string;
-                    userId: string;
-                    avatar?: string;
-                    displayName: string;
-                    points: number;
-                    longestStreak: number;
-                  };
-                  return (
-                    <tr
-                      key={item.id || item.userId}
-                      className="hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
-                    >
-                      <td className="px-6 py-4 font-medium">
-                        {index === 0 ? (
-                          <span className="text-2xl">🥇</span>
-                        ) : index === 1 ? (
-                          <span className="text-2xl">🥈</span>
-                        ) : index === 2 ? (
-                          <span className="text-2xl">🥉</span>
-                        ) : (
-                          index + 1
-                        )}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 font-bold border-2 border-white dark:border-zinc-800 shadow-sm relative overflow-hidden">
-                            {item.avatar ? (
-                              <Image
-                                src={item.avatar}
-                                alt={item.displayName}
-                                fill
-                                className="object-cover"
-                              />
-                            ) : (
-                              item.displayName.charAt(0).toUpperCase()
-                            )}
-                          </div>
-                          <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                            {item.displayName}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        {activeTab === 'points' ? (
-                          <div className="flex items-center justify-end gap-1.5 font-bold text-blue-600">
-                            <Target size={16} />
-                            {item.points.toLocaleString()}{' '}
-                            <span className="text-xs font-normal text-zinc-500 lowercase">
-                              {t('pointsSuffix')}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center justify-end gap-1.5 font-bold text-orange-500">
-                            <Flame size={16} />
-                            {item.longestStreak}{' '}
-                            <span className="text-xs font-normal text-zinc-500 lowercase">
-                              {t('daysSuffix')}
-                            </span>
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                      <span className="font-semibold text-zinc-900 dark:text-zinc-100">{item.displayName}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    {activeTab === 'points' ? (
+                      <div className="flex items-center justify-end gap-1.5 font-bold text-blue-600">
+                        <Target size={16} />
+                        {item.points.toLocaleString()} <span className="text-xs font-normal text-zinc-500 lowercase">{t('pointsSuffix')}</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-end gap-1.5 font-bold text-orange-500">
+                        <Flame size={16} />
+                        {item.longestStreak} <span className="text-xs font-normal text-zinc-500 lowercase">{t('daysSuffix')}</span>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>

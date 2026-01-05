@@ -2,39 +2,6 @@
 
 **EdTech Platform for Financial Education**
 
-## 🏗️ Beads Trinity Architecture
-
-This project uses **Beads Trinity** for 100-agent orchestration:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  beads (bd)        beads_viewer (bv)    mcp_agent_mail     │
-│  Task Mgmt         Analytics            Coordination        │
-│  (Write)           (Read + AI)          (Messaging)         │
-│       │                   │                    │            │
-│       └───────────────────┼────────────────────┘            │
-│                           ▼                                 │
-│              .beads/issues.jsonl                            │
-│              Single Source of Truth                         │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Quick Commands:**
-- `bd ready` - Find unblocked tasks
-- `bv --robot-next` - Get AI-recommended next task (PageRank)
-- `bd doctor` - Health check
-- `bd sync` - Sync to git
-
----
-
-## 🛡️ Zero-Debt Engineering
-This project follows a strict **"Fix First, Feature Second"** protocol:
-1. **Issue Check:** Use `bd ready` to identify pending tasks/bugs.
-2. **Quality Audit:** Run `bd doctor` to ensure environment and dependency health.
-3. **Verified Completion:** No task is closed without passing full test suites.
-
----
-
 ## 📚 Documentation
 
 ### Getting Started
@@ -57,26 +24,9 @@ This project follows a strict **"Fix First, Feature Second"** protocol:
 
 ## 🛡️ CI/CD & Testing
 [![CI](https://github.com/Luahoa/v-edfinance/actions/workflows/ci.yml/badge.svg)](https://github.com/Luahoa/v-edfinance/actions/workflows/ci.yml)
-[![Tests](https://github.com/Luahoa/v-edfinance/actions/workflows/test.yml/badge.svg)](https://github.com/Luahoa/v-edfinance/actions/workflows/test.yml)
-[![Quality Gates](https://github.com/Luahoa/v-edfinance/actions/workflows/quality-gates.yml/badge.svg)](https://github.com/Luahoa/v-edfinance/actions/workflows/quality-gates.yml)
-[![codecov](https://codecov.io/gh/Luahoa/v-edfinance/branch/main/graph/badge.svg)](https://codecov.io/gh/Luahoa/v-edfinance)
-
 - **Track 1 (Unit):** 100% Core Gamification Logic (AVA/Jest)
 - **Track 2 (DevOps):** File Structure & Docker Health Checks (Bats)
 - **Track 3 (Performance):** Stress Testing Payloads Ready (Vegeta)
-
----
-
-## 📋 Prerequisites
-
-- **Node.js** 18+ or 20+
-- **pnpm** 9.15.0+ (⚠️ **REQUIRED** - Do NOT use npm or yarn)
-  ```bash
-  npm install -g pnpm@9.15.0
-  ```
-- **PostgreSQL** 15+ (for local development)
-
-📖 See [DEPENDENCY_MANAGEMENT.md](./docs/DEPENDENCY_MANAGEMENT.md) for detailed setup instructions.
 
 ---
 
@@ -100,28 +50,10 @@ pnpm test
 **Foundation:** ████████████████████ 100%  
 **Backend Services:** ████████████████░░░░ 80%  
 **Frontend UI:** ████░░░░░░░░░░░░░░░░ 20%  
-**Testing:** ██████████████████░░ 90% (1811/1834 passing)  
+**Testing:** ██████░░░░░░░░░░░░░░ 30%  
 **Overall:** ████████████░░░░░░░░ **60%**
 
-### Current Phase: 🔴 PHASE 0 - Emergency Stabilization
-
-**Health Status:** 🟡 **TESTS PASSING, BUILD BLOCKED**
-
-```
-✅ Test Suite:    1811/1834 passing (98.7%)
-🔴 Web Build:     BLOCKED - Missing lucide-react
-⚠️  API Build:    UNKNOWN - Needs verification
-⚠️  Drizzle ORM:  OUT OF SYNC - Schema drift
-```
-
-**Critical Blockers (P0):**
-1. `ved-6bdg` - Fix Web Build (5 min)
-2. `ved-gdvp` - Fix Drizzle Schema (30 min)
-3. `ved-o1cw` - Verify Builds (15 min)
-
-**Total Time to Unblock:** 50 minutes
-
-See [PROJECT_AUDIT_2026-01-03.md](./PROJECT_AUDIT_2026-01-03.md) and [PROJECT_STATUS.md](./PROJECT_STATUS.md) for detailed progress report.
+See [PROJECT_STATUS.md](./PROJECT_STATUS.md) for detailed progress report.
 
 ---
 

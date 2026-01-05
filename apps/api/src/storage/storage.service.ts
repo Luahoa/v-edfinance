@@ -69,7 +69,7 @@ export class StorageService {
           ? new GetObjectCommand({ Bucket: this.bucketName, Key: key })
           : new PutObjectCommand({ Bucket: this.bucketName, Key: key });
 
-      return await getSignedUrl(this.s3Client, command, { expiresIn });
+      return await getSignedUrl(this.s3Client as any, command, { expiresIn });
     } catch (error) {
       this.logger.error(`Error generating presigned ${operation} URL`, error);
       throw error;

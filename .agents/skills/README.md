@@ -1,357 +1,312 @@
-# V-EdFinance Skills Library
+# V-EdFinance Skills & Templates System
 
-**Total Skills:** 50+ expert systems  
-**Categories:** ClaudeKit, UI/UX, EdTech, Database, DevOps, n8n, Testing, Cloud  
-**Last Updated:** 2026-01-03
+**Purpose:** Reusable skills and templates for rapid edtech platform development.
 
 ---
 
-## 🏗️ ClaudeKit Suite (libs/)
+## 📁 Structure
 
-### 1. ClaudeKit CLI
-**Location:** [../../libs/claudekit-cli/](../../libs/claudekit-cli/)  
-**Description:** Dev tooling and CLI automation for Claude Code  
-**Tests:** 100 tests  
-**Features:**
-- Automated CLI workflows
-- Development tool orchestration
-- Command-line helpers
-
-### 2. ClaudeKit Marketing
-**Location:** [../../libs/claudekit-marketing/](../../libs/claudekit-marketing/)  
-**Description:** Marketing automation and campaign management  
-**Tests:** 10 tests  
-**Features:**
-- Campaign automation
-- Marketing workflow templates
-- Content generation helpers
-
-**Status:** Active, test failures non-blocking (P3 priority)
-
----
-
-## 🎨 UI/UX Pro Max
-
-**Location:** [../../docs/UI_UX_PRO_MAX_GUIDE.md](../../docs/UI_UX_PRO_MAX_GUIDE.md)  
-**Source:** https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
-
-### Features
-- ✅ **57 UI Styles** - Glassmorphism, Claymorphism, Minimalism, Brutalism, Neumorphism, Bento Grid, Dark Mode
-- ✅ **95 Color Palettes** - Specialized palettes for SaaS, E-commerce, Healthcare, Fintech, Beauty
-- ✅ **56 Font Pairings** - Curated Google Fonts typography
-- ✅ **24 Chart Types** - Dashboard and analytics suggestions
-- ✅ **8 Tech Stacks** - React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, HTML+Tailwind
-- ✅ **98 UX Guidelines** - Best practices, anti-patterns, accessibility rules
-
-### Installation Status
-- `.claude/` - Claude Code (Amp) ✅
-- `.cursor/` - Cursor ✅
-- `.windsurf/` - Windsurf ✅
-- `.agent/` - Antigravity ✅
-- `.github/` - GitHub Copilot ✅
-- `.kiro/` - Kiro ✅
-- `.shared/` - Shared database ✅
-
-### Usage
-Natural language requests:
 ```
-Build a landing page for my SaaS product with glassmorphism style
-Create a dashboard for healthcare analytics
-Design a portfolio website with dark mode
-Make a mobile app UI for e-commerce
+.agents/
+  skills/                    # AI-readable skill guides
+    ├── nextjs-i18n-setup.md            # Next.js 15 + next-intl i18n
+    ├── edtech-monorepo-init.md         # Turborepo setup
+    ├── prisma-edtech-schema.md         # Database schemas
+    └── ai-integration-gemini.md        # Gemini AI patterns
+
+templates/
+  components/                # Frontend component templates
+    ├── Button.tsx                      # Atom: Basic button
+    ├── CourseCard.tsx                  # Molecule: Course display
+    ├── LessonPlayer.tsx                # Organism: Lesson viewer
+    └── DashboardLayout.tsx             # Template: Layout wrapper
+  api/                       # Backend API templates
+    ├── auth.controller.ts              # Authentication endpoints
+    ├── base.service.ts                 # Base service class
+    └── localized.dto.ts                # Localized field DTOs
+
+AGENTS.md                    # AI agent instructions
+ARCHITECTURE.md              # Architecture decision records
+SPEC.md                      # Full project specification
 ```
 
 ---
 
-## 🎯 EdTech & Product (4 skills)
+## 🚀 How to Use Skills
 
-### Database Patterns
-- [Prisma EdTech Schema](prisma-edtech-schema.md) - Database patterns for EdTech platforms
-- [Prisma-Drizzle Hybrid](prisma-drizzle-hybrid-agent.md) - Triple-ORM strategy (Prisma + Drizzle + Kysely)
+### For AI Agents (like Amp)
+Skills are designed to be loaded by AI agents when starting similar projects:
 
-### Platform Setup
-- [EdTech Monorepo Init](edtech-monorepo-init.md) - Monorepo initialization for EdTech
-- [Next.js i18n Setup](nextjs-i18n-setup.md) - Internationalization configuration
+```
+User: "Start a new edtech platform with Next.js and i18n support"
+Agent: [Loads .agents/skills/nextjs-i18n-setup.md]
+       [Executes step-by-step setup]
+```
 
-### AI Integration
-- [AI Integration Gemini](ai-integration-gemini.md) - Google Gemini integration patterns
+### For Developers
+Each skill is a complete, executable guide:
 
----
-
-## 🗄️ Database & Optimization (4 skills)
-
-### Database Administration
-- [PostgreSQL DBA Pro](postgresql-dba-pro.md) - Expert PostgreSQL DBA skills
-- [Database Reliability Engineering](database-reliability-engineering.md) - SRE practices for databases
-
-### Query Optimization
-- [Query Optimizer AI](query-optimizer-ai.md) - AI-powered query optimization
-- [Prisma-Drizzle Hybrid](prisma-drizzle-hybrid-agent.md) - See [docs/PRISMA_DRIZZLE_HYBRID_STRATEGY.md](../../docs/PRISMA_DRIZZLE_HYBRID_STRATEGY.md)
-
-**Triple-ORM Strategy:**
-- **Prisma:** Schema migrations ONLY (source of truth)
-- **Drizzle:** Fast CRUD operations (65% faster reads, 93% faster batches)
-- **Kysely:** Complex analytics queries (13 production queries)
+1. **Read the skill** (e.g., `nextjs-i18n-setup.md`)
+2. **Follow step-by-step instructions**
+3. **Copy-paste code snippets**
+4. **Verify using checklist**
 
 ---
 
-## ⚙️ DevOps & Infrastructure (14 skills)
+## 📚 Available Skills
 
-### Core DevOps Skills (6 files)
-- [DevOps Awesome Rules](devops-awesome-rules.md) - Best practices
-- [DevOps Toolkit AI](devops-toolkit-ai.md) - AI-powered DevOps tools
-- [Roo Code DevOps Mode](roo-code-devops-mode.md) - Roo Code DevOps patterns
-- [LangChain DevOps Templates](langchain-devops-templates.md) - LangChain DevOps patterns
-- [Kubiya Kubernetes Automation](kubiya-kubernetes-automation.md) - K8s automation
-- [Amphitheatre Agent Framework](amphitheatre-agent-framework.md) - Agent framework patterns
+### 1. Next.js 15 + next-intl i18n Setup
+**File:** `nextjs-i18n-setup.md`  
+**Use when:** Starting a new multilingual Next.js app  
+**Covers:**
+- Root layout setup (mandatory!)
+- Locale routing (`/vi`, `/en`, `/zh`)
+- Translation file structure
+- Middleware configuration
+- Common pitfalls & verification
 
-### DevOps Workflows (12 templates in commands/workflows/)
-- [Full Stack Feature](commands/workflows/full-stack-feature.md) - End-to-end feature development
-- [Full Review](commands/workflows/full-review.md) - Comprehensive code review
-- [TDD Cycle](commands/workflows/tdd-cycle.md) - Test-Driven Development workflow
-- [Smart Fix](commands/workflows/smart-fix.md) - Intelligent bug fixing
-- [Security Hardening](commands/workflows/security-hardening.md) - Security audit workflow
-- [Performance Optimization](commands/workflows/performance-optimization.md) - Performance tuning
-- [Multi Platform](commands/workflows/multi-platform.md) - Cross-platform deployment
-- [ML Pipeline](commands/workflows/ml-pipeline.md) - Machine Learning pipeline
-- [Legacy Modernize](commands/workflows/legacy-modernize.md) - Legacy code modernization
-- [Incident Response](commands/workflows/incident-response.md) - Incident management
-- [Improve Agent](commands/workflows/improve-agent.md) - Agent self-improvement
-- [Workflow Automate](commands/workflows/workflow-automate.md) - Workflow automation patterns
+**Tech Stack:**
+- Next.js 15.1.2
+- React 18.3.1
+- next-intl 3.26.3
 
 ---
 
-## 🤖 n8n Automation Suite (7 expert systems) ⭐
+### 2. Edtech Monorepo Initialization
+**File:** `edtech-monorepo-init.md`  
+**Use when:** Bootstrap full-stack edtech platform  
+**Covers:**
+- Turborepo setup
+- Next.js frontend (apps/web)
+- NestJS backend (apps/api)
+- Shared packages structure
+- Docker PostgreSQL setup
+- Development scripts
 
-**Location:** [n8n-skills/](n8n-skills/)  
-**Source:** https://github.com/czlonkowski/n8n-skills  
-**Total Lines:** 3,852+ lines of AI training
-
-### 1. n8n Code JavaScript
-**Location:** [n8n-skills/skills/n8n-code-javascript/](n8n-skills/skills/n8n-code-javascript/)  
-**Lines:** 500  
-**Topics:** JavaScript Code nodes, $input/$json/$node syntax, $helpers HTTP requests, DateTime handling
-
-### 2. n8n Code Python
-**Location:** [n8n-skills/skills/n8n-code-python/](n8n-skills/skills/n8n-code-python/)  
-**Lines:** 719  
-**Topics:** Python Code nodes, _input/_json/_node syntax, standard library, limitations
-
-### 3. n8n Expression Syntax
-**Location:** [n8n-skills/skills/n8n-expression-syntax/](n8n-skills/skills/n8n-expression-syntax/)  
-**Lines:** 285  
-**Topics:** {{}} syntax, $json/$node variables, webhook data, common errors
-
-### 4. n8n MCP Tools Expert
-**Location:** [n8n-skills/skills/n8n-mcp-tools-expert/](n8n-skills/skills/n8n-mcp-tools-expert/)  
-**Lines:** 480  
-**Topics:** Tool selection, parameter formats, common patterns, MCP integration
-
-### 5. n8n Node Configuration
-**Location:** [n8n-skills/skills/n8n-node-configuration/](n8n-skills/skills/n8n-node-configuration/)  
-**Lines:** 692  
-**Topics:** Operation patterns, property dependencies, required fields, node types
-
-### 6. n8n Validation Expert
-**Location:** [n8n-skills/skills/n8n-validation-expert/](n8n-skills/skills/n8n-validation-expert/)  
-**Lines:** 690  
-**Topics:** Error catalog, validation warnings, false positives, validation loop
-
-### 7. n8n Workflow Patterns
-**Location:** [n8n-skills/skills/n8n-workflow-patterns/](n8n-skills/skills/n8n-workflow-patterns/)  
-**Lines:** 486  
-**Topics:** Webhook processing, HTTP API integration, database operations, AI agents, scheduled tasks
+**Tech Stack:**
+- Turborepo
+- pnpm workspaces
+- Docker Compose
 
 ---
 
-## 🔄 Multi-Agent Orchestration (2 frameworks)
+### 3. Prisma Edtech Schema Templates
+**File:** `prisma-edtech-schema.md`  
+**Use when:** Setting up database for learning platforms  
+**Covers:**
+- User management & authentication
+- Course/Lesson models (localized with JSONB)
+- Progress tracking
+- Gamification (badges, points)
+- Behavioral analytics
+- Investment profiles (fintech)
+- Migration commands
+- Seed data examples
 
-### 1. Beads Trinity Architecture ⭐ CUSTOM SKILL
-**Location:** [multi-agent-orchestration/](multi-agent-orchestration/)  
-**Description:** Our custom 100-agent orchestration skill
+**Tech Stack:**
+- Prisma 5.x
+- PostgreSQL 16
 
-**Components:**
-- **beads (bd)** - Task management (CRUD: create/update/close)
-- **beads_viewer (bv)** - Analytics (PageRank, Betweenness, cycle detection)
-- **mcp_agent_mail** - Coordination (messaging, file locks, conflict prevention)
+---
 
-**Files:**
-- [SKILL.md](multi-agent-orchestration/SKILL.md) - Skill documentation
-- [README.md](multi-agent-orchestration/README.md) - Metadata
-- Scripts: beads-claim-task.sh, beads-release-task.sh, beads-smart-select.sh, beads-unified-dashboard.sh
+### 4. Google Gemini AI Integration
+**File:** `ai-integration-gemini.md`  
+**Use when:** Adding AI features to edtech platform  
+**Covers:**
+- Gemini API setup
+- NestJS service implementation
+- AI-powered Q&A
+- Quiz generation
+- Content translation
+- Behavior analysis
+- Rate limiting & caching
+- Cost optimization
 
-**Usage:**
+**Tech Stack:**
+- Google Gemini 1.5 Pro
+- @google/generative-ai SDK
+
+---
+
+## 🧩 Component Templates
+
+### Frontend (React/Next.js)
+
+**Atoms:**
+- `Button.tsx` - Reusable button with variants
+
+**Molecules:**
+- `CourseCard.tsx` - Course display with localized content
+
+**Organisms:**
+- `LessonPlayer.tsx` - Video/reading lesson player
+
+**Templates:**
+- `DashboardLayout.tsx` - Standard dashboard layout
+
+### Backend (NestJS)
+
+- `auth.controller.ts` - Authentication endpoints
+- `base.service.ts` - Base CRUD service
+- `localized.dto.ts` - DTOs for JSONB localized fields
+
+---
+
+## 🎯 Quick Start Examples
+
+### Scenario 1: New Edtech Project from Scratch
+
 ```bash
-bd ready                    # Find unblocked work
-bv --robot-next             # AI-recommended next task
-bd doctor                   # System health check
-./scripts/beads-smart-select.sh AgentName
-./scripts/beads-unified-dashboard.sh
+# 1. Initialize monorepo
+[Follow edtech-monorepo-init.md]
+
+# 2. Setup i18n
+[Follow nextjs-i18n-setup.md]
+
+# 3. Create database schema
+[Copy from prisma-edtech-schema.md]
+
+# 4. Add AI features
+[Follow ai-integration-gemini.md]
 ```
 
-### 2. Claude Swarm Framework
-**Location:** [swarm/](swarm/)  
-**Source:** https://github.com/parruda/swarm  
-**Description:** Ruby-based multi-agent orchestration
+### Scenario 2: Add i18n to Existing Next.js App
 
-**Features:**
-- Single-process automation
-- Persistent memory
-- Semantic search
-- Node workflows
-- Complete v2 documentation
-- 100+ test files
-
----
-
-## ☁️ Cloud & Deployment (1 suite)
-
-### Cloudflare Command Suite
-**Location:** [command-suite/](command-suite/)  
-**Source:** https://github.com/qdhenry/Claude-Command-Suite
-
-**Skills:**
-1. **Cloudflare Manager** - [.claude/skills/cloudflare-manager/](command-suite/.claude/skills/cloudflare-manager/)
-   - Workers deployment
-   - R2 Storage
-   - KV Storage
-   - Pages deployment
-   - DNS & Routes
-
-2. **Linear Todo Sync** - [.claude/skills/linear-todo-sync/](command-suite/.claude/skills/linear-todo-sync/)
-   - Linear API integration
-   - Task sync to markdown
-
-**Requirements:**
-- CLOUDFLARE_API_KEY in .env
-- Bun runtime
-- Dependencies installed
-
----
-
-## 🧪 Testing & QA (4 tools)
-
-**Location:** [../../temp_skills/](../../temp_skills/)
-
-### 1. e2e-test-agent ⭐ ACTIVE
-**Description:** Natural language E2E tests with Google Gemini  
-**Stack:** TypeScript, LangChain, Playwright MCP  
-**AI:** Gemini 2.0 Flash (FREE tier)  
-**Tests:** 6 scenarios (auth + courses)
-
-**Usage:**
 ```bash
-npx tsx run-e2e-tests.ts
+# Just follow nextjs-i18n-setup.md
+# Copy translation patterns from templates/
 ```
 
-**Test Files (Natural Language):**
-- tests/e2e/1-homepage.test
-- tests/e2e/auth/2-signup.test
-- tests/e2e/auth/3-login.test
-- tests/e2e/auth/4-logout.test
-- tests/e2e/courses/1-browse.test
-- tests/e2e/courses/2-enroll.test
+### Scenario 3: Clone Component Pattern
 
-### 2. testpilot
-**Description:** Unit test generator  
-**Stack:** TypeScript, Mocha  
-**AI:** OpenAI API (or Gemini via proxy)
-
-**Usage:**
 ```bash
-cd ../../temp_skills/testpilot
-node benchmark/run.js --outputDir ./reports --package ../../../../apps/api
-```
-
-### 3. arbigent
-**Description:** Cross-platform E2E testing  
-**Stack:** Java/Gradle  
-**Status:** Skipped (Java not installed)
-
-### 4. qa-use
-**Description:** QA automation tool  
-**Stack:** Various  
-**Status:** Available for future use
-
----
-
-## 📖 Usage
-
-### Auto-Loading
-Skills automatically load in Amp when relevant tasks are detected.
-
-### Explicit Loading
-```bash
-# Load specific skill
-amp load-skill n8n-code-javascript
-
-# Use UI/UX Pro Max (natural language)
-"Build a landing page for my SaaS product with glassmorphism style"
-
-# Use ClaudeKit CLI
-# (Activate via natural language for dev tooling tasks)
-```
-
-### Natural Language Examples
-```
-# UI/UX Pro Max
-"Create a healthcare dashboard with minimalist design"
-"Design a fintech mobile app with dark mode"
-
-# n8n Skills
-"Build an n8n workflow to sync Notion with Airtable"
-"Create a webhook that triggers email on database insert"
-
-# DevOps Workflows
-"Perform a full security audit on this API"
-"Set up CI/CD pipeline for Next.js app"
-
-# Database Optimization
-"Optimize this slow PostgreSQL query"
-"Analyze database performance bottlenecks"
+# Copy from templates/components/
+# Adapt to your use case
+cp templates/components/CourseCard.tsx apps/web/src/components/molecules/
 ```
 
 ---
 
-## 🔗 Related Documentation
+## 📖 Additional Documentation
 
-### Core Documentation
-- [AGENTS.md](../../AGENTS.md) - Agent commands and preferences
-- [SPEC.md](../../SPEC.md) - Technical specification
-- [README.md](../../README.md) - Project overview
+### AGENTS.md
+- Frequently used commands
+- Code style preferences
+- Project structure guide
+- i18n guidelines
+- Quality checklist
 
-### Skills Documentation
-- [Indie AI Skills Collection](../../docs/INDIE_AI_SKILLS_COLLECTION.md) - Master list of all indie skills
-- [UI/UX Pro Max Guide](../../docs/UI_UX_PRO_MAX_GUIDE.md) - Complete UI/UX skill documentation
-- [Multi-Agent Orchestration Skill](multi-agent-orchestration/SKILL.md) - Beads Trinity docs
-- [n8n Skills Overview](n8n-skills/README.md) - n8n automation suite
-- [Swarm Framework](swarm/README.md) - Claude Swarm documentation
+### ARCHITECTURE.md
+- ADR-001: Why Next.js 15 (not 16)
+- ADR-002: Turborepo choice
+- ADR-003: JSONB for localization
+- ADR-004: Cloudflare + Dokploy deployment
+- ADR-005: Zustand state management
+- ADR-006: Prisma over TypeORM
+- ADR-007: Atomic Design structure
+- ADR-008: Google Gemini for AI
 
-### Database & DevOps
-- [Prisma-Drizzle Hybrid Strategy](../../docs/PRISMA_DRIZZLE_HYBRID_STRATEGY.md) - Triple-ORM guide
-- [Beads Multi-Agent Protocol](../../docs/BEADS_MULTI_AGENT_PROTOCOL.md) - Multi-agent coordination
-- [Amp Beads Integration Guide](../../docs/AMP_BEADS_INTEGRATION_GUIDE.md) - Workflow integration
-
----
-
-## 📊 Skills Statistics
-
-| Category | Count | Lines of Code | Status |
-|----------|-------|---------------|--------|
-| ClaudeKit Suite | 2 | 110 tests | ✅ Active |
-| UI/UX Pro Max | 1 guide | 57 styles, 95 palettes | ✅ Installed |
-| EdTech & Product | 4 | ~2,000 | ✅ Active |
-| Database & Optimization | 4 | ~3,000 | ✅ Active |
-| DevOps & Infrastructure | 14 | ~5,000 | ✅ Active |
-| n8n Automation Suite | 7 | 3,852 | ✅ Critical |
-| Multi-Agent Orchestration | 2 | ~1,500 | ✅ Custom |
-| Cloud & Deployment | 2 | ~800 | ✅ Active |
-| Testing & QA | 4 | ~2,000 | ✅ Active |
-| **TOTAL** | **50+** | **18,000+** | **✅ OPERATIONAL** |
+### SPEC.md
+- Full technical specification
+- System architecture
+- Database schema (complete)
+- API standards
+- Quality assurance protocols
+- i18n strategy
 
 ---
 
-**Created:** 2026-01-03  
-**Total Skills:** 50+ expert systems  
-**Total Training:** 18,000+ lines of AI-specific code  
-**Status:** ✅ **ALL SKILLS ACTIVE AND DOCUMENTED**
+## 🔧 Customization Guide
+
+### Adapting for Different Domains
+
+**E-commerce:**
+- Replace `Course` with `Product`
+- Replace `Lesson` with `ProductVariant`
+- Keep: User, Progress, Behavioral tracking
+
+**Healthcare:**
+- Replace `Course` with `Treatment`
+- Replace `Lesson` with `Exercise`
+- Add: MedicalRecord, Appointment models
+
+**Corporate Training:**
+- Keep: Course, Lesson structure as-is
+- Add: Team, Organization models
+- Modify: Badges → Certifications
+
+---
+
+## 🚨 Common Pitfalls to Avoid
+
+### 1. Missing Root Layout (Next.js 15+)
+**Symptom:** Routes return 404, empty build manifests  
+**Fix:** Ensure `apps/web/src/app/layout.tsx` exists  
+**Reference:** ADR-001 in ARCHITECTURE.md
+
+### 2. JSONB Locale Fallbacks
+**Symptom:** Missing translations show `undefined`  
+**Fix:** Always fallback to default locale:
+```typescript
+const title = content.title[locale] || content.title['vi'];
+```
+
+### 3. Prisma Client Not Generated
+**Symptom:** Import errors for `@prisma/client`  
+**Fix:** Run `npx prisma generate` after schema changes
+
+### 4. Monorepo Dependency Issues
+**Symptom:** "Module not found" across packages  
+**Fix:** Run `pnpm install` at root, not in individual apps
+
+---
+
+## 📊 Metrics & Success Criteria
+
+### Skill Effectiveness
+- **Time to scaffold new project:** < 30 minutes
+- **Time to add i18n:** < 15 minutes
+- **Time to setup database:** < 20 minutes
+
+### Template Reusability
+- **Component copy-paste rate:** > 80%
+- **API template usage:** > 70%
+
+---
+
+## 🤝 Contributing
+
+### Adding New Skills
+
+1. Create `.agents/skills/new-skill-name.md`
+2. Follow existing structure:
+   - Purpose & When to use
+   - Prerequisites
+   - Step-by-step execution
+   - Code examples
+   - Verification checklist
+   - Common pitfalls
+   - References
+3. Update this README
+4. Add ADR if architectural decision
+
+### Adding Templates
+
+1. Create in `templates/components/` or `templates/api/`
+2. Use TypeScript strict mode
+3. Include JSDoc comments
+4. Add to this README
+
+---
+
+## 📞 Support
+
+- **Documentation:** See SPEC.md for full spec
+- **Decisions:** See ARCHITECTURE.md for ADRs
+- **Commands:** See AGENTS.md for common tasks
+
+---
+
+**Last Updated:** December 2025  
+**Version:** 1.0.0  
+**Maintainer:** V-EdFinance Team
