@@ -16,3 +16,6 @@ node_modules
 amp_vps_private_key.txt
 
 amp_vps_private_key
+""  
+"# VPS deployment logs"  
+"scripts/vps-toolkit/*.log" 
