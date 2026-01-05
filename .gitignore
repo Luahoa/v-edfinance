@@ -19,3 +19,7 @@ amp_vps_private_key
 ""  
 "# VPS deployment logs"  
 "scripts/vps-toolkit/*.log" 
+""  
+"# Large binary files"  
+"*.exe"  
+"*.msi" 
