@@ -1,0 +1,60 @@
+name: 📚 Documentation Improvement
+description: Suggest improvements to documentation
+title: "[Docs]: "
+labels: ["documentation", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our documentation!
+
+  - type: dropdown
+    id: doc_type
+    attributes:
+      label: Documentation Type
+      description: Which type of documentation needs improvement?
+      options:
+        - README
+        - Getting Started Guide
+        - API Documentation
+        - Architecture Documentation
+        - Contributing Guide
+        - Code Comments
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: Issue with Current Documentation
+      description: What's wrong or missing?
+      placeholder: "The installation guide doesn't mention pnpm version requirements..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+      description: How should it be improved?
+      placeholder: "Add a section under Prerequisites that specifies pnpm 8+..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: Location
+      description: Which file(s) need to be updated?
+      placeholder: "docs/getting-started/installation.md, line 25"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: willing_to_contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to submit a pull request for this documentation improvement
+          required: false
