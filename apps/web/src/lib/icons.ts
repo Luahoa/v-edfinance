@@ -1,4 +1,4 @@
-// Icon exports for Sidebar
+// Icon exports for Sidebar and components
 export {
   Home,
   BookOpen,
@@ -10,5 +10,15 @@ export {
   ChevronDown,
   User,
   Bell,
-  Search
+  Search,
+  LayoutDashboard,
+  Award,
+  Play,
+  Zap,
+  Users,
+  ArrowRight
 } from 'lucide-react';
+
+// Named export for component usage
+import * as LucideIcons from 'lucide-react';
+export const Icons = LucideIcons;

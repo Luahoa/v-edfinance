@@ -173,9 +173,50 @@ return <h1>{t('key')}</h1>;
 
 ---
 
+## Spike Workflow Best Practices
+
+### When to Use Spikes
+- **Before fixing:** When error cause is unclear or fix approach uncertain
+- **Time-box:** 15-30 minutes maximum
+- **Goal:** Verify assumptions, identify root cause, document strategy
+
+### Spike Execution Pattern
+1. **Baseline First:** Always run `pnpm install` + `pnpm build` before creating fix beads
+2. **Read Files:** Verify errors exist by reading actual files (avoid hallucination)
+3. **Test Hypothesis:** Run targeted tests to confirm/reject assumptions
+4. **Document Findings:** Create `.spikes/<name>/FINDINGS.md` with results
+5. **Create Fix Beads:** Only after confirming root cause and strategy
+
+### Learnings from Recent Spikes
+
+**ved-b51s (Merge Strategy):**
+- ❌ **Wrong:** Assume merge conflicts exist based on git history
+- ✅ **Right:** Run `pnpm install` and `pnpm build` first to verify actual state
+- **Lesson:** P0 gate was unnecessary - build already worked
+
+**ved-wbpj (Schema Validation):**
+- ✅ **Pattern:** Test with `prisma generate` before assuming schema drift
+- ✅ **Pattern:** Build succeeds = no critical issues (warnings ≠ blockers)
+- **Lesson:** Validation tools (prisma generate, build) catch real problems
+
+### Anti-Hallucination Checklist for Spikes
+- [ ] Read target files before making assumptions
+- [ ] Run actual commands (build, test) rather than speculate
+- [ ] Check git status/diff to verify conflicts exist
+- [ ] Document "no action needed" outcomes (negative results matter)
+- [ ] Close outdated beads when state has changed
+
+---
+
 ## Quality Checklist
 
 Before completing any task, ensure:
+
+### Pre-Implementation
+- [ ] Baseline: `pnpm install` succeeds
+- [ ] Baseline: `pnpm --filter api build` succeeds (if backend changes)
+- [ ] Baseline: `pnpm --filter web build` succeeds (if frontend changes)
+- [ ] Read target files to verify imports and patterns
 
 ### Type Safety
 - [ ] No `any` types used

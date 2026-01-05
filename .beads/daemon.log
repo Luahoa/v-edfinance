@@ -13787,3 +13787,353 @@ fatal: couldn't find remote ref beads-sync
 [2026-01-05 00:59:49] JSONL removed/renamed, re-establishing watch
 [2026-01-05 00:59:49] Successfully re-established JSONL watch after 50ms
 [2026-01-05 00:59:49] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:47:38] Daemon started (interval: 5s, auto-commit: false, auto-push: false)
+[2026-01-05 10:47:38] Using database: C:\Users\luaho\Demo project\v-edfinance\.beads\beads.db
+[2026-01-05 10:47:38] Database opened: C:\Users\luaho\Demo project\v-edfinance\.beads\beads.db (freshness checking enabled)
+[2026-01-05 10:47:38] Upgrading .beads/.gitignore...
+[2026-01-05 10:47:38] Warning: failed to upgrade .gitignore: open .beads\.gitignore: The system cannot find the path specified.
+[2026-01-05 10:47:39] Repository fingerprint validated: e04e7bc5
+[2026-01-05 10:47:39] Warning: Database schema version mismatch
+[2026-01-05 10:47:39]   Database version: 0.32.1
+[2026-01-05 10:47:39]   Daemon version: 0.30.7
+[2026-01-05 10:47:39]   Auto-upgrading database to daemon version...
+[2026-01-05 10:47:39]   Database version updated to 0.30.7
+[2026-01-05 10:47:39] Starting RPC server: C:\Users\luaho\Demo project\v-edfinance\.beads\bd.sock
+[2026-01-05 10:47:39] RPC server ready (socket listening)
+[2026-01-05 10:47:39] Registered in global registry
+[2026-01-05 10:47:39] Starting sync cycle...
+[2026-01-05 10:47:39] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-05 10:47:39] Monitoring parent process (PID 0)
+[2026-01-05 10:47:39] Using event-driven mode
+[2026-01-05 10:47:39] Mutation detected: create ved-wcyx
+[2026-01-05 10:47:40] Export triggered by mutation events
+[2026-01-05 10:47:40] Starting export...
+[2026-01-05 10:47:40] Exported to JSONL
+[2026-01-05 10:47:40] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:40] Export complete
+[2026-01-05 10:47:40] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:40] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:40] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:40] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:47:41] Mutation detected: create ved-udv5
+[2026-01-05 10:47:41] Import triggered by file change
+[2026-01-05 10:47:41] Starting auto-import...
+[2026-01-05 10:47:41] Skipping auto-import: JSONL content unchanged
+[2026-01-05 10:47:42] Export triggered by mutation events
+[2026-01-05 10:47:42] Starting export...
+[2026-01-05 10:47:42] Exported to JSONL
+[2026-01-05 10:47:42] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:42] Export complete
+[2026-01-05 10:47:42] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:42] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:42] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:42] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:47:43] Import triggered by file change
+[2026-01-05 10:47:43] Starting auto-import...
+[2026-01-05 10:47:43] Skipping auto-import: JSONL content unchanged
+[2026-01-05 10:47:43] Mutation detected: create ved-wvi9
+[2026-01-05 10:47:44] Export triggered by mutation events
+[2026-01-05 10:47:44] Starting export...
+[2026-01-05 10:47:44] Exported to JSONL
+[2026-01-05 10:47:44] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:44] Export complete
+[2026-01-05 10:47:44] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:44] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:44] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:44] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:47:45] Import triggered by file change
+[2026-01-05 10:47:45] Starting auto-import...
+[2026-01-05 10:47:45] Skipping auto-import: JSONL content unchanged
+[2026-01-05 10:47:45] Mutation detected: create ved-klt5
+[2026-01-05 10:47:46] Export triggered by mutation events
+[2026-01-05 10:47:46] Starting export...
+[2026-01-05 10:47:46] Exported to JSONL
+[2026-01-05 10:47:46] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:46] Export complete
+[2026-01-05 10:47:46] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:46] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:46] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:46] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:47:47] Import triggered by file change
+[2026-01-05 10:47:47] Starting auto-import...
+[2026-01-05 10:47:47] Skipping auto-import: JSONL content unchanged
+[2026-01-05 10:47:47] Mutation detected: create ved-83t6
+[2026-01-05 10:47:47] Export triggered by mutation events
+[2026-01-05 10:47:47] Starting export...
+[2026-01-05 10:47:48] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:48] Exported to JSONL
+[2026-01-05 10:47:48] Export complete
+[2026-01-05 10:47:48] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:48] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:48] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:48] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:47:48] Mutation detected: create ved-86e6
+[2026-01-05 10:47:49] Export triggered by mutation events
+[2026-01-05 10:47:49] Starting export...
+[2026-01-05 10:47:49] Import triggered by file change
+[2026-01-05 10:47:49] Starting auto-import...
+[2026-01-05 10:47:49] Skipping auto-import: JSONL content unchanged
+[2026-01-05 10:47:49] Exported to JSONL
+[2026-01-05 10:47:49] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:49] Export complete
+[2026-01-05 10:47:49] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:49] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:49] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:49] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:47:49] Mutation detected: create ved-mj5q
+[2026-01-05 10:47:50] Import triggered by file change
+[2026-01-05 10:47:50] Starting auto-import...
+[2026-01-05 10:47:50] Skipping auto-import: JSONL content unchanged
+[2026-01-05 10:47:50] Export triggered by mutation events
+[2026-01-05 10:47:50] Starting export...
+[2026-01-05 10:47:50] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:50] Exported to JSONL
+[2026-01-05 10:47:50] Export complete
+[2026-01-05 10:47:50] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:50] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:47:50] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:47:50] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:47:51] Import triggered by file change
+[2026-01-05 10:47:51] Starting auto-import...
+[2026-01-05 10:47:51] Skipping auto-import: JSONL content unchanged
+[2026-01-05 10:48:38] Mutation detected: update ved-klt5
+[2026-01-05 10:48:39] Export triggered by mutation events
+[2026-01-05 10:48:39] Starting export...
+[2026-01-05 10:48:39] Exported to JSONL
+[2026-01-05 10:48:39] Export complete
+[2026-01-05 10:48:39] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:48:39] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:48:39] JSONL removed/renamed, re-establishing watch
+[2026-01-05 10:48:39] Successfully re-established JSONL watch after 50ms
+[2026-01-05 10:48:39] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 10:48:40] Import triggered by file change
+[2026-01-05 10:48:40] Starting auto-import...
+[2026-01-05 10:48:40] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:12:07] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:12:07] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:12:08] Import triggered by file change
+[2026-01-05 11:12:08] Starting auto-import...
+[2026-01-05 11:12:08] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:12:30] Mutation detected: update ved-klt5
+[2026-01-05 11:12:31] Export triggered by mutation events
+[2026-01-05 11:12:31] Starting export...
+[2026-01-05 11:12:31] Exported to JSONL
+[2026-01-05 11:12:31] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:12:31] Export complete
+[2026-01-05 11:12:31] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:12:31] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:12:31] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:12:31] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:12:32] Import triggered by file change
+[2026-01-05 11:12:32] Starting auto-import...
+[2026-01-05 11:12:32] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:12:40] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:12:40] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:12:40] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:12:40] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:12:40] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:12:41] Import triggered by file change
+[2026-01-05 11:12:41] Starting auto-import...
+[2026-01-05 11:12:41] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:12:41] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:12:41] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:12:42] Import triggered by file change
+[2026-01-05 11:12:42] Starting auto-import...
+[2026-01-05 11:12:42] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:12:55] Mutation detected: update ved-83t6
+[2026-01-05 11:12:55] Export triggered by mutation events
+[2026-01-05 11:12:55] Starting export...
+[2026-01-05 11:12:55] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:12:55] Exported to JSONL
+[2026-01-05 11:12:55] Export complete
+[2026-01-05 11:12:56] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:12:56] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:12:56] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:12:56] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:12:57] Import triggered by file change
+[2026-01-05 11:12:57] Starting auto-import...
+[2026-01-05 11:12:57] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:18:38] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:18:38] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:18:39] Import triggered by file change
+[2026-01-05 11:18:39] Starting auto-import...
+[2026-01-05 11:18:39] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:18:51] Mutation detected: update ved-83t6
+[2026-01-05 11:18:51] Export triggered by mutation events
+[2026-01-05 11:18:51] Starting export...
+[2026-01-05 11:18:51] Exported to JSONL
+[2026-01-05 11:18:51] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:18:51] Export complete
+[2026-01-05 11:18:51] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:18:51] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:18:51] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:18:51] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:18:52] Import triggered by file change
+[2026-01-05 11:18:52] Starting auto-import...
+[2026-01-05 11:18:52] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:19:01] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:19:01] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:19:01] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:19:01] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:19:01] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:19:02] Import triggered by file change
+[2026-01-05 11:19:02] Starting auto-import...
+[2026-01-05 11:19:02] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:19:02] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:19:02] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:19:03] Import triggered by file change
+[2026-01-05 11:19:03] Starting auto-import...
+[2026-01-05 11:19:03] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:19:26] Mutation detected: update ved-86e6
+[2026-01-05 11:19:26] Export triggered by mutation events
+[2026-01-05 11:19:26] Starting export...
+[2026-01-05 11:19:27] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:19:27] Exported to JSONL
+[2026-01-05 11:19:27] Export complete
+[2026-01-05 11:19:27] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:19:27] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:19:27] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:19:27] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:19:28] Import triggered by file change
+[2026-01-05 11:19:28] Starting auto-import...
+[2026-01-05 11:19:28] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:20:52] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:20:52] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:20:53] Import triggered by file change
+[2026-01-05 11:20:53] Starting auto-import...
+[2026-01-05 11:20:53] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:21:00] Mutation detected: update ved-86e6
+[2026-01-05 11:21:00] Export triggered by mutation events
+[2026-01-05 11:21:00] Starting export...
+[2026-01-05 11:21:00] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:21:00] Exported to JSONL
+[2026-01-05 11:21:00] Export complete
+[2026-01-05 11:21:00] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:21:00] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:21:00] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:21:00] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:21:01] Import triggered by file change
+[2026-01-05 11:21:01] Starting auto-import...
+[2026-01-05 11:21:01] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:21:09] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:21:09] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:21:09] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:21:09] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:21:09] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:21:10] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:21:10] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:21:10] Import triggered by file change
+[2026-01-05 11:21:10] Starting auto-import...
+[2026-01-05 11:21:10] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:21:11] Import triggered by file change
+[2026-01-05 11:21:11] Starting auto-import...
+[2026-01-05 11:21:11] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:21:23] Mutation detected: update ved-mj5q
+[2026-01-05 11:21:24] Export triggered by mutation events
+[2026-01-05 11:21:24] Starting export...
+[2026-01-05 11:21:24] Exported to JSONL
+[2026-01-05 11:21:24] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:21:24] Export complete
+[2026-01-05 11:21:24] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:21:24] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:21:24] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:21:24] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:21:25] Import triggered by file change
+[2026-01-05 11:21:25] Starting auto-import...
+[2026-01-05 11:21:25] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:22:15] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:22:15] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:22:16] Import triggered by file change
+[2026-01-05 11:22:16] Starting auto-import...
+[2026-01-05 11:22:16] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:22:25] Mutation detected: update ved-mj5q
+[2026-01-05 11:22:25] Export triggered by mutation events
+[2026-01-05 11:22:25] Starting export...
+[2026-01-05 11:22:26] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:22:26] Exported to JSONL
+[2026-01-05 11:22:26] Export complete
+[2026-01-05 11:22:26] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:22:26] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:22:26] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:22:26] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:22:27] Import triggered by file change
+[2026-01-05 11:22:27] Starting auto-import...
+[2026-01-05 11:22:27] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:22:35] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:22:35] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:22:35] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:22:35] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:22:35] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:22:36] Import triggered by file change
+[2026-01-05 11:22:36] Starting auto-import...
+[2026-01-05 11:22:36] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:22:36] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:22:36] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:22:37] Import triggered by file change
+[2026-01-05 11:22:37] Starting auto-import...
+[2026-01-05 11:22:37] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:35:37] Mutation detected: update ved-udv5
+[2026-01-05 11:35:37] Export triggered by mutation events
+[2026-01-05 11:35:37] Starting export...
+[2026-01-05 11:35:37] Exported to JSONL
+[2026-01-05 11:35:37] Export complete
+[2026-01-05 11:35:37] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:35:37] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:35:37] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:35:38] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:35:38] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:35:39] Import triggered by file change
+[2026-01-05 11:35:39] Starting auto-import...
+[2026-01-05 11:35:39] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:35:47] Mutation detected: update ved-wvi9
+[2026-01-05 11:35:48] Export triggered by mutation events
+[2026-01-05 11:35:48] Starting export...
+[2026-01-05 11:35:48] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:35:48] Exported to JSONL
+[2026-01-05 11:35:48] Export complete
+[2026-01-05 11:35:48] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:35:48] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:35:48] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:35:48] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:35:49] Import triggered by file change
+[2026-01-05 11:35:49] Starting auto-import...
+[2026-01-05 11:35:49] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:35:59] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:35:59] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:35:59] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:35:59] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:35:59] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:36:00] Import triggered by file change
+[2026-01-05 11:36:00] Starting auto-import...
+[2026-01-05 11:36:00] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:36:00] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:36:00] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:36:01] Import triggered by file change
+[2026-01-05 11:36:01] Starting auto-import...
+[2026-01-05 11:36:01] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:36:16] Mutation detected: update ved-wcyx
+[2026-01-05 11:36:16] Export triggered by mutation events
+[2026-01-05 11:36:16] Starting export...
+[2026-01-05 11:36:16] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:36:16] Exported to JSONL
+[2026-01-05 11:36:16] Export complete
+[2026-01-05 11:36:16] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:36:16] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:36:16] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:36:16] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:36:17] Import triggered by file change
+[2026-01-05 11:36:17] Starting auto-import...
+[2026-01-05 11:36:17] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:36:24] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:36:24] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:36:24] JSONL removed/renamed, re-establishing watch
+[2026-01-05 11:36:24] Successfully re-established JSONL watch after 50ms
+[2026-01-05 11:36:24] JSONL file created: C:\Users\luaho\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-05 11:36:25] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:36:25] Git ref change detected: C:\Users\luaho\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-05 11:36:25] Import triggered by file change
+[2026-01-05 11:36:25] Starting auto-import...
+[2026-01-05 11:36:25] Skipping auto-import: JSONL content unchanged
+[2026-01-05 11:36:26] Import triggered by file change
+[2026-01-05 11:36:26] Starting auto-import...
+[2026-01-05 11:36:26] Skipping auto-import: JSONL content unchanged
