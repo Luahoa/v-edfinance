@@ -1,11 +1,11 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { CheckCircle2, Circle, Loader2, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { api } from '@/lib/api-client';
 import { useGamificationStore } from '@/store/useGamificationStore';
-import { motion } from 'framer-motion';
-import { AlertCircle, CheckCircle2, Circle, Loader2 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
 import { AchievementModal } from './AchievementModal';
 
 interface ChecklistItem {
@@ -63,36 +63,31 @@ export default function InteractiveChecklist() {
   const toggleItem = async (checklistId: string, itemIndex: number, currentStatus: boolean) => {
     // Optimistic UI Update
     const originalChecklists = [...checklists];
-    setChecklists((prev) =>
-      prev.map((c) => {
-        if (c.id === checklistId) {
-          const newItems = [...c.items];
-          newItems[itemIndex] = { ...newItems[itemIndex], completed: !currentStatus };
-          const completedCount = newItems.filter((i) => i.completed).length;
-          const newProgress = Math.round((completedCount / newItems.length) * 100);
-          return { ...c, items: newItems, progress: newProgress };
-        }
-        return c;
-      })
-    );
+    setChecklists(prev => prev.map(c => {
+      if (c.id === checklistId) {
+        const newItems = [...c.items];
+        newItems[itemIndex] = { ...newItems[itemIndex], completed: !currentStatus };
+        const completedCount = newItems.filter(i => i.completed).length;
+        const newProgress = Math.round((completedCount / newItems.length) * 100);
+        return { ...c, items: newItems, progress: newProgress };
+      }
+      return c;
+    }));
 
     try {
-      const data = await api.patch<UpdateResponse>(
-        `/checklists/${checklistId}/items/${itemIndex}`,
-        {
-          completed: !currentStatus,
-        }
-      );
+      const data = await api.patch<UpdateResponse>(`/checklists/${checklistId}/items/${itemIndex}`, {
+        completed: !currentStatus
+      });
 
-      setChecklists((prev) => prev.map((c) => (c.id === checklistId ? data.checklist : c)));
-
+      setChecklists(prev => prev.map(c => c.id === checklistId ? data.checklist : c));
+      
       if (data.rewarded && !hasCelebrated(checklistId)) {
         addCelebration(checklistId);
         setLastAchievement({
           name: data.checklist.title,
           description: t('rewardEarned', { title: data.checklist.title }),
           points: 50,
-          type: 'MILESTONE',
+          type: 'MILESTONE'
         });
         setShowAchievement(true);
       }
@@ -103,27 +98,22 @@ export default function InteractiveChecklist() {
     }
   };
 
-  if (loading)
-    return (
-      <div className="flex flex-col items-center justify-center p-12 space-y-4">
-        <Loader2 className="animate-spin text-blue-500 w-8 h-8" />
-        <p className="text-zinc-500 text-sm">{tCommon('loading')}</p>
-      </div>
-    );
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center p-12 space-y-4">
+      <Loader2 className="animate-spin text-blue-500 w-8 h-8" />
+      <p className="text-zinc-500 text-sm">{tCommon('loading')}</p>
+    </div>
+  );
 
-  if (error)
-    return (
-      <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center gap-3 text-red-600 dark:text-red-400">
-        <AlertCircle size={20} />
-        <div className="flex-1 text-sm">{error}</div>
-        <button
-          onClick={fetchChecklists}
-          className="text-xs font-bold underline uppercase tracking-widest"
-        >
-          {tCommon('retry')}
-        </button>
-      </div>
-    );
+  if (error) return (
+    <div className="p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-center gap-3 text-red-600 dark:text-red-400">
+      <AlertCircle size={20} />
+      <div className="flex-1 text-sm">{error}</div>
+      <button onClick={fetchChecklists} className="text-xs font-bold underline uppercase tracking-widest">
+        {tCommon('retry')}
+      </button>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -136,10 +126,7 @@ export default function InteractiveChecklist() {
       )}
 
       {checklists.map((checklist) => (
-        <div
-          key={checklist.id}
-          className="bg-white dark:bg-zinc-900 border dark:border-zinc-800 rounded-xl p-5 shadow-sm"
-        >
+        <div key={checklist.id} className="bg-white dark:bg-zinc-900 border dark:border-zinc-800 rounded-xl p-5 shadow-sm">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h3 className="font-bold text-lg">{checklist.title}</h3>
@@ -151,7 +138,7 @@ export default function InteractiveChecklist() {
           </div>
 
           <div className="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full mb-6 overflow-hidden">
-            <motion.div
+            <motion.div 
               initial={{ width: 0 }}
               animate={{ width: `${checklist.progress}%` }}
               className="h-full bg-blue-600 rounded-full"
@@ -170,9 +157,7 @@ export default function InteractiveChecklist() {
                 ) : (
                   <Circle className="text-zinc-300 group-hover:text-blue-400 shrink-0" />
                 )}
-                <span
-                  className={`${item.completed ? 'text-zinc-400 line-through' : 'text-zinc-700 dark:text-zinc-200'} text-sm`}
-                >
+                <span className={`${item.completed ? 'text-zinc-400 line-through' : 'text-zinc-700 dark:text-zinc-200'} text-sm`}>
                   {item.text}
                 </span>
               </button>

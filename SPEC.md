@@ -232,88 +232,66 @@ A task or feature is considered **COMPLETE** only when:
 | **Daily Backup** | Automated VPS snapshot | Dokploy/Cron | Automatically at 02:00 AM daily. |
 | **Seed Data Check** | Verify app with dummy data | `npx prisma db seed` | After a major schema change. |
 
-### 10.4 Refactoring Protocol (Anti-Tech Debt)
+### 10.4 Git Operations with Beads Integration
+
+**CRITICAL:** This project uses [beads_viewer](https://github.com/Dicklesworthstone/beads_viewer) for task tracking. Follow these protocols to prevent git conflicts:
+
+#### Never Run Beads Daemon During Git Operations
+```bash
+# ✅ CORRECT: Use --no-daemon flag
+beads sync --no-daemon
+
+# ❌ WRONG: Daemon will lock .beads/daemon.lock
+beads sync
+```
+
+#### Gitignore Beads Daemon Files
+Add to `.gitignore`:
+```gitignore
+# beads daemon files
+.beads/daemon.lock
+.beads/daemon.pid
+.beads/daemon.log
+.beads/beads.db*
+.beads/bd.sock
+```
+
+#### Pre-Merge Checklist
+Before merging branches (especially spike branches to main):
+1. ✅ Run `beads sync --no-daemon` to commit beads state
+2. ✅ Check for large files: `git ls-files -s | awk '$5 > 100000000'`
+3. ✅ Kill any beads daemon processes: `tasklist | findstr beads` (Windows) or `ps aux | grep beads` (Linux)
+4. ✅ Create agent-mail notification for blocking operations
+5. ✅ Use git worktrees for complex merges to avoid stash conflicts
+
+#### Agent-Mail Protocol for Critical Git Operations
+For merge/cleanup/deployment operations, create `.beads/agent-mail/<operation>.json`:
+```json
+{
+  "task": "ved-xxxx",
+  "status": "in_progress",
+  "issue": "Brief description",
+  "blocking": ["ved-yyyy"],
+  "eta": "X minutes",
+  "agent": "Agent Name"
+}
+```
+
+Update to `completed` with `resolution` and `actions_completed` when done.
+
+#### Lessons Learned: Git + Beads Conflicts (2026-01-05)
+**Issue:** Beads daemon locked `.beads/daemon.lock` during merge, blocking git operations.
+
+**Prevention:**
+- Always use `--no-daemon` during git operations
+- Kill daemon before complex git operations
+- Add daemon files to `.gitignore` immediately after setup
+- Use P0 beads tasks for git cleanup operations
+- Check file sizes before commit (GitHub limit: 100MB)
+
+### 10.5 Refactoring Protocol (Anti-Tech Debt)
 Before starting a complex new feature (estimated > 2 hours), issue this prompt to the AI:
 > "Analyze the current codebase for potential duplications or messy logic in [Target Module]. Refactor and clean up first before implementing [New Feature]."
-
----
-
-### 10.5 Zero-Debt Engineering Protocol (MANDATORY)
-
-This project uses **Beads Trinity Architecture** for multi-agent task orchestration:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   BEADS TRINITY ARCHITECTURE                │
-├─────────────────────────────────────────────────────────────┤
-│  beads (bd)        beads_viewer (bv)    mcp_agent_mail     │
-│  Task Mgmt         Analytics            Coordination        │
-│  (Write)           (Read + AI)          (Messaging)         │
-│       │                   │                    │            │
-│       └───────────────────┼────────────────────┘            │
-│                           ▼                                 │
-│              .beads/issues.jsonl                            │
-│              Single Source of Truth                         │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**The Trinity:**
-1. **beads (bd)** - Task management (CRUD: create/update/close tasks)
-2. **beads_viewer (bv)** - Analytics (PageRank, Betweenness, cycle detection, AI-driven task selection)
-3. **mcp_agent_mail** - Coordination (messaging, file locks, conflict prevention between agents)
-
-**Zero-Debt Workflow:**
-1. **Beads First:** ALWAYS check `bd ready` for pending issues/bugs before starting any new feature.
-2. **AI-Driven Selection:** Use `bv --robot-next` to get high-impact task recommendations via PageRank algorithm.
-3. **Resolution before Expansion:** Fix all critical bugs and technical debt (identified by `bd doctor`) before adding new lines of feature code.
-4. **Strict Testing Gate:** A task is NOT closed until all relevant Unit, Integration, and E2E tests pass.
-5. **No Ghost Code:** Do not commit commented-out code or unused files.
-6. **Sync Protocol:** Run `bd sync` at end of session to persist task metadata to git.
-
-**Quick Commands:**
-- `bd ready` - Find unblocked tasks
-- `bv --robot-next` - Get AI-recommended next task
-- `bv --robot-insights` - View graph health (cycles, bottlenecks)
-- `bd doctor` - Health check system
-- `bd sync` - Sync tasks to git
-
-See [BEADS_INTEGRATION_DEEP_DIVE.md](BEADS_INTEGRATION_DEEP_DIVE.md) for complete workflow.
-
-### 10.6 Project Health Status (2026-01-03)
-
-**Latest Audit:** [PROJECT_AUDIT_2026-01-03.md](PROJECT_AUDIT_2026-01-03.md)  
-**Current Phase:** 🔴 **PHASE 0 - Emergency Stabilization**  
-**Health Score:** 🟡 **TESTS PASSING, BUILD BLOCKED**
-
-#### Build Status
-```
-🔴 Web Build:     BLOCKED - Missing lucide-react (ved-6bdg)
-⚠️  API Build:    UNKNOWN - Needs verification (ved-o1cw)
-⚠️  Drizzle ORM:  OUT OF SYNC - Schema drift (ved-gdvp)
-```
-
-#### Test Status
-```
-✅ Test Suite:    1811/1834 passing (98.7%)
-✅ VED-SM0:       Fixed 170 failures → 98.7% pass rate
-⚠️  Integration:  23 tests skipped (need TEST_DATABASE_URL)
-⚠️  TypeScript:   35 errors in test files (non-blocking)
-```
-
-#### Zero-Debt Compliance
-```
-✅ Beads Trinity:     OPERATIONAL (200+ tasks tracked)
-✅ Session Protocol:  FOLLOWED (VED-SM0 success)
-⚠️  Coverage:         UNKNOWN (need verification)
-🔴 Deployment:        BLOCKED (3 P0 blockers)
-```
-
-#### Critical Path (50 minutes to unblock)
-1. **ved-6bdg** - Add lucide-react to Web (5 min)
-2. **ved-gdvp** - Regenerate Drizzle schema (30 min)
-3. **ved-o1cw** - Verify all builds pass (15 min)
-
-**Action Required:** Execute Phase 0 tasks BEFORE any new development
 
 ---
 

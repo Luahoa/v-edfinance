@@ -1,96 +1,4 @@
-version: '3.8'
-
 services:
-  # Real-time metrics (1-second intervals) - BEST for debugging
-  netdata:
-    image: netdata/netdata:latest
-    container_name: v-edfinance-netdata
-    hostname: v-edfinance-monitoring
-    ports:
-      - "19999:19999"
-    restart: unless-stopped
-    cap_add:
-      - SYS_PTRACE
-      - SYS_ADMIN
-    security_opt:
-      - apparmor:unconfined
-    volumes:
-      - netdataconfig:/etc/netdata
-      - netdatalib:/var/lib/netdata
-      - netdatacache:/var/cache/netdata
-      - /etc/passwd:/host/etc/passwd:ro
-      - /etc/group:/host/etc/group:ro
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /etc/os-release:/host/etc/os-release:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - DOCKER_HOST=/var/run/docker.sock
-      - NETDATA_CLAIM_TOKEN=${NETDATA_CLAIM_TOKEN:-}
-      - NETDATA_CLAIM_ROOMS=${NETDATA_CLAIM_ROOMS:-}
-    networks:
-      - monitoring
-
-  # Uptime monitoring & beautiful status page
-  uptime-kuma:
-    image: louislam/uptime-kuma:1
-    container_name: v-edfinance-uptime-kuma
-    ports:
-      - "3002:3001"  # Changed to avoid conflict with NestJS API
-    restart: unless-stopped
-    volumes:
-      - uptime-kuma-data:/app/data
-    networks:
-      - monitoring
-    healthcheck:
-      test: ["CMD", "node", "/app/extra/healthcheck.js"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # System monitoring (Python-based, web + terminal UI)
-  glances:
-    image: nicolargo/glances:latest-full
-    container_name: v-edfinance-glances
-    ports:
-      - "61208:61208"
-    restart: unless-stopped
-    pid: host
-    privileged: true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - GLANCES_OPT=-w
-      - TZ=Asia/Ho_Chi_Minh
-    networks:
-      - monitoring
-
-  # Lightweight Docker container stats tracker
-  beszel:
-    image: henrygd/beszel:latest
-    container_name: v-edfinance-beszel
-    ports:
-      - "8090:8090"
-    restart: unless-stopped
-    volumes:
-      - beszel-data:/beszel/data
-    environment:
-      - PORT=8090
-    networks:
-      - monitoring
-
-  # Beszel Agent (collects Docker stats from host)
-  beszel-agent:
-    image: henrygd/beszel-agent:latest
-    container_name: v-edfinance-beszel-agent
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - PORT=45876
-      - KEY=${BESZEL_AGENT_KEY:-change-this-to-secure-key}
-
   # Prometheus - Time series database for metrics
   prometheus:
     image: prom/prometheus:latest
@@ -139,15 +47,9 @@ services:
       - prometheus
 
 volumes:
-  netdataconfig:
-  netdatalib:
-  netdatacache:
-  uptime-kuma-data:
-  beszel-data:
   prometheus-data:
   grafana-data:
 
 networks:
   monitoring:
     driver: bridge
-    name: v-edfinance-monitoring

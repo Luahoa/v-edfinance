@@ -1,18 +1,16 @@
 'use client';
 
-import type { BuddyGroup } from '@/types';
-import { Sparkles } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { Sparkles } from 'lucide-react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import type { BuddyGroup } from '@/types';
 
 interface BuddyRecommendationsProps {
   recommendations: BuddyGroup[];
 }
 
-export const BuddyRecommendations = ({
-  recommendations: initialRecommendations,
-}: BuddyRecommendationsProps) => {
+export const BuddyRecommendations = ({ recommendations: initialRecommendations }: BuddyRecommendationsProps) => {
   const ts = useTranslations('Social');
   const [recommendations, setRecommendations] = useState(initialRecommendations);
   const [loading, setLoading] = useState<string | null>(null);
@@ -29,7 +27,7 @@ export const BuddyRecommendations = ({
 
       if (res.ok) {
         // Remove from recommendations after joining
-        setRecommendations((prev) => prev.filter((g) => g.id !== groupId));
+        setRecommendations(prev => prev.filter(g => g.id !== groupId));
         router.refresh(); // Refresh dashboard to show new status
       }
     } catch (err) {
@@ -49,17 +47,12 @@ export const BuddyRecommendations = ({
       </h2>
       <div className="space-y-3">
         {recommendations.map((group) => (
-          <div
-            key={group.id}
-            className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm dark:bg-zinc-800"
-          >
+          <div key={group.id} className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm dark:bg-zinc-800">
             <div>
               <p className="text-sm font-medium">{group.name}</p>
-              <p className="text-xs text-zinc-500">
-                {ts(`types.${group.type}`)} • {group._count?.members || 0} {ts('members')}
-              </p>
+              <p className="text-xs text-zinc-500">{ts(`types.${group.type}`)} • {group._count?.members || 0} {ts('members')}</p>
             </div>
-            <button
+            <button 
               onClick={() => handleJoin(group.id)}
               disabled={loading === group.id}
               className="text-xs font-bold text-indigo-600 hover:text-indigo-700 disabled:opacity-50"

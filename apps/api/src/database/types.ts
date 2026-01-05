@@ -4,7 +4,7 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   : ColumnType<T, T | undefined, T>;
 export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
-import type { BuddyGroupType, BuddyRole, PostType, Role, Level, LessonType, ProgressStatus, ChatRole, RelationStatus, QuestionType } from "./enums";
+import type { BuddyGroupType, BuddyRole, PostType, Role, Level, LessonType, ProgressStatus, ChatRole, RelationStatus, QuestionType, TransactionStatus, TransactionType } from "./enums";
 
 export type Achievement = {
     id: Generated<string>;
@@ -214,6 +214,23 @@ export type SystemSettings = {
     description: string | null;
     updatedAt: Timestamp;
 };
+export type Transaction = {
+    id: Generated<string>;
+    userId: string;
+    courseId: string | null;
+    amount: number;
+    currency: Generated<string>;
+    status: Generated<TransactionStatus>;
+    type: Generated<TransactionType>;
+    stripeSessionId: string | null;
+    stripePaymentIntentId: string | null;
+    metadata: unknown | null;
+    createdAt: Generated<Timestamp>;
+    updatedAt: Timestamp;
+    completedAt: Timestamp | null;
+    failedAt: Timestamp | null;
+    refundedAt: Timestamp | null;
+};
 export type User = {
     id: Generated<string>;
     email: string;
@@ -227,6 +244,7 @@ export type User = {
     moderationStrikes: Generated<number>;
     failedLoginAttempts: Generated<number>;
     lockedUntil: Timestamp | null;
+    stripeCustomerId: string | null;
     metadata: unknown | null;
     createdAt: Generated<Timestamp>;
     updatedAt: Timestamp;
@@ -311,6 +329,7 @@ export type DB = {
     SimulationScenario: SimulationScenario;
     SocialPost: SocialPost;
     SystemSettings: SystemSettings;
+    Transaction: Transaction;
     User: User;
     UserAchievement: UserAchievement;
     UserChecklist: UserChecklist;

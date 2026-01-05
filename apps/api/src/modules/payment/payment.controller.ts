@@ -1,10 +1,12 @@
-import { Controller, Logger, Post, Get, Body, Param, UseGuards, Req, NotFoundException, BadRequestException, UnauthorizedException, Headers, RawBodyRequest } from '@nestjs/common';
+import { Controller, Logger, Post, Get, Body, Param, UseGuards, Req, NotFoundException, BadRequestException, UnauthorizedException, Headers } from '@nestjs/common';
+import type { RawBodyRequest } from '@nestjs/common';
+import { Request } from 'express';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiExcludeEndpoint } from '@nestjs/swagger';
 import { StripeService } from './services/stripe.service';
 import { TransactionService } from './services/transaction.service';
 import { WebhookService } from './services/webhook.service';
 import { CreateCheckoutSessionDto, CheckoutSessionResponseDto, TransactionResponseDto } from './dto/payment.dto';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 
 @ApiTags('Payment')
 @Controller('payment')
@@ -79,10 +81,10 @@ export class PaymentController {
       this.logger.log(`Created Stripe customer ${stripeCustomerId} for user ${userId}`);
     }
 
-    // Get course title (localized)
-    const courseTitle = typeof course.title === 'object' 
-      ? course.title.vi || course.title.en || course.title.zh 
-      : course.title;
+    // Get course title (localized) - Handle JSONB type
+    const courseTitle = typeof course.title === 'object' && course.title !== null
+      ? (course.title as any).vi || (course.title as any).en || (course.title as any).zh || 'Untitled Course'
+      : String(course.title || 'Untitled Course');
 
     // Create Stripe Checkout Session
     const session = await this.stripeService.createCheckoutSession({

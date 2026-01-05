@@ -1,0 +1,265 @@
+{
+  "name": "Zalo OA - Course Enrollment Notification",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "course-enrolled",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-course-enrolled",
+      "name": "Webhook - Course Enrolled",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "webhookId": "course-enrolled"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "userId",
+              "value": "={{ $json.body.userId }}"
+            },
+            {
+              "name": "phone",
+              "value": "={{ $json.body.phone }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.body.name }}"
+            },
+            {
+              "name": "courseId",
+              "value": "={{ $json.body.courseId }}"
+            },
+            {
+              "name": "courseName",
+              "value": "={{ $json.body.courseName }}"
+            },
+            {
+              "name": "startDate",
+              "value": "={{ $json.body.startDate }}"
+            },
+            {
+              "name": "phoneFormatted",
+              "value": "={{ $json.body.phone.startsWith('0') ? '84' + $json.body.phone.slice(1) : $json.body.phone }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "set-enrollment-data",
+      "name": "Transform Enrollment Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const name = $input.item.json.name;\nconst courseName = $input.item.json.courseName;\nconst startDate = $input.item.json.startDate;\n\n// Format date to Vietnamese\nconst date = new Date(startDate);\nconst formattedDate = date.toLocaleDateString('vi-VN', {\n  weekday: 'long',\n  year: 'numeric',\n  month: 'long',\n  day: 'numeric'\n});\n\n// Generate personalized message\nconst message = `🎓 Chúc mừng ${name}!\n\n✅ Bạn đã đăng ký khóa học \"${courseName}\" thành công.\n\n📅 Ngày bắt đầu: ${formattedDate}\n\n💡 Những điều cần làm:\n1️⃣ Chuẩn bị tài liệu học tập\n2️⃣ Tham gia group Zalo của lớp\n3️⃣ Hoàn thành bài test đầu vào\n\n👉 Truy cập khóa học: https://v-edfinance.com/courses/${$input.item.json.courseId}\n\n📞 Hỗ trợ: 1900-xxxx\n\n🚀 Chúc bạn học tốt!`;\n\nreturn {\n  ...($input.item.json),\n  messageText: message\n};"
+      },
+      "id": "generate-message",
+      "name": "Generate Personalized Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openapi.zalo.me/v3.0/oa/message/cs",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "zaloOaApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "recipient",
+              "value": "={{ { \"user_id\": $json.phoneFormatted } }}"
+            },
+            {
+              "name": "message",
+              "value": "={{ { \"text\": $json.messageText } }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "send-zalo-enrollment",
+      "name": "Send Zalo OA Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "zalo-success-check",
+              "leftValue": "={{ $json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-response",
+      "name": "Check Zalo Response",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO \"BehaviorLog\" (\"userId\", \"sessionId\", \"action\", \"context\", \"timestamp\", \"createdAt\", \"updatedAt\")\nVALUES (\n  '{{ $('Transform Enrollment Data').item.json.userId }}',\n  'zalo-notification',\n  'zalo_enrollment_sent',\n  '{{ JSON.stringify({ courseId: $('Transform Enrollment Data').item.json.courseId, courseName: $('Transform Enrollment Data').item.json.courseName, phone: $('Transform Enrollment Data').item.json.phone }) }}',\n  NOW(),\n  NOW(),\n  NOW()\n);",
+        "options": {}
+      },
+      "id": "log-enrollment-success",
+      "name": "Log Success to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.4,
+      "position": [1250, 200],
+      "credentials": {
+        "postgres": {
+          "id": "postgres-vedfinance",
+          "name": "V-EdFinance Database"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Enrollment notification sent' } }}",
+        "options": {}
+      },
+      "id": "response-success",
+      "name": "Webhook Response - Success",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1450, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, message: 'Notification failed', error: $json.error } }}",
+        "responseCode": 500,
+        "options": {}
+      },
+      "id": "response-error",
+      "name": "Webhook Response - Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1450, 400]
+    }
+  ],
+  "connections": {
+    "Webhook - Course Enrolled": {
+      "main": [
+        [
+          {
+            "node": "Transform Enrollment Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Enrollment Data": {
+      "main": [
+        [
+          {
+            "node": "Generate Personalized Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Personalized Message": {
+      "main": [
+        [
+          {
+            "node": "Send Zalo OA Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Zalo OA Message": {
+      "main": [
+        [
+          {
+            "node": "Check Zalo Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Zalo Response": {
+      "main": [
+        [
+          {
+            "node": "Log Success to Database",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Webhook Response - Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Success to Database": {
+      "main": [
+        [
+          {
+            "node": "Webhook Response - Success",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-12-23T00:00:00.000Z",
+  "versionId": "1"
+}

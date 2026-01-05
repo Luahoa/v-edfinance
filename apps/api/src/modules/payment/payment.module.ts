@@ -4,7 +4,7 @@ import { PaymentController } from './payment.controller';
 import { StripeService } from './services/stripe.service';
 import { TransactionService } from './services/transaction.service';
 import { WebhookService } from './services/webhook.service';
-import { PrismaModule } from '../prisma/prisma.module';
+import { PrismaModule } from '../../prisma/prisma.module';
 
 @Module({
   imports: [ConfigModule, PrismaModule],

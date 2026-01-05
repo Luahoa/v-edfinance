@@ -7,7 +7,7 @@ services:
       dockerfile: apps/api/Dockerfile
     container_name: vedfinance-api-test
     environment:
-      DATABASE_URL: "postgresql://test_user:test_password@postgres-test:5432/vedfinance_test?schema=public"
+      DATABASE_URL: "postgresql://postgres:postgres@postgres-test:5432/vedfinance_test?schema=public"
       E2B_API_KEY: "${E2B_API_KEY}"
       NODE_ENV: test
     depends_on:
@@ -17,18 +17,16 @@ services:
       - test-network
 
   postgres-test:
-    image: postgres:16-alpine
+    image: postgres:15-alpine
     container_name: vedfinance-postgres-test
     ports:
-      - "5433:5432"
+      - "5434:5432"
     environment:
-      POSTGRES_USER: test_user
-      POSTGRES_PASSWORD: test_password
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
       POSTGRES_DB: vedfinance_test
-    volumes:
-      - test-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U test_user"]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -42,7 +40,7 @@ services:
     volumes:
       - .:/app
     environment:
-      DATABASE_URL: "postgresql://test_user:test_password@postgres-test:5432/vedfinance_test?schema=public"
+      DATABASE_URL: "postgresql://postgres:postgres@postgres-test:5432/vedfinance_test?schema=public"
       E2B_API_KEY: "${E2B_API_KEY}"
       BASE_URL: "http://api-test:3000"
     depends_on:
@@ -51,9 +49,6 @@ services:
     entrypoint: /bin/bash -c "npm install -g pnpm@9.15.0 && pnpm install && npx prisma@5.22.0 migrate deploy --schema=apps/api/prisma/schema.prisma && pnpm --filter api test:e2e test/persona-simulation.e2e-spec.ts"
     networks:
       - test-network
-
-volumes:
-  test-db-data:
 
 networks:
   test-network:

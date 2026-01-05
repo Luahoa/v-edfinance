@@ -61,3 +61,19 @@ export const QuestionType = {
     MATCHING: "MATCHING"
 } as const;
 export type QuestionType = (typeof QuestionType)[keyof typeof QuestionType];
+export const TransactionStatus = {
+    PENDING: "PENDING",
+    PROCESSING: "PROCESSING",
+    COMPLETED: "COMPLETED",
+    FAILED: "FAILED",
+    REFUNDED: "REFUNDED",
+    CANCELLED: "CANCELLED"
+} as const;
+export type TransactionStatus = (typeof TransactionStatus)[keyof typeof TransactionStatus];
+export const TransactionType = {
+    COURSE_PURCHASE: "COURSE_PURCHASE",
+    SUBSCRIPTION: "SUBSCRIPTION",
+    CREDITS: "CREDITS",
+    DONATION: "DONATION"
+} as const;
+export type TransactionType = (typeof TransactionType)[keyof typeof TransactionType];

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException, Logger } from '@nestjs/common';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { CreateTransactionDto, UpdateTransactionDto, TransactionResponseDto, TransactionStatus, TransactionType } from '../dto/payment.dto';
 
 @Injectable()
@@ -275,13 +275,13 @@ export class TransactionService {
 
     const stats = {
       total: transactions.length,
-      completed: transactions.filter(t => t.status === TransactionStatus.COMPLETED).length,
-      pending: transactions.filter(t => t.status === TransactionStatus.PENDING).length,
-      failed: transactions.filter(t => t.status === TransactionStatus.FAILED).length,
-      refunded: transactions.filter(t => t.status === TransactionStatus.REFUNDED).length,
+      completed: transactions.filter((t: any) => t.status === TransactionStatus.COMPLETED).length,
+      pending: transactions.filter((t: any) => t.status === TransactionStatus.PENDING).length,
+      failed: transactions.filter((t: any) => t.status === TransactionStatus.FAILED).length,
+      refunded: transactions.filter((t: any) => t.status === TransactionStatus.REFUNDED).length,
       totalAmount: transactions
-        .filter(t => t.status === TransactionStatus.COMPLETED)
-        .reduce((sum, t) => sum + t.amount, 0),
+        .filter((t: any) => t.status === TransactionStatus.COMPLETED)
+        .reduce((sum: number, t: any) => sum + t.amount, 0),
     };
 
     return stats;
@@ -297,16 +297,16 @@ export class TransactionService {
 
     const stats = {
       total: transactions.length,
-      completed: transactions.filter(t => t.status === TransactionStatus.COMPLETED).length,
-      pending: transactions.filter(t => t.status === TransactionStatus.PENDING).length,
-      failed: transactions.filter(t => t.status === TransactionStatus.FAILED).length,
-      refunded: transactions.filter(t => t.status === TransactionStatus.REFUNDED).length,
+      completed: transactions.filter((t: any) => t.status === TransactionStatus.COMPLETED).length,
+      pending: transactions.filter((t: any) => t.status === TransactionStatus.PENDING).length,
+      failed: transactions.filter((t: any) => t.status === TransactionStatus.FAILED).length,
+      refunded: transactions.filter((t: any) => t.status === TransactionStatus.REFUNDED).length,
       totalRevenue: transactions
-        .filter(t => t.status === TransactionStatus.COMPLETED)
-        .reduce((sum, t) => sum + t.amount, 0),
+        .filter((t: any) => t.status === TransactionStatus.COMPLETED)
+        .reduce((sum: number, t: any) => sum + t.amount, 0),
       refundedAmount: transactions
-        .filter(t => t.status === TransactionStatus.REFUNDED)
-        .reduce((sum, t) => sum + t.amount, 0),
+        .filter((t: any) => t.status === TransactionStatus.REFUNDED)
+        .reduce((sum: number, t: any) => sum + t.amount, 0),
     };
 
     return stats;

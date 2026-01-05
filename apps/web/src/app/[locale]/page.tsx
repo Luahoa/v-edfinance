@@ -1,9 +1,5 @@
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
-
-import { Suspense } from 'react';
-import { getTranslations } from 'next-intl/server';
-import Link from 'next/link';
 import { ArrowRight, Users, TrendingUp, ShieldCheck } from 'lucide-react';
 
 export default async function Index({ params }: { params: Promise<{ locale: string }> }) {
