@@ -80,3 +80,4 @@ scripts/vps-toolkit/*.log
 # Large binary files
 *.exe
 *.msi 
+".turbo/"  
