@@ -1,0 +1,20 @@
+# Ralph CLI
+
+node_modules/
+dist/
+bin/
+*.exe
+*.log
+.ralph/
+
+# Build artifacts
+*.tsbuildinfo
+
+# Logs
+.quality-gate.log
+.quality-gate-result.json
+.ralph-output.md
+
+# OS
+.DS_Store
+Thumbs.db
