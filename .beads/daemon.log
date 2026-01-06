@@ -3511,3 +3511,121 @@
 [2026-01-07 02:03:51]    Consider running 'bd sync' to commit and push your changes first.
 [2026-01-07 02:03:51] Successfully re-established JSONL watch after 50ms
 [2026-01-07 02:03:51] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:03:52] Import triggered by file change
+[2026-01-07 02:03:52] Starting auto-import...
+[2026-01-07 02:03:52] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:03:53] Pulled sync branch spike/simplified-nav
+[2026-01-07 02:03:53] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:53] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:53] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:53] Synced JSONL from sync branch to main repo
+[2026-01-07 02:03:53] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:53] Imported from JSONL
+[2026-01-07 02:03:53] Auto-import complete
+[2026-01-07 02:03:53] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 02:03:54] Import triggered by file change
+[2026-01-07 02:03:54] Starting auto-import...
+[2026-01-07 02:03:54] JSONL content changed, proceeding with auto-import...
+[2026-01-07 02:03:54] ⚠️  WARNING: Uncommitted local changes detected in E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:03:54]    Pulling from remote may overwrite local unpushed changes.
+[2026-01-07 02:03:54]    Consider running 'bd sync' to commit and push your changes first.
+[2026-01-07 02:03:54] Import triggered by file change
+[2026-01-07 02:03:54] Starting auto-import...
+[2026-01-07 02:03:54] JSONL content changed, proceeding with auto-import...
+[2026-01-07 02:03:54] ⚠️  WARNING: Uncommitted local changes detected in E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:03:54]    Pulling from remote may overwrite local unpushed changes.
+[2026-01-07 02:03:54]    Consider running 'bd sync' to commit and push your changes first.
+[2026-01-07 02:03:55] Pulled sync branch spike/simplified-nav
+[2026-01-07 02:03:55] Synced JSONL from sync branch to main repo
+[2026-01-07 02:03:55] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:55] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:55] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:55] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:55] Imported from JSONL
+[2026-01-07 02:03:55] Auto-import complete
+[2026-01-07 02:03:56] Pulled sync branch spike/simplified-nav
+[2026-01-07 02:03:56] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:56] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:56] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:56] Synced JSONL from sync branch to main repo
+[2026-01-07 02:03:56] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:56] Imported from JSONL
+[2026-01-07 02:03:56] Import triggered by file change
+[2026-01-07 02:03:56] Starting auto-import...
+[2026-01-07 02:03:56] JSONL content changed, proceeding with auto-import...
+[2026-01-07 02:03:56] Auto-import complete
+[2026-01-07 02:03:56] ⚠️  WARNING: Uncommitted local changes detected in E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:03:56]    Pulling from remote may overwrite local unpushed changes.
+[2026-01-07 02:03:56]    Consider running 'bd sync' to commit and push your changes first.
+[2026-01-07 02:03:57] Import triggered by file change
+[2026-01-07 02:03:57] Starting auto-import...
+[2026-01-07 02:03:57] JSONL content changed, proceeding with auto-import...
+[2026-01-07 02:03:57] ⚠️  WARNING: Uncommitted local changes detected in E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:03:57]    Pulling from remote may overwrite local unpushed changes.
+[2026-01-07 02:03:57]    Consider running 'bd sync' to commit and push your changes first.
+[2026-01-07 02:03:58] Pulled sync branch spike/simplified-nav
+[2026-01-07 02:03:58] Synced JSONL from sync branch to main repo
+[2026-01-07 02:03:58] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:58] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:58] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:58] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:58] Imported from JSONL
+[2026-01-07 02:03:58] Auto-import complete
+[2026-01-07 02:03:58] Pulled sync branch spike/simplified-nav
+[2026-01-07 02:03:58] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:58] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:58] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:58] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:03:58] Synced JSONL from sync branch to main repo
+[2026-01-07 02:03:59] Import triggered by file change
+[2026-01-07 02:03:59] Starting auto-import...
+[2026-01-07 02:03:59] JSONL content changed, proceeding with auto-import...
+[2026-01-07 02:03:59] ⚠️  WARNING: Uncommitted local changes detected in E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:03:59]    Pulling from remote may overwrite local unpushed changes.
+[2026-01-07 02:03:59]    Consider running 'bd sync' to commit and push your changes first.
+[2026-01-07 02:03:59] Import failed: collision detection failed: failed to lookup by ID: failed to get issue: sqlite3: SQL logic error: no such column: pinned
+[2026-01-07 02:03:59] Import triggered by file change
+[2026-01-07 02:03:59] Starting auto-import...
+[2026-01-07 02:03:59] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:04:00] Pulled sync branch spike/simplified-nav
+[2026-01-07 02:04:00] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:04:00] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:04:00] Synced JSONL from sync branch to main repo
+[2026-01-07 02:04:00] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:04:00] File change detected: E:\Demo project\v-edfinance\.beads\issues.jsonl (op: WRITE)
+[2026-01-07 02:04:00] Imported from JSONL
+[2026-01-07 02:04:00] Auto-import complete
+[2026-01-07 02:04:01] Import triggered by file change
+[2026-01-07 02:04:01] Starting auto-import...
+[2026-01-07 02:04:01] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:06:22] Mutation detected: update ved-4o7q
+[2026-01-07 02:06:22] Export triggered by mutation events
+[2026-01-07 02:06:22] Starting export...
+[2026-01-07 02:06:22] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:06:22] Exported to JSONL
+[2026-01-07 02:06:22] Export complete
+[2026-01-07 02:06:22] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:06:22] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:06:22] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:06:22] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:06:23] Import triggered by file change
+[2026-01-07 02:06:23] Starting auto-import...
+[2026-01-07 02:06:24] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:08:00] Mutation detected: update ved-4o7q
+[2026-01-07 02:08:01] Export triggered by mutation events
+[2026-01-07 02:08:01] Starting export...
+[2026-01-07 02:08:01] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:08:01] Exported to JSONL
+[2026-01-07 02:08:01] Export complete
+[2026-01-07 02:08:01] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:08:01] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:08:01] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:08:01] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:08:02] Import triggered by file change
+[2026-01-07 02:08:02] Starting auto-import...
+[2026-01-07 02:08:02] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:08:03] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:08:03] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:08:03] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:08:03] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:08:03] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
