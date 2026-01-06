@@ -388,14 +388,23 @@ Update to `completed` when done with detailed `resolution` and `actions_complete
   - *Loss Aversion*: "Don't lose your X-day streak."
   - *Framing*: Present choices as gains rather than losses.
   - *Mapping*: Convert abstract numbers into real-world value (e.g., $ = Coffee).
+- **Documentation**: [docs/behavioral-design/nudge-theory.md](docs/behavioral-design/nudge-theory.md)
 
 ### 2. Hooked Loop Implementation (Nir Eyal)
 - **Trigger**: External (Notifications/Nudges) and Internal (Curiosity/Achievement).
 - **Action**: Simplify the most important user action (Single-click decisions).
 - **Variable Reward**: Use AI to generate unpredictable story outcomes or rewards.
 - **Investment**: Ask users to put in effort (Locking funds/Building a persona) to increase "stickiness".
+- **Documentation**: [docs/behavioral-design/hooked-model.md](docs/behavioral-design/hooked-model.md)
 
-### 3. AI-Powered Behavioral Analytics
+### 3. Gamification Patterns
+- **Points System**: Event-driven architecture with GamificationService
+- **Leaderboards**: Global, periodic (daily/weekly/monthly), and streak rankings
+- **Challenges**: Collaborative P2P group challenges with social rewards
+- **Achievements**: Tiered badge system (BRONZE/SILVER/GOLD/PLATINUM)
+- **Documentation**: [docs/behavioral-design/gamification.md](docs/behavioral-design/gamification.md)
+
+### 4. AI-Powered Behavioral Analytics
 - **Persona Modeling**: Analyzing `BehaviorLog` to identify psychological profiles.
 - **Adaptive Difficulty**: Dynamically adjusting content complexity based on user success rate (Flow State).
 - **Predictive Scenarios**: Using LLMs to simulate long-term consequences of short-term decisions.
