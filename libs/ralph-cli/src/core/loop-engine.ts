@@ -241,7 +241,14 @@ export class LoopEngine {
 			try {
 				const qgContent = readFileSync(qgResultPath, "utf-8");
 				const qgResult = JSON.parse(qgContent);
-				conditions.qualityGatesPassed = qgResult.passed === true;
+				
+				// Support multiple JSON formats:
+				// 1. {passed: boolean}
+				// 2. {summary: {failed: number}}
+				conditions.qualityGatesPassed =
+					qgResult.passed === true ||
+					(qgResult.summary && qgResult.summary.failed === 0);
+					
 				logger.verbose(`Quality gates passed: ${conditions.qualityGatesPassed}`);
 			} catch {
 				logger.verbose("Could not parse quality gate results");
