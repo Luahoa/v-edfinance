@@ -1,0 +1,36 @@
+{
+  "task": "ved-1yhd",
+  "status": "completed",
+  "message": "i18n Accessibility namespace ready with 18 keys (vi/en/zh)",
+  "details": {
+    "files_updated": [
+      "apps/web/src/messages/en.json",
+      "apps/web/src/messages/vi.json",
+      "apps/web/src/messages/zh.json"
+    ],
+    "keys_added": 18,
+    "keys": [
+      "askMentor",
+      "searchCommands",
+      "selectLanguage",
+      "viewProfile",
+      "checklistProgress",
+      "submitAnswer",
+      "nextQuestion",
+      "loadingMentor",
+      "noCertificates",
+      "previousVideo",
+      "nextVideo",
+      "videoOf",
+      "buddyRecommendations",
+      "closeSidebar",
+      "openMenu",
+      "closeMenu",
+      "moreOptions",
+      "selectThread"
+    ]
+  },
+  "unblocks": ["ved-a6or", "ved-pjtl", "ved-wbji", "ved-4f3z", "ved-4o7q", "ved-tftp"],
+  "agent": "RedWave",
+  "timestamp": "2026-01-07T00:00:00Z"
+}

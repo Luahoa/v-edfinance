@@ -3448,3 +3448,38 @@
 [2026-01-07 01:27:03] Import triggered by file change
 [2026-01-07 01:27:03] Starting auto-import...
 [2026-01-07 01:27:03] Skipping auto-import: JSONL content unchanged
+[2026-01-07 01:31:16] Daemon started (interval: 5s, auto-commit: false, auto-push: false)
+[2026-01-07 01:31:16] Using database: E:\Demo project\v-edfinance\.beads\beads.db
+[2026-01-07 01:31:16] Database opened: E:\Demo project\v-edfinance\.beads\beads.db (freshness checking enabled)
+[2026-01-07 01:31:16] Upgrading .beads/.gitignore...
+[2026-01-07 01:31:16] Warning: failed to upgrade .gitignore: open .beads\.gitignore: The system cannot find the path specified.
+[2026-01-07 01:31:16] Repository fingerprint validated: e04e7bc5
+[2026-01-07 01:31:16] Warning: Database schema version mismatch
+[2026-01-07 01:31:16]   Database version: 0.30.7
+[2026-01-07 01:31:16]   Daemon version: 0.32.1
+[2026-01-07 01:31:16]   Auto-upgrading database to daemon version...
+[2026-01-07 01:31:16]   Database version updated to 0.32.1
+[2026-01-07 01:31:16] Starting RPC server: E:\Demo project\v-edfinance\.beads\bd.sock
+[2026-01-07 01:31:16] RPC server ready (socket listening)
+[2026-01-07 01:31:16] Registered in global registry
+[2026-01-07 01:31:16] Starting sync cycle...
+[2026-01-07 01:31:16] Exported to JSONL
+[2026-01-07 01:31:17] Pulled sync branch spike/simplified-nav
+[2026-01-07 01:31:17] Synced JSONL from sync branch to main repo
+[2026-01-07 01:31:18] Imported from JSONL
+[2026-01-07 01:31:18] Sync cycle complete
+[2026-01-07 01:31:18] Monitoring parent process (PID 0)
+[2026-01-07 01:31:18] Using event-driven mode
+[2026-01-07 01:42:38] Mutation detected: update ved-1yhd
+[2026-01-07 01:42:38] Export triggered by mutation events
+[2026-01-07 01:42:38] Starting export...
+[2026-01-07 01:42:38] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-07 02:00:04] Mutation detected: update ved-1yhd
+[2026-01-07 02:00:04] Export triggered by mutation events
+[2026-01-07 02:00:04] Starting export...
+[2026-01-07 02:00:04] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-07 02:00:06] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:00:06] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:00:06] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:00:06] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:00:06] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
