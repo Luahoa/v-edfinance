@@ -289,5 +289,25 @@
     "speed": "播放速度",
     "volume": "音量",
     "thumbnailAlt": "视频缩略图"
+  },
+  "Accessibility": {
+    "askMentor": "咨询 AI 导师",
+    "searchCommands": "搜索命令",
+    "selectLanguage": "选择语言",
+    "viewProfile": "查看 {name} 的个人资料",
+    "checklistProgress": "已完成 {completed} 项，共 {total} 项",
+    "submitAnswer": "提交答案",
+    "nextQuestion": "下一个问题",
+    "loadingMentor": "正在加载导师回复",
+    "noCertificates": "尚无证书",
+    "previousVideo": "上一个视频",
+    "nextVideo": "下一个视频",
+    "videoOf": "第 {current} 个视频，共 {total} 个",
+    "buddyRecommendations": "推荐的学习伙伴",
+    "closeSidebar": "关闭侧边栏",
+    "openMenu": "打开菜单",
+    "closeMenu": "关闭菜单",
+    "moreOptions": "更多选项",
+    "selectThread": "选择主题：{title}"
   }
 }

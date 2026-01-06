@@ -649,3 +649,176 @@ V-EdFinance uses a multi-tier video optimization pipeline for high-performance l
 **Documentation**: [ved-59th execution plan](file:///e:/Demo%20project/v-edfinance/history/ved-59th/execution-plan.md)
 
 ---
+
+## UI Accessibility Best Practices (WCAG AA)
+
+V-EdFinance maintains WCAG AA compliance through systematic accessibility patterns.
+
+### Accessibility-First Component Pattern
+
+**When to use:** All new interactive components (buttons, forms, modals, loading states)
+
+**Required elements:**
+1. **aria-labels** via i18n (`Accessibility` namespace)
+2. **Focus management** (visible ring, focus trap for modals)
+3. **Loading announcements** (aria-live + Skeleton)
+4. **Touch targets** (44px minimum per WCAG 2.5.5)
+
+**Template:**
+```tsx
+'use client';
+import { useTranslations } from 'next-intl';
+import { Skeleton } from '@/components/ui/skeleton';
+
+export function AccessibleComponent() {
+  const t = useTranslations('Dashboard');
+  const a = useTranslations('Accessibility');
+  const [isLoading, setIsLoading] = useState(false);
+
+  return (
+    <div aria-live="polite" aria-busy={isLoading}>
+      {isLoading ? (
+        <>
+          <span className="sr-only">{a('loadingContent')}</span>
+          <Skeleton className="h-20 w-full" />
+        </>
+      ) : (
+        <Button
+          aria-label={a('actionName')}
+          className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        >
+          {t('actionLabel')}
+        </Button>
+      )}
+    </div>
+  );
+}
+```
+
+### i18n Accessibility Namespace
+
+**Location:** `apps/web/src/messages/{locale}.json`  
+**Purpose:** Screen reader announcements (separate from visible UI strings)
+
+**Structure:**
+```json
+{
+  "Accessibility": {
+    "actionName": "Descriptive action for screen readers",
+    "loadingContent": "Loading content...",
+    "progressStatus": "{completed} of {total} completed"
+  }
+}
+```
+
+**Rules:**
+- Use `useTranslations('Accessibility')` for aria-labels
+- Use `useTranslations('Dashboard')` for visible text
+- Never mix screen reader context with visual context
+
+### Focus Management
+
+**Keyboard navigation:** All interactive elements must be keyboard-accessible (Tab, Enter, ESC)
+
+**Pattern:**
+```tsx
+// Always add focus-visible ring
+className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+
+// For modals/dialogs: Use radix-ui primitives (built-in focus trap)
+import { Dialog } from '@radix-ui/react-dialog';
+<Dialog>...</Dialog>
+```
+
+**Testing:**
+- [ ] Tab cycles through all interactive elements
+- [ ] ESC closes modals
+- [ ] Enter activates buttons
+- [ ] Focus ring visible on keyboard nav
+
+### Loading State Accessibility
+
+**Pattern:** Skeleton + aria-live (deprecate Loader2)
+
+```tsx
+<div aria-live="polite" aria-busy={isLoading}>
+  {isLoading ? (
+    <>
+      <span className="sr-only">{a('loadingMessage')}</span>
+      <Skeleton className="h-20 w-full" />
+    </>
+  ) : (
+    <Content />
+  )}
+</div>
+```
+
+**Key attributes:**
+- `aria-live="polite"` - Announces changes without interrupting
+- `aria-busy={isLoading}` - Signals loading state
+- `sr-only` class - Screen reader-only text
+
+### Touch Targets (WCAG 2.5.5)
+
+**Minimum:** 44px × 44px on mobile (Level AAA)  
+**Implementation:** Use button.tsx variants (default: 48px, sm: 44px, lg: 44px)
+
+**Pattern:**
+```tsx
+// Default buttons (48px)
+<Button size="default">Action</Button>
+
+// Small buttons (44px minimum)
+<Button size="sm">Compact</Button>
+
+// Icon buttons (44px)
+<Button size="icon"><Icon /></Button>
+```
+
+**Testing:** Manual test on 375px viewport (iPhone SE)
+
+### Decorative Icons
+
+**Rule:** If icon is purely visual (no semantic meaning), hide from screen readers
+
+```tsx
+<Award aria-hidden="true" className="h-6 w-6" />
+```
+
+### Semantic ARIA Roles
+
+**Progress indicators:**
+```tsx
+<div
+  role="progressbar"
+  aria-valuenow={50}
+  aria-valuemin={0}
+  aria-valuemax={100}
+  aria-label={a('checklistProgress', { completed: 5, total: 10 })}
+/>
+```
+
+**Combobox/search:**
+```tsx
+<Input role="combobox" aria-label={a('searchCommands')} />
+<div role="listbox">{results}</div>
+```
+
+### Accessibility Checklist (Pre-Commit)
+
+- [ ] All buttons have `aria-label` (via `Accessibility` namespace)
+- [ ] Focus states visible (`focus-visible:ring-2`)
+- [ ] Loading states announced (`aria-live="polite"`)
+- [ ] Touch targets ≥44px (use button.tsx variants)
+- [ ] Decorative icons hidden (`aria-hidden="true"`)
+- [ ] Modals use radix-ui primitives (focus trap)
+- [ ] Manual keyboard test (Tab, Enter, ESC)
+
+**Tools:**
+- Lighthouse accessibility audit (target: ≥85)
+- NVDA/VoiceOver screen reader testing
+- Manual mobile touch testing (375px viewport)
+
+**Reference:** [ved-pd8l knowledge extraction](file:///e:/Demo%20project/v-edfinance/docs/ved-pd8l-knowledge-extraction.md)
+
+---

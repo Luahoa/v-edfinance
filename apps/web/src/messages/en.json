@@ -289,5 +289,25 @@
     "speed": "Playback Speed",
     "volume": "Volume",
     "thumbnailAlt": "Video thumbnail"
+  },
+  "Accessibility": {
+    "askMentor": "Ask AI Mentor",
+    "searchCommands": "Search commands",
+    "selectLanguage": "Select language",
+    "viewProfile": "View profile for {name}",
+    "checklistProgress": "{completed} of {total} items completed",
+    "submitAnswer": "Submit answer",
+    "nextQuestion": "Next question",
+    "loadingMentor": "Loading mentor response",
+    "noCertificates": "No certificates yet",
+    "previousVideo": "Previous video",
+    "nextVideo": "Next video",
+    "videoOf": "Video {current} of {total}",
+    "buddyRecommendations": "Recommended buddies",
+    "closeSidebar": "Close sidebar",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "moreOptions": "More options",
+    "selectThread": "Select thread: {title}"
   }
 }

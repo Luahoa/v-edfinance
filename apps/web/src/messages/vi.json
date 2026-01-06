@@ -294,5 +294,25 @@
     "speed": "Tốc độ phát",
     "volume": "Âm lượng",
     "thumbnailAlt": "Hình thu nhỏ video"
+  },
+  "Accessibility": {
+    "askMentor": "Hỏi AI Mentor",
+    "searchCommands": "Tìm kiếm lệnh",
+    "selectLanguage": "Chọn ngôn ngữ",
+    "viewProfile": "Xem hồ sơ của {name}",
+    "checklistProgress": "Đã hoàn thành {completed} trong tổng số {total} mục",
+    "submitAnswer": "Gửi câu trả lời",
+    "nextQuestion": "Câu hỏi tiếp theo",
+    "loadingMentor": "Đang tải phản hồi từ mentor",
+    "noCertificates": "Chưa có chứng chỉ",
+    "previousVideo": "Video trước",
+    "nextVideo": "Video tiếp theo",
+    "videoOf": "Video {current} trong tổng số {total}",
+    "buddyRecommendations": "Bạn học được đề xuất",
+    "closeSidebar": "Đóng thanh bên",
+    "openMenu": "Mở menu",
+    "closeMenu": "Đóng menu",
+    "moreOptions": "Tùy chọn khác",
+    "selectThread": "Chọn chủ đề: {title}"
   }
 }
