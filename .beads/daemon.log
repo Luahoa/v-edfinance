@@ -1,0 +1,66 @@
+[2026-01-06 15:06:03] Daemon started (interval: 5s, auto-commit: false, auto-push: false)
+[2026-01-06 15:06:03] Using database: E:\Demo project\v-edfinance\.beads\beads.db
+[2026-01-06 15:06:03] Database opened: E:\Demo project\v-edfinance\.beads\beads.db (freshness checking enabled)
+[2026-01-06 15:06:03] Upgrading .beads/.gitignore...
+[2026-01-06 15:06:03] Warning: failed to upgrade .gitignore: open .beads\.gitignore: The system cannot find the path specified.
+[2026-01-06 15:06:03] Repository fingerprint validated: e04e7bc5
+[2026-01-06 15:06:03] Starting RPC server: E:\Demo project\v-edfinance\.beads\bd.sock
+[2026-01-06 15:06:03] RPC server ready (socket listening)
+[2026-01-06 15:06:03] Registered in global registry
+[2026-01-06 15:06:03] Starting sync cycle...
+[2026-01-06 15:06:03] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:03] Monitoring parent process (PID 0)
+[2026-01-06 15:06:03] Using event-driven mode
+[2026-01-06 15:06:04] Mutation detected: create ved-pd8l
+[2026-01-06 15:06:04] Export triggered by mutation events
+[2026-01-06 15:06:04] Starting export...
+[2026-01-06 15:06:04] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:44] Mutation detected: create ved-a6or
+[2026-01-06 15:06:44] Export triggered by mutation events
+[2026-01-06 15:06:44] Starting export...
+[2026-01-06 15:06:44] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:45] Mutation detected: create ved-pjtl
+[2026-01-06 15:06:46] Export triggered by mutation events
+[2026-01-06 15:06:46] Starting export...
+[2026-01-06 15:06:46] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:46] Mutation detected: create ved-wbji
+[2026-01-06 15:06:47] Export triggered by mutation events
+[2026-01-06 15:06:47] Starting export...
+[2026-01-06 15:06:47] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:48] Mutation detected: create ved-4o7q
+[2026-01-06 15:06:48] Export triggered by mutation events
+[2026-01-06 15:06:48] Starting export...
+[2026-01-06 15:06:48] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:49] Mutation detected: create ved-4f3z
+[2026-01-06 15:06:49] Export triggered by mutation events
+[2026-01-06 15:06:49] Starting export...
+[2026-01-06 15:06:49] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:50] Mutation detected: create ved-tftp
+[2026-01-06 15:06:51] Export triggered by mutation events
+[2026-01-06 15:06:51] Starting export...
+[2026-01-06 15:06:51] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:51] Mutation detected: create ved-1yhd
+[2026-01-06 15:06:52] Export triggered by mutation events
+[2026-01-06 15:06:52] Starting export...
+[2026-01-06 15:06:52] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:06:53] Mutation detected: create ved-j0zv
+[2026-01-06 15:06:53] Export triggered by mutation events
+[2026-01-06 15:06:53] Starting export...
+[2026-01-06 15:06:53] Pre-export validation failed: refusing to export: JSONL content has changed since last import (import first to avoid data loss)
+[2026-01-06 15:14:18] JSONL removed/renamed, re-establishing watch
+[2026-01-06 15:14:18] Successfully re-established JSONL watch after 50ms
+[2026-01-06 15:14:18] JSONL removed/renamed, re-establishing watch
+[2026-01-06 15:14:18] Successfully re-established JSONL watch after 50ms
+[2026-01-06 15:14:18] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-06 15:14:19] Import triggered by file change
+[2026-01-06 15:14:19] Starting auto-import...
+[2026-01-06 15:14:19] Skipping auto-import: JSONL content unchanged
+[2026-01-06 15:14:20] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-06 15:14:21] Import triggered by file change
+[2026-01-06 15:14:21] Starting auto-import...
+[2026-01-06 15:14:21] Skipping auto-import: JSONL content unchanged
+[2026-01-06 15:17:07] JSONL removed/renamed, re-establishing watch
+[2026-01-06 15:17:07] Successfully re-established JSONL watch after 50ms
+[2026-01-06 15:17:07] JSONL removed/renamed, re-establishing watch
+[2026-01-06 15:17:07] Successfully re-established JSONL watch after 50ms
+[2026-01-06 15:17:07] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
