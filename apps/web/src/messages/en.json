@@ -25,7 +25,12 @@
     "startLearning": "Start Learning",
     "viewCourse": "View Details",
     "free": "Free",
-    "level": "Level"
+    "level": "Level",
+    "videoUnavailable": "Video Unavailable",
+    "videoFailedToLoad": "The video failed to load. Please check your connection or try again later.",
+    "videoBlockedByAdBlocker": "Video blocked by ad-blocker. Please disable it or watch on YouTube.",
+    "watchOnYouTube": "Watch on YouTube",
+    "clickToLoad": "Click to load video"
   },
   "Navigation": {
     "home": "Home",
@@ -272,5 +277,17 @@
     "noStudents": "No students enrolled yet",
     "exportSuccess": "Roster exported successfully",
     "exportError": "Failed to export roster"
+  },
+  "Video": {
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit Fullscreen",
+    "pictureInPicture": "Picture-in-Picture",
+    "speed": "Playback Speed",
+    "volume": "Volume",
+    "thumbnailAlt": "Video thumbnail"
   }
 }

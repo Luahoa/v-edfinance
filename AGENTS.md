@@ -451,3 +451,201 @@ Update to `completed` when done with detailed `resolution` and `actions_complete
 - NEVER stop before pushing - that leaves work stranded locally
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
+
+---
+
+## Epic Execution Patterns (Ralph CLI + Orchestrator)
+
+### Ralph Unified Pipeline 🚀
+
+V-EdFinance uses **Ralph skill** - the complete automation pipeline from idea to production.
+
+**One command executes everything**:
+```bash
+/skill ralph
+
+# Automatically executes:
+# Phase 1: PLANNING      → execution-plan.md
+# Phase 2: EXECUTION     → parallel workers
+# Phase 3: VERIFICATION  → quality gates
+# Phase 4: DOCUMENTATION → knowledge extraction  
+# Phase 5: LANDING       → git push
+
+# Result: EPIC COMPLETE
+```
+
+**5-Phase Workflow**:
+1. **Planning Phase** (planning.md skill):
+   - Discovery → Approach → Spikes → Decomposition → Validation → Track Planning
+   - Output: `history/<epic-id>/execution-plan.md`
+
+2. **Execution Phase** (orchestrator.md skill):
+   - Spawn parallel workers via `Task()` API
+   - Each worker handles 1 track with isolated file scope
+   - Agent Mail coordination via `.beads/agent-mail/*.json`
+
+3. **Verification Phase** (Ralph CLI):
+   - Quality gates (`scripts/quality-gate-ultra-fast.bat`)
+   - Beads sync (`beads sync --no-daemon`)
+   - Build verification (pnpm build, test)
+
+4. **Documentation Phase** (knowledge skill):
+   - Extract learnings from threads
+   - Update AGENTS.md with patterns
+   - Create diagrams with code citations
+
+5. **Landing Phase** (mandatory):
+   - Git push (MANDATORY before completion)
+   - Close epic in beads
+   - Create session handoff
+
+**Example** (Epic ved-jgea):
+```bash
+# Planning → 5 tracks with file scope isolation
+# Execution → 5 parallel workers (BlueLake, GreenCastle, etc.)
+# Verification → 5/5 quality gates PASS
+# Documentation → AGENTS.md updated (3 sections, 125 lines)
+# Landing → git push SUCCESS
+
+# Result: 82% completion (18/22 beads), 5/5 quality gates PASS
+```
+
+**Key Principles:**
+- **Spikes first**: Validate HIGH-risk items (Prisma, VPS, automation) before main work
+- **File scope isolation**: No overlapping paths between tracks prevents conflicts
+- **Self-correction loops**: Workers run build/test verification after every change
+- **Agent Mail**: Inter-track communication via JSON messages
+- **Epic ≠ complete until git push**: Final step is ALWAYS push to remote
+
+**Documentation**:
+- [orchestrator.md](file:///e:/Demo%20project/v-edfinance/.agents/skills/orchestrator.md) - Worker spawning patterns
+- [planning.md](file:///e:/Demo%20project/v-edfinance/.agents/skills/planning.md) - Discovery → execution plan pipeline
+- [Ralph CLI docs](file:///e:/Demo%20project/v-edfinance/RALPH_CLI_HANDOFF.md) - Loop engine integration
+
+---
+
+## VPS Deployment Automation
+
+### VPS Toolkit (Node.js SSH Automation)
+
+For VPS operations, use **`scripts/vps-toolkit/`** instead of interactive SSH:
+
+**Why**: Agents can't use `ssh vps "command"` due to timeout/cancellation. VPS Toolkit provides async/await API.
+
+**Usage**:
+```javascript
+const VPSConnection = require('./scripts/vps-toolkit/vps-connection');
+
+const vps = new VPSConnection();
+await vps.connect();
+
+// Execute commands
+await vps.exec('docker ps');
+await vps.uploadFile('./local.yml', '/root/remote.yml');
+
+// Get system info
+const info = await vps.getSystemInfo();
+
+vps.disconnect();
+```
+
+**Key Features**:
+- Non-interactive (no terminal prompts)
+- SFTP support (upload/download files)
+- Error handling built-in
+- SSH key: `C:\Users\luaho\.ssh\vps_new_key`
+
+**Safety Protocol** (AGENT_PROTOCOL.md):
+- NEVER enable firewall before configuring SSH (will lock out)
+- ALWAYS use `safe-deploy.js` for infrastructure changes
+- ALWAYS verify SSH after firewall changes
+
+**Documentation**:
+- [VPS Toolkit README](file:///e:/Demo%20project/v-edfinance/scripts/vps-toolkit/README.md)
+- [AGENT_PROTOCOL.md](file:///e:/Demo%20project/v-edfinance/scripts/vps-toolkit/AGENT_PROTOCOL.md)
+
+---
+
+## Knowledge Documentation (Post-Epic Hook)
+
+After completing major epics, extract knowledge using the **knowledge skill**:
+
+```bash
+# Trigger after epic completion
+/skill knowledge epic <epic-id>
+
+# Workflow:
+# 1. Find threads for epic
+# 2. Extract topics, decisions, patterns
+# 3. Verify against code (finder, Grep)
+# 4. Update AGENTS.md, docs/, skills/
+# 5. Create diagrams with code citations
+```
+
+**When to Use**:
+- ✅ After major epic (>10 beads)
+- ✅ Monthly documentation sync
+- ✅ Pre-handoff to new agent session
+- ✅ When significant patterns/decisions made
+
+**Benefits**:
+- Prevents knowledge loss (threads → docs)
+- Reduces onboarding time
+- Catches documentation drift
+- Documents WHY, not just WHAT
+
+**Documentation**: [knowledge skill](file:///e:/Demo%20project/v-edfinance/.agents/skills/knowledge/SKILL.md)
+
+---
+
+## Video System Architecture
+
+V-EdFinance uses a multi-tier video optimization pipeline for high-performance learning experiences.
+
+### Performance Tier
+- **Compression**: Multi-quality encoding (360p-1080p) with 60-85% file size reduction
+- **HLS Streaming**: Adaptive bitrate with bandwidth-aware quality switching (600Kbps - 4Mbps)
+- **Lazy Loading**: Intersection Observer for viewport-based loading, metadata-only preload
+
+**Services**:
+- [VideoCompressionService](file:///e:/Demo%20project/v-edfinance/apps/api/src/modules/video/video-compression.service.ts) - Async job processing with progress tracking
+- [HLSGeneratorService](file:///e:/Demo%20project/v-edfinance/apps/api/src/modules/video/hls-generator.service.ts) - Master playlist generation, 10s segments
+- [OptimizedVideo](file:///e:/Demo%20project/v-edfinance/apps/web/src/components/molecules/OptimizedVideo.tsx) - Lazy-loaded component with HLS support
+
+### UX Tier
+- **Player Controls**: Keyboard shortcuts (Space, K, Arrows, F, M, 0-9), playback speed (0.5x-2x), PiP mode
+- **Accessibility**: WebVTT subtitles (vi/en/zh), screen reader support, customizable captions
+- **Visual Feedback**: Thumbnails with hover preview, duration badges, loading skeletons
+
+**Components**:
+- [VideoPlayer](file:///e:/Demo%20project/v-edfinance/apps/web/src/components/molecules/VideoPlayer.tsx) - Full-featured player with PiP, subtitles, keyboard control
+- [VideoControls](file:///e:/Demo%20project/v-edfinance/apps/web/src/components/atoms/VideoControls.tsx) - Custom controls UI (Atomic Design)
+- [useVideoKeyboard](file:///e:/Demo%20project/v-edfinance/apps/web/src/lib/hooks/useVideoKeyboard.ts) - Keyboard shortcuts hook
+
+### Infrastructure Tier
+- **CDN**: Cloudflare R2 storage with edge caching (80%+ hit rate target, 1-year TTL)
+- **Streaming**: HLS manifest generation with <2s latency target
+- **Analytics**: Prometheus metrics (views, buffering, quality switches, errors, watch time)
+
+**Services**:
+- [CDNService](file:///e:/Demo%20project/v-edfinance/apps/api/src/modules/cdn/cdn.service.ts) - R2 upload/delete/metadata with cache purge
+- [StreamingController](file:///e:/Demo%20project/v-edfinance/apps/api/src/modules/streaming/streaming.controller.ts) - 6 endpoints (upload, transcode, manifest, metrics, jobs, health)
+- [VideoAnalyticsService](file:///e:/Demo%20project/v-edfinance/apps/api/src/modules/analytics/video-analytics.service.ts) - Prometheus integration, real-time dashboard
+
+### Advanced Features
+- **Playlist**: Auto-play next, shuffle/repeat modes, progress tracking (Zustand persist)
+- **Offline**: PWA video caching (500MB quota, 30-day auto-cleanup, IndexedDB)
+- **Interactive**: Clickable hotspots, pause-for-quiz, branching narratives, jump-to-timestamp
+
+**Pattern**: Compression → HLS → CDN → Analytics → Offline/Interactive
+
+**Quality Targets**:
+- File size reduction: 60-85%
+- Page load with videos: ≤3s
+- CDN cache hit rate: ≥80%
+- Streaming latency: <2s
+- Buffering events: Monitored via Prometheus
+
+**Documentation**: [ved-59th execution plan](file:///e:/Demo%20project/v-edfinance/history/ved-59th/execution-plan.md)
+
+---
