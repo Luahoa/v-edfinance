@@ -13,6 +13,22 @@
 
 ## Frequently Used Commands
 
+### Ralph CLI (Epic Automation) 🚀
+```bash
+# Start epic execution
+test-ralph.bat start <epic-id> --max-iter 30 --verbose
+
+# Check status
+test-ralph.bat status <epic-id>
+
+# List epics
+test-ralph.bat list
+
+# View help
+test-ralph.bat --help
+```
+**Documentation**: See [RALPH_CLI_HANDOFF.md](RALPH_CLI_HANDOFF.md) for complete guide
+
 ### Development
 ```bash
 pnpm dev                    # Start all apps in dev mode
