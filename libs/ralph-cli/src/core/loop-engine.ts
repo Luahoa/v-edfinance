@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { logger } from "../utils/logger.js";
 import { BeadsClient } from "./beads-client.js";
 import { QualityGate } from "./quality-gate.js";
+import { KnowledgeExtractor } from "./knowledge-extractor.js";
 import type { RalphConfig } from "../utils/config.js";
 
 export interface LoopOptions {
@@ -28,11 +29,13 @@ export class LoopEngine {
 	private config: RalphConfig;
 	private beadsClient: BeadsClient;
 	private qualityGate: QualityGate;
+	private knowledgeExtractor: KnowledgeExtractor;
 
 	constructor(config: RalphConfig) {
 		this.config = config;
 		this.beadsClient = new BeadsClient(config.beadsCommand);
 		this.qualityGate = new QualityGate(config.qualityGateScript);
+		this.knowledgeExtractor = new KnowledgeExtractor(config);
 	}
 
 	/**
@@ -106,6 +109,9 @@ export class LoopEngine {
 
 								// Sync beads one final time
 								await this.beadsClient.sync();
+
+								// Phase 5: Knowledge extraction
+								await this.knowledgeExtractor.extract(epicId);
 
 								return;
 							}

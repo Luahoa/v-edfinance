@@ -1,0 +1,114 @@
+# Knowledge Extraction Prompt
+
+Document epic {{EPIC_ID}} using the knowledge skill.
+
+## Instructions
+
+Load the knowledge skill and extract learnings from this epic:
+
+```
+/skill knowledge
+```
+
+## Focus Areas
+
+Extract and document:
+
+1. **Key Patterns**: Architecture decisions, coding patterns established
+2. **Epic Execution**: How orchestrator/planning worked, track coordination  
+3. **Technology Choices**: Libraries, tools, frameworks used
+4. **Learnings**: What worked, what didn't, recommendations
+5. **Code Citations**: Link all diagrams to actual code files
+6. **AGENTS.md Updates**: Add new patterns to relevant sections
+
+## Workflow (6 Phases)
+
+### Phase 1: Discover Threads
+```bash
+find_thread "{{EPIC_ID}}" after:7d
+```
+
+### Phase 2: Extract Topics
+Use parallel Task agents to read threads and extract:
+- Topics
+- Decisions
+- Patterns
+- Changes
+
+### Phase 3: Verify Against Code
+Use `finder` and `Grep` to verify extracted topics match actual code:
+- Check file paths exist
+- Verify code snippets are current
+- Confirm patterns are implemented
+
+### Phase 4: Map to Documentation
+Identify target files for updates:
+- AGENTS.md (patterns, commands, workflows)
+- docs/behavioral-design/ (if applicable)
+- .agents/skills/ (if new skill patterns)
+- Architecture/deployment docs
+
+### Phase 5: Reconcile
+Compare threads vs code vs docs:
+- Identify GAPS (topics not in docs)
+- Identify STALE (docs ≠ code)
+- Plan UPDATES (what to change)
+
+### Phase 6: Apply Updates
+- Update AGENTS.md with new sections
+- Create Mermaid diagrams with code citations
+- Create knowledge extraction document
+
+## Output Deliverables
+
+Expected files to create/update:
+
+1. **AGENTS.md Updates**:
+   - New sections for patterns discovered
+   - Updated commands/workflows
+   - Code citations in examples
+
+2. **Mermaid Diagrams**:
+   - Architecture/workflow visualizations
+   - All nodes have file:// citations
+   - Link to actual code locations
+
+3. **Knowledge Extraction Doc**:
+   - `docs/{{EPIC_ID}}-knowledge-extraction.md`
+   - 5+ key learnings
+   - Lessons learned
+   - Recommendations for future epics
+
+4. **Pattern Documentation**:
+   - Update relevant skill files if new patterns
+   - Update behavioral-design docs if applicable
+
+## Quality Verification
+
+After extraction, verify:
+
+- [ ] Topics verified against code (not hallucinated)
+- [ ] AGENTS.md updated with new patterns
+- [ ] Diagrams have file citations (file:///path#L10-L50)
+- [ ] Existing doc structure preserved
+- [ ] Terminology matches codebase conventions
+- [ ] All file paths are valid and current
+
+## Example Topics (Epic ved-jgea)
+
+- Ralph CLI Orchestrator Pattern
+- Spike Validation Workflow  
+- Track-Based Parallel Execution
+- VPS Toolkit for Deployment
+- Quality Gate Integration
+- File Scope Isolation
+- Self-Correction Loops
+
+## Success Criteria
+
+Knowledge extraction complete when:
+- ✅ AGENTS.md has new sections
+- ✅ Mermaid diagrams created with citations
+- ✅ Knowledge doc exists in docs/
+- ✅ All topics verified against code
+- ✅ Future agents can learn from this epic
