@@ -3483,3 +3483,31 @@
 [2026-01-07 02:00:06] JSONL removed/renamed, re-establishing watch
 [2026-01-07 02:00:06] Successfully re-established JSONL watch after 50ms
 [2026-01-07 02:00:06] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:00:07] Import triggered by file change
+[2026-01-07 02:00:07] Starting auto-import...
+[2026-01-07 02:00:07] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:00:07] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 02:00:08] Import triggered by file change
+[2026-01-07 02:00:08] Starting auto-import...
+[2026-01-07 02:00:08] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:03:50] Mutation detected: update ved-j0zv
+[2026-01-07 02:03:50] Export triggered by mutation events
+[2026-01-07 02:03:50] Starting export...
+[2026-01-07 02:03:50] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:03:50] Exported to JSONL
+[2026-01-07 02:03:50] Export complete
+[2026-01-07 02:03:50] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:03:50] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:03:50] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:03:50] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:03:51] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:03:51] Import triggered by file change
+[2026-01-07 02:03:51] Starting auto-import...
+[2026-01-07 02:03:51] JSONL content changed, proceeding with auto-import...
+[2026-01-07 02:03:51] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:03:51] JSONL removed/renamed, re-establishing watch
+[2026-01-07 02:03:51] ⚠️  WARNING: Uncommitted local changes detected in E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 02:03:51]    Pulling from remote may overwrite local unpushed changes.
+[2026-01-07 02:03:51]    Consider running 'bd sync' to commit and push your changes first.
+[2026-01-07 02:03:51] Successfully re-established JSONL watch after 50ms
+[2026-01-07 02:03:51] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
