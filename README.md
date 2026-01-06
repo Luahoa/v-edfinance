@@ -69,6 +69,8 @@ Visit:
 - [ARCHITECTURE.md](ARCHITECTURE.md) - System architecture
 - [AGENTS.md](AGENTS.md) - AI agent instructions
 - [docs/getting-started/](docs/getting-started/) - Setup guides
+- [docs/database/](docs/database/) - Database schema & migrations
+- [docs/testing/](docs/testing/) - Test strategies & reports
 
 ### For Users
 - [SPEC.md](SPEC.md) - Product specification
@@ -76,7 +78,8 @@ Visit:
 
 ### Operations
 - [SECURITY.md](SECURITY.md) - Security policy
-- [docs/operations/](docs/operations/) - Deployment & monitoring
+- [docs/devops/](docs/devops/) - Deployment & infrastructure
+- [docs/beads/](docs/beads/) - Issue tracking workflow
 
 ---
 
