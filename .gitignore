@@ -1,5 +1,7 @@
-/$null
 node_modules
+
+# Turbo build cache (ignore large cache files)
+.turbo/cache/*.tar.zst
 
 # bv (beads viewer) local config and caches
 .bv/
@@ -84,3 +86,4 @@ scripts/vps-toolkit/*.log
 ""  
 "# Turbo cache (too large for GitHub)"  
 ".turbo/cache/" 
+.turbo/cache/*.tar.zst  
