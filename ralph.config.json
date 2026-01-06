@@ -4,7 +4,7 @@
 	"qualityGates": true,
 	"beadsCommand": "beads.exe",
 	"bvCommand": "bv.exe",
-	"qualityGateScript": "scripts/quality-gate.bat",
+	"qualityGateScript": "scripts/quality-gate-ultra-fast.bat",
 	"historyDir": "history/",
 	"logDir": ".ralph/logs/"
 }
