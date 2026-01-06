@@ -256,7 +256,22 @@ bv --robot-triage --graph-root <epic-id> 2>/dev/null | jq '.quick_ref.open_count
 # Should be 0
 ```
 
+### Run Quality Gate Verification
+
+```bash
+bash scripts/quality-gate.sh
+# Check exit code: 0 = pass, non-zero = fail
+
+# If quality gate fails:
+# 1. Read .quality-gate-result.json for failure details
+# 2. Create fix beads for failures
+# 3. Assign to appropriate workers
+# 4. Re-run verification after fixes
+```
+
 ### Send Completion Summary
+
+**When quality gates PASS**, output `<promise>EPIC_COMPLETE</promise>`:
 
 ```bash
 send_message(
@@ -274,6 +289,13 @@ send_message(
 ### Deliverables
 - <what was built>
 
+### Quality Gates
+✅ All quality gates PASSED
+- TypeScript build: PASS
+- Test coverage: PASS
+- No 'any' types: PASS
+- Schema validation: PASS
+
 ### Learnings
 - <key insights>
 """
@@ -283,8 +305,13 @@ send_message(
 ### Close Epic
 
 ```bash
-bd close <epic-id> --reason "All tracks complete"
+bd close <epic-id> --reason "All tracks complete, quality gates passed"
 ```
+
+**Important**: Do NOT output `<promise>EPIC_COMPLETE</promise>` until:
+1. All track workers report completion
+2. `bv --robot-triage` shows 0 open beads
+3. `bash scripts/quality-gate.sh` exits 0
 
 ---
 
@@ -326,19 +353,73 @@ For EACH bead in your track:
    - Use preferred tools from AGENTS.md
    - Check inbox periodically
 
-3. COMPLETE BEAD
+3. SELF-CORRECTION LOOP (Ralph-style)
+   - Run verification: `pnpm --filter <scope> build` (or appropriate command from AGENTS.md)
+   - IF build/lint/test FAILS:
+     - Read error output carefully
+     - Fix the issues
+     - Re-run verification
+     - Repeat until ALL verifications pass
+   - ELSE: Continue to completion step
+
+4. COMPLETE BEAD
    - bd close {BEAD_ID} --reason "..."
    - send_message to orchestrator: "[{BEAD_ID}] COMPLETE"
    - send_message to self (track thread): context for next bead
    - release_file_reservations()
 
-4. NEXT BEAD
+5. NEXT BEAD
    - Read track thread for context
    - Continue with next bead
 
 ## When Track Complete
 - send_message to orchestrator: "[Track {N}] COMPLETE"
 - Return summary of all work
+
+## Self-Correction Protocol Details
+
+**After EVERY code change**, run appropriate verification:
+```bash
+# For API changes
+pnpm --filter api build
+
+# For Web changes  
+pnpm --filter web build
+
+# For tests
+pnpm --filter <scope> test
+```
+
+**If verification fails**:
+1. DO NOT mark bead complete
+2. Read error messages line by line
+3. Identify root cause (type errors, import issues, etc.)
+4. Fix the issues
+5. Re-run verification
+6. Repeat until success
+
+**Only when verification passes**: Mark bead complete and report to orchestrator.
+
+## Ralph Loop Completion Criteria
+
+**When ALL beads in track are complete**, output to orchestrator:
+```markdown
+send_message(
+  to=["<OrchestratorName>"],
+  thread_id="<epic-id>",
+  subject="[Track {N}] COMPLETE - Ready for quality gate",
+  body_md="""
+## Track {N} Complete
+
+All beads executed and verified:
+- {bead-1}: ✅ Build passing
+- {bead-2}: ✅ Build passing
+- {bead-3}: ✅ Build passing
+
+Ready for orchestrator to verify epic completion and run quality gates.
+"""
+)
+```
 
 ## Important
 - ALWAYS read track thread before starting each bead for context

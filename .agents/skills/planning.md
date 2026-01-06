@@ -370,6 +370,20 @@ bv --robot-plan 2>/dev/null | jq '.plan.unassigned'
 | Beads             | `.beads/*.md`                         | Executable work items              |
 | Execution Plan    | `history/<feature>/execution-plan.md` | Track assignments for orchestrator |
 
+## Ralph Loop Completion Criteria
+
+**When ALL conditions are true**, output `<promise>PLAN_READY</promise>`:
+- [ ] Discovery report exists (`history/<feature>/discovery.md`)
+- [ ] Approach document exists (`history/<feature>/approach.md`)
+- [ ] All HIGH-risk spikes completed (`.spikes/<feature>/*.md`)
+- [ ] Beads created in `.beads/` directory
+- [ ] `bv` validation passes (no cycles, all deps resolved):
+  - `bv --robot-insights 2>/dev/null | jq '.Cycles'` returns `[]`
+  - `bv --robot-plan 2>/dev/null | jq '.plan.unassigned'` returns `[]`
+- [ ] Execution plan generated (`history/<feature>/execution-plan.md`)
+
+**Important**: Do NOT output `<promise>PLAN_READY</promise>` until the execution plan file actually exists and contains track assignments.
+
 ## Quick Reference
 
 ### Tool Selection

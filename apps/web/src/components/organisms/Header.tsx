@@ -47,8 +47,8 @@ export default function Header() {
           
           <button 
             onClick={handleLogout} 
-            className="rounded-full p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
-            title={t('login')} // Temporary until we have logout translation
+            className="rounded-full p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none"
+            aria-label="Log out"
           >
             <LogOut className="h-5 w-5 text-zinc-500 hover:text-red-500" />
           </button>
