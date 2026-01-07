@@ -47,7 +47,7 @@ jobs:
   # Build Nginx (lightweight)
   build-nginx:
     needs: detect-changes
-    if: needs.detect-changes.outputs.nginx == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.detect-changes.outputs.nginx == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -87,7 +87,7 @@ jobs:
   # Build Web (Next.js)
   build-web:
     needs: detect-changes
-    if: needs.detect-changes.outputs.web == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.detect-changes.outputs.web == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -129,7 +129,7 @@ jobs:
   # Build API (NestJS)
   build-api:
     needs: detect-changes
-    if: needs.detect-changes.outputs.api == 'true' || github.event_name == 'workflow_dispatch'
+    if: needs.detect-changes.outputs.api == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
