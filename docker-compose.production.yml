@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   nginx:
-    build: ./docker/nginx
+    image: luahoa/v-edfinance-nginx:staging
+    pull_policy: always
     ports:
       - "80:80"
     depends_on:
@@ -18,9 +17,8 @@ services:
       - WEB_URL=http://web:3000
 
   web:
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile
+    image: luahoa/v-edfinance-web:staging
+    pull_policy: always
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=http://api:3001
@@ -41,9 +39,8 @@ services:
         condition: service_healthy
 
   api:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+    image: luahoa/v-edfinance-api:staging
+    pull_policy: always
     environment:
       - NODE_ENV=production
       - PORT=3001
