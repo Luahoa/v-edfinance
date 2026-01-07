@@ -3759,3 +3759,20 @@
 [2026-01-07 02:18:06] Import triggered by file change
 [2026-01-07 02:18:06] Starting auto-import...
 [2026-01-07 02:18:06] Skipping auto-import: JSONL content unchanged
+[2026-01-07 07:34:37] Daemon started (interval: 5s, auto-commit: false, auto-push: false)
+[2026-01-07 07:34:37] Using database: E:\Demo project\v-edfinance\.beads\beads.db
+[2026-01-07 07:34:37] Database opened: E:\Demo project\v-edfinance\.beads\beads.db (freshness checking enabled)
+[2026-01-07 07:34:37] Upgrading .beads/.gitignore...
+[2026-01-07 07:34:37] Warning: failed to upgrade .gitignore: open .beads\.gitignore: The system cannot find the path specified.
+[2026-01-07 07:34:37] Repository fingerprint validated: e04e7bc5
+[2026-01-07 07:34:37] Starting RPC server: E:\Demo project\v-edfinance\.beads\bd.sock
+[2026-01-07 07:34:37] RPC server ready (socket listening)
+[2026-01-07 07:34:37] Registered in global registry
+[2026-01-07 07:34:37] Starting sync cycle...
+[2026-01-07 07:34:38] Exported to JSONL
+[2026-01-07 07:34:40] Pulled sync branch spike/simplified-nav
+[2026-01-07 07:34:40] Synced JSONL from sync branch to main repo
+[2026-01-07 07:34:41] Imported from JSONL
+[2026-01-07 07:34:41] Sync cycle complete
+[2026-01-07 07:34:41] Monitoring parent process (PID 0)
+[2026-01-07 07:34:41] Using event-driven mode
