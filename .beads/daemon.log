@@ -3751,3 +3751,11 @@
 [2026-01-07 02:13:56] Import triggered by file change
 [2026-01-07 02:13:56] Starting auto-import...
 [2026-01-07 02:13:56] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:17:42] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 02:17:43] Import triggered by file change
+[2026-01-07 02:17:43] Starting auto-import...
+[2026-01-07 02:17:43] Skipping auto-import: JSONL content unchanged
+[2026-01-07 02:18:05] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 02:18:06] Import triggered by file change
+[2026-01-07 02:18:06] Starting auto-import...
+[2026-01-07 02:18:06] Skipping auto-import: JSONL content unchanged
