@@ -24,7 +24,7 @@ COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
 
 # Generate Prisma client
-RUN pnpm --filter api exec prisma generate --schema=apps/api/prisma/schema.prisma
+RUN pnpm --filter api exec prisma generate --schema=prisma/schema.prisma
 
 # Build the app
 RUN pnpm --filter api build
