@@ -32644,3 +32644,7 @@ matches on the remote end.
 [2026-01-07 11:25:17] Import triggered by file change
 [2026-01-07 11:25:17] Starting auto-import...
 [2026-01-07 11:25:17] Skipping auto-import: JSONL content unchanged
+[2026-01-07 11:27:00] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 11:27:01] Import triggered by file change
+[2026-01-07 11:27:01] Starting auto-import...
+[2026-01-07 11:27:01] Skipping auto-import: JSONL content unchanged
