@@ -32567,3 +32567,80 @@ matches on the remote end.
 [2026-01-07 10:39:15] JSONL removed/renamed, re-establishing watch
 [2026-01-07 10:39:15] Successfully re-established JSONL watch after 50ms
 [2026-01-07 10:39:15] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 10:39:16] Import triggered by file change
+[2026-01-07 10:39:16] Starting auto-import...
+[2026-01-07 10:39:16] Skipping auto-import: JSONL content unchanged
+[2026-01-07 10:39:17] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 10:39:18] Import triggered by file change
+[2026-01-07 10:39:18] Starting auto-import...
+[2026-01-07 10:39:18] Skipping auto-import: JSONL content unchanged
+[2026-01-07 10:39:27] Mutation detected: update ved-et78
+[2026-01-07 10:39:28] Export triggered by mutation events
+[2026-01-07 10:39:28] Starting export...
+[2026-01-07 10:39:28] Exported to JSONL
+[2026-01-07 10:39:28] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:39:28] Export complete
+[2026-01-07 10:39:28] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:39:28] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:39:28] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:39:28] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 10:39:29] Import triggered by file change
+[2026-01-07 10:39:29] Starting auto-import...
+[2026-01-07 10:39:29] Skipping auto-import: JSONL content unchanged
+[2026-01-07 10:39:41] Health check: metadata read failed: get metadata: sql: database is closed
+[2026-01-07 10:39:41] Health check: database integrity check failed: sql: database is closed
+[2026-01-07 10:39:41] Mutation detected: update ved-et78.1
+[2026-01-07 10:39:42] Export triggered by mutation events
+[2026-01-07 10:39:42] Starting export...
+[2026-01-07 10:39:42] Exported to JSONL
+[2026-01-07 10:39:42] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:39:42] Export complete
+[2026-01-07 10:39:42] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:39:42] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:39:42] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:39:42] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 10:39:43] Import triggered by file change
+[2026-01-07 10:39:43] Starting auto-import...
+[2026-01-07 10:39:43] Skipping auto-import: JSONL content unchanged
+[2026-01-07 10:39:43] Mutation detected: update ved-et78.2
+[2026-01-07 10:39:44] Export triggered by mutation events
+[2026-01-07 10:39:44] Starting export...
+[2026-01-07 10:39:44] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:39:44] Exported to JSONL
+[2026-01-07 10:39:44] Export complete
+[2026-01-07 10:39:44] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:39:44] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:39:44] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:39:44] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 10:39:45] Import triggered by file change
+[2026-01-07 10:39:45] Starting auto-import...
+[2026-01-07 10:39:45] Skipping auto-import: JSONL content unchanged
+[2026-01-07 10:40:17] Mutation detected: update ved-et78.2
+[2026-01-07 10:40:18] Export triggered by mutation events
+[2026-01-07 10:40:18] Starting export...
+[2026-01-07 10:40:18] Exported to JSONL
+[2026-01-07 10:40:18] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:40:18] Export complete
+[2026-01-07 10:40:18] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:40:18] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:40:18] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:40:18] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 10:40:19] Import triggered by file change
+[2026-01-07 10:40:19] Starting auto-import...
+[2026-01-07 10:40:19] Skipping auto-import: JSONL content unchanged
+[2026-01-07 10:40:20] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:40:20] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:40:20] JSONL removed/renamed, re-establishing watch
+[2026-01-07 10:40:20] Successfully re-established JSONL watch after 50ms
+[2026-01-07 10:40:20] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 10:40:21] Import triggered by file change
+[2026-01-07 10:40:21] Starting auto-import...
+[2026-01-07 10:40:21] Skipping auto-import: JSONL content unchanged
+[2026-01-07 10:40:22] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 10:40:23] Import triggered by file change
+[2026-01-07 10:40:23] Starting auto-import...
+[2026-01-07 10:40:23] Skipping auto-import: JSONL content unchanged
+[2026-01-07 11:25:16] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 11:25:17] Import triggered by file change
+[2026-01-07 11:25:17] Starting auto-import...
+[2026-01-07 11:25:17] Skipping auto-import: JSONL content unchanged

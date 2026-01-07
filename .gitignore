@@ -87,3 +87,4 @@ scripts/vps-toolkit/*.log
 "# Turbo cache (too large for GitHub)"  
 ".turbo/cache/" 
 .turbo/cache/*.tar.zst  
+build-context.tar.gz 
