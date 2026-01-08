@@ -1,0 +1,10 @@
+{
+	"maxIterations": 30,
+	"defaultWorkers": 0,
+	"qualityGates": true,
+	"beadsCommand": "beads.exe",
+	"bvCommand": "bv.exe",
+	"qualityGateScript": "scripts/quality-gate-ultra-fast.bat",
+	"historyDir": "history/",
+	"logDir": ".ralph/logs/"
+}

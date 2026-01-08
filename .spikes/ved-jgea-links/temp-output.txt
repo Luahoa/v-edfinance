@@ -1,0 +1,8 @@
+
+FILE: e:\Demo project\v-edfinance\docs\operations\TEST_ENVIRONMENT_GUIDE.md
+  [✖] file:///c%3A/Users/luaho/Demo%20project/v-edfinance/apps/api/src/modules/debug/diagnostic.service.ts
+
+  1 link checked.
+
+  ERROR: 1 dead link found!
+  [✖] file:///c%3A/Users/luaho/Demo%20project/v-edfinance/apps/api/src/modules/debug/diagnostic.service.ts → Status: 400

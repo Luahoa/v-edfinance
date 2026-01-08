@@ -25,9 +25,13 @@ const messages = {
 };
 
 // Component that throws error for testing
-function ThrowError({ message }: { message: string }): React.ReactElement {
-    throw new Error(message);
-    return <></>; // Never reached, but satisfies TypeScript
+class ThrowError extends React.Component<{ message: string }> {
+    componentDidMount() {
+        throw new Error(this.props.message);
+    }
+    render() {
+        return null;
+    }
 }
 
 describe('YouTubeErrorBoundary', () => {

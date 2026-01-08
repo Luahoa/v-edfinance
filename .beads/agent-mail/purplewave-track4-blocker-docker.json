@@ -1,0 +1,142 @@
+{
+  "task": "ved-jgea",
+  "agent": "PurpleWave",
+  "status": "blocked",
+  "timestamp": "2026-01-06T15:30:00Z",
+  "issue": "Docker build timeout on VPS prevents API/Web deployment",
+  "blocking": ["ved-43oq", "ved-949o", "ved-jgea"],
+  "eta": "Requires manual intervention or alternative deployment strategy",
+  
+  "root_cause": {
+    "description": "Docker build commands timeout after 5 minutes on VPS",
+    "attempts": [
+      {
+        "strategy": "Remote Docker build with --no-cache",
+        "command": "docker compose build --no-cache --progress=plain api",
+        "result": "Timeout after 303 seconds",
+        "reason": "Build process exceeds SSH command timeout"
+      },
+      {
+        "strategy": "Pre-built Docker images",
+        "command": "docker images | grep api",
+        "result": "No pre-built images found",
+        "reason": "Images need to be built first"
+      }
+    ]
+  },
+  
+  "completed_beads": [
+    {
+      "id": "ved-6yb",
+      "title": "Enable Pgvector Extension",
+      "status": "✅ COMPLETE",
+      "verification": "SELECT extname, extversion FROM pg_extension WHERE extname = 'vector'",
+      "result": "vector | 0.8.1"
+    }
+  ],
+  
+  "blocked_beads": [
+    {
+      "id": "ved-43oq",
+      "title": "Deploy API to VPS",
+      "status": "⛔ BLOCKED",
+      "blocker": "Docker build timeout",
+      "alternatives": [
+        "Build locally + push to DockerHub + pull on VPS",
+        "Deploy without Docker (systemd service)",
+        "Use pre-built binary deployment"
+      ]
+    },
+    {
+      "id": "ved-949o",
+      "title": "Deploy Web to VPS",
+      "status": "⛔ BLOCKED",
+      "blocker": "Same Docker build timeout issue",
+      "dependency": "ved-43oq (API must be deployed first)"
+    },
+    {
+      "id": "ved-0jl6",
+      "title": "Enrollment Logic - Service Layer",
+      "status": "⏸️ PAUSED",
+      "note": "Can be implemented locally, but needs deployed API to test"
+    }
+  ],
+  
+  "alternative_strategies": [
+    {
+      "option": "A",
+      "title": "DockerHub Registry",
+      "steps": [
+        "1. Build images locally: pnpm run docker:build",
+        "2. Push to DockerHub: docker push vedfinance/api:latest",
+        "3. Pull on VPS: docker pull vedfinance/api:latest",
+        "4. Start containers: docker compose up -d"
+      ],
+      "pros": ["No VPS build timeout", "CI/CD compatible"],
+      "cons": ["Requires DockerHub account", "Manual image tagging"],
+      "estimated_time": "30 minutes"
+    },
+    {
+      "option": "B",
+      "title": "Systemd Service (No Docker)",
+      "steps": [
+        "1. Build API locally: pnpm --filter api build",
+        "2. Upload dist/ to VPS via rsync",
+        "3. Create systemd service: vedfinance-api.service",
+        "4. Start service: systemctl start vedfinance-api"
+      ],
+      "pros": ["No Docker complexity", "Lower resource usage"],
+      "cons": ["Manual dependency management", "No containerization"],
+      "estimated_time": "45 minutes"
+    },
+    {
+      "option": "C",
+      "title": "Cloudflare Pages (Web) + VPS (API)",
+      "steps": [
+        "1. Deploy Web to Cloudflare Pages (already configured)",
+        "2. Use Option B for API deployment",
+        "3. Configure CORS for cross-origin requests"
+      ],
+      "pros": ["Web deployment already works", "CDN benefits"],
+      "cons": ["Split deployment", "CORS configuration needed"],
+      "estimated_time": "20 minutes"
+    }
+  ],
+  
+  "recommendation": {
+    "preferred": "Option A (DockerHub Registry)",
+    "rationale": "Maintains Docker consistency, CI/CD ready, aligns with project architecture",
+    "next_steps": [
+      "1. Create DockerHub account/repo: vedfinance/api",
+      "2. Add DOCKER_USERNAME, DOCKER_PASSWORD to .env",
+      "3. Create deploy-via-registry.js script",
+      "4. Test local build + push",
+      "5. Deploy to VPS via pull"
+    ]
+  },
+  
+  "tools_created": [
+    "scripts/vps-toolkit/deploy-api-revised.js (failed - timeout)",
+    "scripts/vps-toolkit/deploy-api-manual.js (alternative - systemd)",
+    "scripts/vps-toolkit/install-pgvector.js (✅ SUCCESS)"
+  ],
+  
+  "vps_status": {
+    "connection": "✅ Working (vps_new_key)",
+    "containers_running": [
+      "v-edfinance-postgres (Up 47 hours)",
+      "v-edfinance-grafana (Up 2 days)",
+      "v-edfinance-prometheus (Up 2 days)",
+      "v-edfinance-netdata (Up 2 days)"
+    ],
+    "api_container": "Not running (build failed)",
+    "web_container": "Not running (blocked by API)"
+  },
+  
+  "request_for_decision": {
+    "question": "Which deployment strategy should PurpleWave execute?",
+    "options": ["A: DockerHub", "B: Systemd", "C: Cloudflare+Systemd"],
+    "urgency": "High (blocks Track 4 completion)",
+    "responder": "User or Track Lead"
+  }
+}

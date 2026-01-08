@@ -260,9 +260,38 @@ JSON_REPORT=$(jq -n \
         gates: $gates
     }')
 
-# Write JSON report to file
+# ═══════════════════════════════════════════════════════
+# FINAL REPORT GENERATION
+# ═══════════════════════════════════════════════════════
+
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+
+# Generate final JSON report with all gate results
+JSON_REPORT=$(jq -n \
+    --argjson gates "$JSON_GATES" \
+    --arg passed "$PASSED" \
+    --arg failed "$FAILED" \
+    --arg warnings "$WARNINGS" \
+    --arg duration "$DURATION" \
+    --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+    '{
+        timestamp: $timestamp,
+        duration_seconds: ($duration | tonumber),
+        summary: {
+            passed: ($passed | tonumber),
+            failed: ($failed | tonumber),
+            warnings: ($warnings | tonumber)
+        },
+        gates: $gates
+    }')
+
+# Write JSON report to files (both for compatibility)
 echo "$JSON_REPORT" > quality-gate-report.json
-echo -e "${BLUE}📄 JSON report saved to quality-gate-report.json${NC}"
+echo "$JSON_REPORT" > .quality-gate-result.json
+echo -e "${BLUE}📄 JSON reports saved to:${NC}"
+echo -e "${BLUE}   - quality-gate-report.json (CI/CD)${NC}"
+echo -e "${BLUE}   - .quality-gate-result.json (Ralph loop)${NC}"
 echo ""
 
 if [ $FAILED -eq 0 ]; then

@@ -1,0 +1,65 @@
+name: Deploy to Dokploy
+
+on:
+  workflow_run:
+    workflows: ["Build & Push Docker Images"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+      - name: Trigger Dokploy Webhook
+        run: |
+          curl -X POST "${{ secrets.DOKPLOY_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "ref": "${{ github.ref }}",
+              "sha": "${{ github.sha }}",
+              "service": "v-edfinance-staging"
+            }'
+      
+      - name: Wait for deployment
+        run: sleep 30
+      
+      - name: Health check
+        run: |
+          echo "Checking deployment health..."
+          
+          # Check Nginx
+          if curl -f http://${{ secrets.VPS_IP }}/health; then
+            echo "✅ Nginx healthy"
+          else
+            echo "❌ Nginx health check failed"
+            exit 1
+          fi
+          
+          # Check API
+          if curl -f http://${{ secrets.VPS_IP }}:3001/health; then
+            echo "✅ API healthy"
+          else
+            echo "❌ API health check failed"
+            exit 1
+          fi
+          
+          # Check Web
+          if curl -f http://${{ secrets.VPS_IP }}:3000; then
+            echo "✅ Web healthy"
+          else
+            echo "❌ Web health check failed"
+            exit 1
+          fi
+      
+      - name: Deployment summary
+        run: |
+          echo "### Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status**: ✅ Successful" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment**: Staging" >> $GITHUB_STEP_SUMMARY
+          echo "**URL**: http://${{ secrets.VPS_IP }}" >> $GITHUB_STEP_SUMMARY
+          echo "**API**: http://${{ secrets.VPS_IP }}:3001" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

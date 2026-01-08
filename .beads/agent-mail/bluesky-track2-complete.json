@@ -1,0 +1,40 @@
+{
+  "task": "ved-pd8l Track 2",
+  "status": "completed",
+  "beads_closed": ["ved-4o7q", "ved-tftp"],
+  "message": "Track 2 complete: All Skeleton loading states implemented with aria-live announcements. Screen readers now announce loading/loaded states. Decorative icons hidden.",
+  "details": {
+    "ved-4o7q": {
+      "file": "apps/web/src/components/AiMentor.tsx",
+      "changes": [
+        "Replaced Loader2 with 3-line Skeleton animation",
+        "Added aria-live=polite wrapper for loading state",
+        "Added aria-busy to input field",
+        "Works with Track 1 aria-label changes from GreenLeaf"
+      ]
+    },
+    "ved-tftp": {
+      "files": [
+        "apps/web/src/components/certificates/CertificateList.tsx",
+        "apps/web/src/components/certificates/CertificateCard.tsx"
+      ],
+      "changes": [
+        "Replaced spinner with Skeleton grid (4 cards)",
+        "Added aria-live=polite + aria-busy wrapper",
+        "Hid decorative icons (Award, Download, Share2) with aria-hidden=true",
+        "Fixed hardcoded strings: noCertificates, completeCourses, title, count"
+      ]
+    },
+    "i18n_keys_used": [
+      "a('messageInput')",
+      "t('noCertificates')",
+      "t('completeCourses')",
+      "t('title')",
+      "t('count', { count })"
+    ],
+    "build_status": "PASS (pnpm --filter web build)",
+    "integration": "Coordinated with Track 1 (GreenLeaf) on AiMentor.tsx - added Skeleton after their aria-label work"
+  },
+  "agent": "BlueSky",
+  "timestamp": "2026-01-07T00:00:00Z"
+}

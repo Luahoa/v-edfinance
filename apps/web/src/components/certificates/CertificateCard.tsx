@@ -48,7 +48,7 @@ export function CertificateCard({
       {/* Certificate Icon */}
       <div className="flex items-start gap-4 mb-4">
         <div className="bg-yellow-100 dark:bg-yellow-900/30 p-3 rounded-lg">
-          <Award className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+          <Award className="w-8 h-8 text-yellow-600 dark:text-yellow-400" aria-hidden="true" />
         </div>
         
         <div className="flex-1">
@@ -79,7 +79,7 @@ export function CertificateCard({
           onClick={handleDownload}
           className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
         >
-          <Download className="w-4 h-4" />
+          <Download className="w-4 h-4" aria-hidden="true" />
           Download PDF
         </button>
         
@@ -89,7 +89,7 @@ export function CertificateCard({
           className="px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           title="Share certificate"
         >
-          <Share2 className="w-4 h-4" />
+          <Share2 className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
     </div>

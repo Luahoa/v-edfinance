@@ -25,7 +25,12 @@
     "startLearning": "Bắt đầu học",
     "viewCourse": "Xem chi tiết",
     "free": "Miễn phí",
-    "level": "Cấp độ"
+    "level": "Cấp độ",
+    "videoUnavailable": "Video không khả dụng",
+    "videoFailedToLoad": "Video không tải được. Vui lòng kiểm tra kết nối hoặc thử lại sau.",
+    "videoBlockedByAdBlocker": "Video bị chặn bởi ad-blocker. Vui lòng tắt hoặc xem trên YouTube.",
+    "watchOnYouTube": "Xem trên YouTube",
+    "clickToLoad": "Nhấp để tải video"
   },
   "Navigation": {
     "home": "Trang chủ",
@@ -277,5 +282,37 @@
     "noStudents": "Chưa có học viên nào đăng ký",
     "exportSuccess": "Đã xuất danh sách thành công",
     "exportError": "Không thể xuất danh sách"
+  },
+  "Video": {
+    "play": "Phát",
+    "pause": "Tạm dừng",
+    "mute": "Tắt tiếng",
+    "unmute": "Bật tiếng",
+    "fullscreen": "Toàn màn hình",
+    "exitFullscreen": "Thoát toàn màn hình",
+    "pictureInPicture": "Hình trong hình",
+    "speed": "Tốc độ phát",
+    "volume": "Âm lượng",
+    "thumbnailAlt": "Hình thu nhỏ video"
+  },
+  "Accessibility": {
+    "askMentor": "Hỏi AI Mentor",
+    "searchCommands": "Tìm kiếm lệnh",
+    "selectLanguage": "Chọn ngôn ngữ",
+    "viewProfile": "Xem hồ sơ của {name}",
+    "checklistProgress": "Đã hoàn thành {completed} trong tổng số {total} mục",
+    "submitAnswer": "Gửi câu trả lời",
+    "nextQuestion": "Câu hỏi tiếp theo",
+    "loadingMentor": "Đang tải phản hồi từ mentor",
+    "noCertificates": "Chưa có chứng chỉ",
+    "previousVideo": "Video trước",
+    "nextVideo": "Video tiếp theo",
+    "videoOf": "Video {current} trong tổng số {total}",
+    "buddyRecommendations": "Bạn học được đề xuất",
+    "closeSidebar": "Đóng thanh bên",
+    "openMenu": "Mở menu",
+    "closeMenu": "Đóng menu",
+    "moreOptions": "Tùy chọn khác",
+    "selectThread": "Chọn chủ đề: {title}"
   }
 }

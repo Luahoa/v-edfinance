@@ -1,11 +1,33 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
+import type { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
+
+// Helper to create complete User mock
+function createMockUser(partial: Partial<User>): Omit<User, 'passwordHash'> {
+  return {
+    id: partial.id || '1',
+    email: partial.email || 'test@example.com',
+    name: partial.name || null,
+    role: partial.role || 'STUDENT',
+    points: partial.points || 0,
+    preferredLocale: partial.preferredLocale || 'vi',
+    preferredLanguage: partial.preferredLanguage || null,
+    dateOfBirth: partial.dateOfBirth || null,
+    moderationStrikes: partial.moderationStrikes || 0,
+    failedLoginAttempts: partial.failedLoginAttempts || 0,
+    lockedUntil: partial.lockedUntil || null,
+    stripeCustomerId: partial.stripeCustomerId || null,
+    metadata: partial.metadata || null,
+    createdAt: partial.createdAt || new Date(),
+    updatedAt: partial.updatedAt || new Date(),
+  };
+}
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -61,7 +83,24 @@ describe('AuthService', () => {
     it('should return user without password if valid', async () => {
       const password = 'password123';
       const passwordHash = await bcrypt.hash(password, 10);
-      const mockUser = { id: '1', email: 'test@example.com', passwordHash };
+      const mockUser = {
+        id: '1',
+        email: 'test@example.com',
+        passwordHash,
+        failedLoginAttempts: 0,
+        lockedUntil: null,
+        name: null,
+        role: 'STUDENT',
+        points: 0,
+        preferredLocale: 'vi',
+        preferredLanguage: null,
+        dateOfBirth: null,
+        moderationStrikes: 0,
+        stripeCustomerId: null,
+        metadata: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
 
       usersService.findOne.mockResolvedValue(mockUser);
 
@@ -105,6 +144,7 @@ describe('AuthService', () => {
           preferredLocale: 'vi',
           preferredLanguage: null,
           dateOfBirth: null,
+          stripeCustomerId: null,
           moderationStrikes: 0,
           metadata: null,
           createdAt: new Date(),
@@ -180,7 +220,7 @@ describe('AuthService', () => {
         userId: 'user-id',
         expiresAt: new Date(Date.now() + 10000),
         revoked: false,
-        user: { id: 'user-id', email: 'test@example.com', role: 'USER' },
+        user: createMockUser({ id: 'user-id', email: 'test@example.com', role: 'USER' }),
       };
 
       prismaService.refreshToken.findUnique = vi
@@ -237,7 +277,7 @@ describe('AuthService', () => {
         password: 'password',
         role: 'USER',
       };
-      const mockUser = { id: '2', email: 'new@example.com', role: 'USER' };
+      const mockUser = createMockUser({ id: '2', email: 'new@example.com', role: 'USER' });
 
       usersService.findOne.mockResolvedValue(null);
       usersService.create.mockResolvedValue(mockUser);
@@ -277,7 +317,7 @@ describe('AuthService', () => {
         password: 'plainPassword123',
         role: 'USER',
       };
-      const mockUser = { id: '2', email: 'new@example.com', role: 'USER' };
+      const mockUser = createMockUser({ id: '2', email: 'new@example.com', role: 'USER' });
 
       usersService.findOne.mockResolvedValue(null);
       usersService.create.mockImplementation((data: any) => {
@@ -344,11 +384,7 @@ describe('AuthService', () => {
 
   describe('Token Rotation Edge Cases (S001)', () => {
     it('should handle concurrent login requests', async () => {
-      const mockUser = {
-        id: 'u1',
-        email: 'concurrent@example.com',
-        role: 'USER',
-      } as any;
+      const mockUser = createMockUser({ id: 'u1', email: 'concurrent@example.com', role: 'USER' });
       vi.spyOn(service, 'validateUser').mockResolvedValue(mockUser);
 
       const loginDto = {
@@ -378,7 +414,7 @@ describe('AuthService', () => {
         userId: 'user-id',
         expiresAt: nearExpiryDate,
         revoked: false,
-        user: { id: 'user-id', email: 'test@example.com', role: 'USER' },
+        user: createMockUser({ id: 'user-id', email: 'test@example.com', role: 'USER' }),
       };
 
       prismaService.refreshToken.findUnique = vi
@@ -398,7 +434,7 @@ describe('AuthService', () => {
         id: 'token-id',
         expiresAt: new Date(Date.now() - 1),
         revoked: false,
-        user: { id: 'user-id', email: 'test@example.com', role: 'USER' },
+        user: createMockUser({ id: 'user-id', email: 'test@example.com', role: 'USER' }),
       };
       prismaService.refreshToken.findUnique = vi
         .fn()
@@ -432,7 +468,24 @@ describe('AuthService', () => {
 
       // VED-IU3: Mock Prisma update
       prismaService.user = {
-        update: vi.fn().mockResolvedValue({ failedLoginAttempts: 1 }),
+        update: vi.fn().mockResolvedValue({
+          id: '1',
+          email: 'test@example.com',
+          passwordHash: 'hash',
+          failedLoginAttempts: 1,
+          lockedUntil: null,
+          name: null,
+          role: 'STUDENT',
+          points: 0,
+          preferredLocale: 'vi',
+          preferredLanguage: null,
+          dateOfBirth: null,
+          stripeCustomerId: null,
+          moderationStrikes: 0,
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
       };
 
       const result = await service.validateUser('test@example.com', '');
@@ -454,7 +507,24 @@ describe('AuthService', () => {
 
       // VED-IU3: Mock Prisma update for successful login
       prismaService.user = {
-        update: vi.fn().mockResolvedValue({ failedLoginAttempts: 0 }),
+        update: vi.fn().mockResolvedValue({
+          id: '1',
+          email: 'concurrent@example.com',
+          passwordHash,
+          failedLoginAttempts: 0,
+          lockedUntil: null,
+          name: null,
+          role: 'STUDENT',
+          points: 0,
+          preferredLocale: 'vi',
+          preferredLanguage: null,
+          dateOfBirth: null,
+          stripeCustomerId: null,
+          moderationStrikes: 0,
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
       };
 
       const promises = [
@@ -485,7 +555,24 @@ describe('AuthService', () => {
 
       // VED-IU3: Mock Prisma update
       prismaService.user = {
-        update: vi.fn().mockResolvedValue({ failedLoginAttempts: 1 }),
+        update: vi.fn().mockResolvedValue({
+          id: '1',
+          email: 'exists@example.com',
+          passwordHash: await bcrypt.hash('correct', 10),
+          failedLoginAttempts: 1,
+          lockedUntil: null,
+          name: null,
+          role: 'STUDENT',
+          points: 0,
+          preferredLocale: 'vi',
+          preferredLanguage: null,
+          dateOfBirth: null,
+          stripeCustomerId: null,
+          moderationStrikes: 0,
+          metadata: null,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
       };
 
       const startWrongPassword = Date.now();
@@ -499,11 +586,7 @@ describe('AuthService', () => {
 
   describe('Login Error Handling (S001)', () => {
     it('should handle JWT signing failure gracefully', async () => {
-      const mockUser = {
-        id: 'u1',
-        email: 'test@example.com',
-        role: 'USER',
-      } as any;
+      const mockUser = createMockUser({ id: 'u1', email: 'test@example.com', role: 'USER' });
       vi.spyOn(service, 'validateUser').mockResolvedValue(mockUser);
       jwtService.sign = vi.fn().mockImplementation(() => {
         throw new Error('JWT signing failed');
@@ -515,11 +598,7 @@ describe('AuthService', () => {
     });
 
     it('should handle database errors during token generation', async () => {
-      const mockUser = {
-        id: 'u1',
-        email: 'test@example.com',
-        role: 'USER',
-      } as any;
+      const mockUser = createMockUser({ id: 'u1', email: 'test@example.com', role: 'USER' });
       vi.spyOn(service, 'validateUser').mockResolvedValue(mockUser);
       prismaService.refreshToken.create.mockRejectedValue(
         new Error('DB error'),

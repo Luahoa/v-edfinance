@@ -1,0 +1,305 @@
+
+> web@0.1.0 build C:\Users\luaho\Demo project\v-edfinance\apps\web
+> next build
+
+   ▲ Next.js 15.1.2
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ⚠ Compiled with warnings
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/ui/resizable.tsx
+Attempted import error: 'PanelGroup' is not exported from 'react-resizable-panels' (imported as 'ResizablePrimitive').
+
+Import trace for requested module:
+./src/components/ui/resizable.tsx
+./src/app/[locale]/courses/[id]/lessons/[lessonId]/page.tsx
+
+./src/components/ui/resizable.tsx
+Attempted import error: 'PanelResizeHandle' is not exported from 'react-resizable-panels' (imported as 'ResizablePrimitive').
+
+Import trace for requested module:
+./src/components/ui/resizable.tsx
+./src/app/[locale]/courses/[id]/lessons/[lessonId]/page.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/organisms/Sidebar.tsx
+Attempted import error: 'Icons' is not exported from '@/lib/icons' (imported as 'Icons').
+
+Import trace for requested module:
+./src/components/organisms/Sidebar.tsx
+./src/app/[locale]/dashboard/layout.tsx
+
+./src/components/ui/resizable.tsx
+Attempted import error: 'PanelGroup' is not exported from 'react-resizable-panels' (imported as 'ResizablePrimitive').
+
+Import trace for requested module:
+./src/components/ui/resizable.tsx
+./src/app/[locale]/courses/[id]/lessons/[lessonId]/page.tsx
+
+./src/components/ui/resizable.tsx
+Attempted import error: 'PanelResizeHandle' is not exported from 'react-resizable-panels' (imported as 'ResizablePrimitive').
+
+Import trace for requested module:
+./src/components/ui/resizable.tsx
+./src/app/[locale]/courses/[id]/lessons/[lessonId]/page.tsx
+
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/68) ...
+   Generating static pages (17/68) 
+   Generating static pages (34/68) 
+   Generating static pages (51/68) 
+ ✓ Generating static pages (68/68)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                    Size     First Load JS
+┌ ○ /                                          159 B           106 kB
+├ ○ /_not-found                                988 B           107 kB
+├ ● /[locale]                                  1.86 kB         111 kB
+├   ├ /vi
+├   ├ /en
+├   └ /zh
+├ ● /[locale]/ai-tutor                         2.54 kB         124 kB
+├   ├ /vi/ai-tutor
+├   ├ /en/ai-tutor
+├   └ /zh/ai-tutor
+├ ● /[locale]/certificates                     8.12 kB         141 kB
+├   ├ /vi/certificates
+├   ├ /en/certificates
+├   └ /zh/certificates
+├ ● /[locale]/checkout                         5.91 kB         136 kB
+├   ├ /vi/checkout
+├   ├ /en/checkout
+├   └ /zh/checkout
+├ ● /[locale]/checkout/success                 3.12 kB         133 kB
+├   ├ /vi/checkout/success
+├   ├ /en/checkout/success
+├   └ /zh/checkout/success
+├ ● /[locale]/courses                          6.38 kB         137 kB
+├   ├ /vi/courses
+├   ├ /en/courses
+├   └ /zh/courses
+├ ƒ /[locale]/courses/[id]                     3.71 kB         124 kB
+├ ƒ /[locale]/courses/[id]/lessons/[lessonId]  19.9 kB         191 kB
+├ ƒ /[locale]/courses/[id]/roster              14.1 kB         148 kB
+├ ● /[locale]/dashboard                        44.7 kB         235 kB
+├   ├ /vi/dashboard
+├   ├ /en/dashboard
+├   └ /zh/dashboard
+├ ● /[locale]/document-analyzer                2.6 kB          109 kB
+├   ├ /vi/document-analyzer
+├   ├ /en/document-analyzer
+├   └ /zh/document-analyzer
+├ ● /[locale]/leaderboard                      4.03 kB         131 kB
+├   ├ /vi/leaderboard
+├   ├ /en/leaderboard
+├   └ /zh/leaderboard
+├ ● /[locale]/learn                            159 B           106 kB
+├   ├ /vi/learn
+├   ├ /en/learn
+├   └ /zh/learn
+├ ● /[locale]/login                            7.11 kB         133 kB
+├   ├ /vi/login
+├   ├ /en/login
+├   └ /zh/login
+├ ● /[locale]/market-simulator                 2.31 kB         108 kB
+├   ├ /vi/market-simulator
+├   ├ /en/market-simulator
+├   └ /zh/market-simulator
+├ ● /[locale]/practice                         159 B           106 kB
+├   ├ /vi/practice
+├   ├ /en/practice
+├   └ /zh/practice
+├ ● /[locale]/prediction                       5.13 kB         135 kB
+├   ├ /vi/prediction
+├   ├ /en/prediction
+├   └ /zh/prediction
+├ ● /[locale]/recommendations                  6.74 kB         116 kB
+├   ├ /vi/recommendations
+├   ├ /en/recommendations
+├   └ /zh/recommendations
+├ ● /[locale]/register                         5.37 kB         131 kB
+├   ├ /vi/register
+├   ├ /en/register
+├   └ /zh/register
+├ ● /[locale]/simulation                       8.12 kB         134 kB
+├   ├ /vi/simulation
+├   ├ /en/simulation
+├   └ /zh/simulation
+├ ● /[locale]/simulation/life                  3.82 kB         110 kB
+├   ├ /vi/simulation/life
+├   ├ /en/simulation/life
+├   └ /zh/simulation/life
+├ ● /[locale]/social                           3.44 kB         153 kB
+├   ├ /vi/social
+├   ├ /en/social
+├   └ /zh/social
+├ ƒ /[locale]/social/groups/[id]               1.86 kB         117 kB
+├ ● /[locale]/store                            3.79 kB         126 kB
+├   ├ /vi/store
+├   ├ /en/store
+├   └ /zh/store
+├ ● /[locale]/teacher/revenue                  5.52 kB         136 kB
+├   ├ /vi/teacher/revenue
+├   ├ /en/teacher/revenue
+├   └ /zh/teacher/revenue
+└ ƒ /api/mock/[...slug]                        159 B           106 kB
++ First Load JS shared by all                  106 kB
+  ├ chunks/6823-bdeabf5d28880a83.js            50.6 kB
+  ├ chunks/ab32c0e7-18c32ede959b7f8e.js        53 kB
+  └ other shared chunks (total)                2.39 kB
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

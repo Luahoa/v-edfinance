@@ -80,7 +80,7 @@ describe('SimulationService - AI Scenario Generation (90%+ Coverage)', () => {
     };
 
     mockValidation = {
-      validate: vi.fn((type, data) => data),
+      validate: vi.fn((type: any, data: any) => data),
     };
 
     service = new SimulationService(
@@ -134,6 +134,10 @@ describe('SimulationService - AI Scenario Generation (90%+ Coverage)', () => {
       expect(mockAi.modelInstance.generateContent).toHaveBeenCalled();
       expect(result.type).toBe('LIFE');
       expect(result.isActive).toBe(true);
+      expect(result.decisions).toBeDefined();
+      expect(Array.isArray(result.decisions)).toBe(true);
+      const decisions = result.decisions as SimulationEvent[];
+      expect(decisions[0].eventTitle).toBe('Job Offer Opportunity');
       expect(mockValidation.validate).toHaveBeenCalledWith(
         'SIMULATION_STATUS',
         expect.any(Object),
@@ -179,10 +183,13 @@ describe('SimulationService - AI Scenario Generation (90%+ Coverage)', () => {
 
       const result = await service.startLifeScenario('user-1');
 
-      expect(result?.decisions?.[0]).toMatchObject({
-        eventTitle: 'Emergency Medical Bill',
-        description: expect.any(String),
-      });
+      expect(result.decisions).toBeDefined();
+      expect(result.decisions?.length).toBeGreaterThan(0);
+      if (result.decisions && Array.isArray(result.decisions)) {
+        const firstDecision = result.decisions[0] as SimulationEvent;
+        expect(firstDecision.eventTitle).toBe('Emergency Medical Bill');
+        expect(firstDecision.description).toBeDefined();
+      }
     });
 
     it('should continue scenario based on previous choice', async () => {
@@ -351,6 +358,9 @@ describe('SimulationService - AI Scenario Generation (90%+ Coverage)', () => {
         .calls[0][0] as string;
       expect(generatedPrompt).toContain('age');
       expect(generatedPrompt).toContain('22');
+      expect(result.decisions).toBeDefined();
+      const decisions = result.decisions as SimulationEvent[];
+      expect(decisions[0].eventTitle).toBe('First Salary Decision');
     });
 
     it('should update user status based on choice impact', async () => {
