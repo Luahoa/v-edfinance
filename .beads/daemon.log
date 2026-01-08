@@ -32648,3 +32648,23 @@ matches on the remote end.
 [2026-01-07 11:27:01] Import triggered by file change
 [2026-01-07 11:27:01] Starting auto-import...
 [2026-01-07 11:27:01] Skipping auto-import: JSONL content unchanged
+[2026-01-07 11:27:03] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 11:27:04] Import triggered by file change
+[2026-01-07 11:27:04] Starting auto-import...
+[2026-01-07 11:27:04] Skipping auto-import: JSONL content unchanged
+[2026-01-07 11:35:16] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 11:35:17] Import triggered by file change
+[2026-01-07 11:35:17] Starting auto-import...
+[2026-01-07 11:35:17] Skipping auto-import: JSONL content unchanged
+[2026-01-07 12:31:24] JSONL removed/renamed, re-establishing watch
+[2026-01-07 12:31:24] Successfully re-established JSONL watch after 50ms
+[2026-01-07 12:31:24] JSONL removed/renamed, re-establishing watch
+[2026-01-07 12:31:24] Successfully re-established JSONL watch after 50ms
+[2026-01-07 12:31:24] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
+[2026-01-07 12:31:25] Import triggered by file change
+[2026-01-07 12:31:25] Starting auto-import...
+[2026-01-07 12:31:25] Skipping auto-import: JSONL content unchanged
+[2026-01-07 12:31:26] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\spike
+[2026-01-07 12:31:27] Import triggered by file change
+[2026-01-07 12:31:27] Starting auto-import...
+[2026-01-07 12:31:27] Skipping auto-import: JSONL content unchanged
