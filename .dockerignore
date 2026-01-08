@@ -45,3 +45,11 @@ archive
 docs
 *.md
 !README.md
+
+# Ensure workspace files are included (needed for pnpm builds)
+!pnpm-workspace.yaml
+!pnpm-lock.yaml
+!package.json
+!turbo.json
+!apps/*/package.json
+!apps/*/prisma/**

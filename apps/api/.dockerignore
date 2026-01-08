@@ -13,6 +13,9 @@ pnpm-debug.log*
 .cache
 .turbo
 apps/web
-packages
-# Keep prisma schema
+
+# Keep prisma schema and workspace files
 !apps/api/prisma
+!pnpm-workspace.yaml
+!pnpm-lock.yaml
+!package.json
