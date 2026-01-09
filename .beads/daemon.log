@@ -33094,3 +33094,12 @@ fatal: unable to access 'https://github.com/Luahoa/v-edfinance.git/': Failed to 
 [2026-01-09 10:26:05] Import triggered by file change
 [2026-01-09 10:26:05] Starting auto-import...
 [2026-01-09 10:26:05] Skipping auto-import: JSONL content unchanged
+[2026-01-09 10:30:47] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\main.lock
+[2026-01-09 10:30:48] Import triggered by file change
+[2026-01-09 10:30:48] Starting auto-import...
+[2026-01-09 10:30:48] Skipping auto-import: JSONL content unchanged
+[2026-01-09 12:02:02] JSONL removed/renamed, re-establishing watch
+[2026-01-09 12:02:02] Successfully re-established JSONL watch after 50ms
+[2026-01-09 12:02:02] JSONL removed/renamed, re-establishing watch
+[2026-01-09 12:02:02] Successfully re-established JSONL watch after 50ms
+[2026-01-09 12:02:02] JSONL file created: E:\Demo project\v-edfinance\.beads\issues.jsonl
