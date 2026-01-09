@@ -44,7 +44,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/v_edfinance
+      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/vedfinance
       - JWT_SECRET=${JWT_SECRET}
       - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-${JWT_SECRET}}
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-https://staging.v-edfinance.com}
@@ -66,7 +66,7 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=v_edfinance
+      - POSTGRES_DB=vedfinance
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     env_file:

@@ -25,7 +25,8 @@ COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 # Copy source code
 COPY . .
 
-# Build
+# Build with standalone mode enabled
+ENV NEXT_BUILD_STANDALONE=true
 RUN pnpm --filter=web build
 
 # Stage 4: Runner
