@@ -33342,3 +33342,11 @@ fatal: unable to access 'https://github.com/Luahoa/v-edfinance.git/': Failed to 
 [2026-01-09 15:00:34] Import triggered by file change
 [2026-01-09 15:00:34] Starting auto-import...
 [2026-01-09 15:00:34] Skipping auto-import: JSONL content unchanged
+[2026-01-09 15:00:35] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\main.lock
+[2026-01-09 15:00:36] Import triggered by file change
+[2026-01-09 15:00:36] Starting auto-import...
+[2026-01-09 15:00:36] Skipping auto-import: JSONL content unchanged
+[2026-01-09 15:01:44] Git ref change detected: E:\Demo project\v-edfinance\.git\refs\heads\main.lock
+[2026-01-09 15:01:45] Import triggered by file change
+[2026-01-09 15:01:45] Starting auto-import...
+[2026-01-09 15:01:45] Skipping auto-import: JSONL content unchanged
