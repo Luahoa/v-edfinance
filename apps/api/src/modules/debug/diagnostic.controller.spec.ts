@@ -47,6 +47,9 @@ vedfinance_throughput_eps 42.5
 
     controller = module.get<DiagnosticController>(DiagnosticController);
     service = module.get<DiagnosticService>(DiagnosticService);
+
+    // Manually bind service to controller
+    (controller as any).diagnosticService = service;
   });
 
   it('should be defined', () => {

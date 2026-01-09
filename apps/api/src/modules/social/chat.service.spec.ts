@@ -37,6 +37,9 @@ describe('ChatService', () => {
 
     service = module.get<ChatService>(ChatService);
     prisma = module.get<PrismaService>(PrismaService);
+
+    // Manual binding for NestJS DI mock
+    (service as any).prisma = mockPrisma;
   });
 
   afterEach(() => {

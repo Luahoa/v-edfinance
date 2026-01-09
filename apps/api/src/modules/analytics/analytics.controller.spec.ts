@@ -56,6 +56,11 @@ describe('AnalyticsController', () => {
     analyticsService = module.get<AnalyticsService>(AnalyticsService);
     predictiveService = module.get<PredictiveService>(PredictiveService);
     mentorService = module.get<MentorService>(MentorService);
+
+    // Manually bind services to controller
+    (controller as any).analyticsService = analyticsService;
+    (controller as any).predictiveService = predictiveService;
+    (controller as any).mentorService = mentorService;
   });
 
   it('should be defined', () => {

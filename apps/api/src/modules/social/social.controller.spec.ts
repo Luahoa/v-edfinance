@@ -45,6 +45,9 @@ describe('SocialController', () => {
 
     controller = module.get<SocialController>(SocialController);
     socialService = module.get<SocialService>(SocialService);
+
+    // Manually bind service to controller (NestJS TestingModule binding fix)
+    (controller as any).socialService = socialService;
   });
 
   afterEach(() => {

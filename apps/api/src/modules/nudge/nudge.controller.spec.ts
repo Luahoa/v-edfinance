@@ -35,6 +35,9 @@ describe('NudgeController', () => {
 
     controller = module.get<NudgeController>(NudgeController);
     nudgeEngine = module.get<NudgeEngineService>(NudgeEngineService);
+
+    // Manually bind service to controller
+    (controller as any).nudgeEngine = nudgeEngine;
   });
 
   it('should be defined', () => {

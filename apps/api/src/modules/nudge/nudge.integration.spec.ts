@@ -1,6 +1,7 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { Test, type TestingModule } from '@nestjs/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { AiService } from '../../ai/ai.service';
 import { GamificationService } from '../../common/gamification.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AnalyticsService } from '../analytics/analytics.service';
@@ -16,6 +17,7 @@ describe('Nudge System Integration Tests', () => {
   let prismaService: any;
   let analyticsService: any;
   let gamificationService: any;
+  let aiService: any;
 
   beforeEach(async () => {
     prismaService = {
@@ -41,6 +43,12 @@ describe('Nudge System Integration Tests', () => {
       awardPoints: vi.fn(),
     };
 
+    aiService = {
+      modelInstance: {
+        generateContent: vi.fn(),
+      },
+    };
+
     eventEmitter = new EventEmitter2();
 
     const module: TestingModule = await Test.createTestingModule({
@@ -51,6 +59,7 @@ describe('Nudge System Integration Tests', () => {
         { provide: PrismaService, useValue: prismaService },
         { provide: AnalyticsService, useValue: analyticsService },
         { provide: GamificationService, useValue: gamificationService },
+        { provide: AiService, useValue: aiService },
         { provide: EventEmitter2, useValue: eventEmitter },
       ],
     }).compile();
@@ -58,6 +67,19 @@ describe('Nudge System Integration Tests', () => {
     nudgeService = module.get<NudgeService>(NudgeService);
     nudgeEngine = module.get<NudgeEngineService>(NudgeEngineService);
     nudgeListener = module.get<NudgeListener>(NudgeListener);
+
+    // Manual bindings for NudgeService dependencies
+    (nudgeService as any).prisma = prismaService;
+
+    // Manual bindings for NudgeEngineService dependencies
+    (nudgeEngine as any).prisma = prismaService;
+    (nudgeEngine as any).analytics = analyticsService;
+    (nudgeEngine as any).aiService = aiService;
+
+    // Manual bindings for NudgeListener dependencies
+    (nudgeListener as any).nudgeEngine = nudgeEngine;
+    (nudgeListener as any).prisma = prismaService;
+    (nudgeListener as any).gamification = gamificationService;
   });
 
   describe('End-to-End Nudge Flows', () => {

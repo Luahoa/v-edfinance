@@ -32,6 +32,9 @@ describe('AdaptiveController', () => {
 
     controller = module.get<AdaptiveController>(AdaptiveController);
     service = module.get<AdaptiveService>(AdaptiveService);
+
+    // Manually bind service to controller
+    (controller as any).adaptiveService = service;
   });
 
   it('should be defined', () => {

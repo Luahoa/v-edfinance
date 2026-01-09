@@ -31,6 +31,9 @@ describe('YouTubeController', () => {
 
     controller = module.get<YouTubeController>(YouTubeController);
     service = module.get<YouTubeService>(YouTubeService);
+
+    // Manually bind service to controller (NestJS TestingModule binding fix)
+    (controller as any).youtubeService = service;
   });
 
   describe('POST /youtube/validate', () => {

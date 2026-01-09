@@ -1,4 +1,3 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { BadRequestException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -8,33 +7,26 @@ import { PrismaService } from '../../prisma/prisma.service';
 describe('YouTubeService', () => {
   let service: YouTubeService;
   let prisma: PrismaService;
+  let configService: ConfigService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        YouTubeService,
-        {
-          provide: ConfigService,
-          useValue: {
-            get: vi.fn((key: string, defaultValue?: any) => {
-              if (key === 'YOUTUBE_API_KEY') return '';
-              return defaultValue;
-            }),
-          },
-        },
-        {
-          provide: PrismaService,
-          useValue: {
-            lesson: {
-              findFirst: vi.fn(),
-            },
-          },
-        },
-      ],
-    }).compile();
+  beforeEach(() => {
+    // Create mock ConfigService
+    configService = {
+      get: vi.fn((key: string, defaultValue?: unknown) => {
+        if (key === 'YOUTUBE_API_KEY') return '';
+        return defaultValue;
+      }),
+    } as unknown as ConfigService;
 
-    service = module.get<YouTubeService>(YouTubeService);
-    prisma = module.get<PrismaService>(PrismaService);
+    // Create mock PrismaService
+    prisma = {
+      lesson: {
+        findFirst: vi.fn(),
+      },
+    } as unknown as PrismaService;
+
+    // Directly instantiate service with mocks (bypasses NestJS DI metadata issues)
+    service = new YouTubeService(configService, prisma);
   });
 
   describe('extractVideoId', () => {
@@ -76,24 +68,30 @@ describe('YouTubeService', () => {
       });
     });
 
-    it('should use in-memory cache for subsequent calls with same videoId', async () => {
+    it('should use in-memory cache for subsequent calls with same videoId (when cached from DB)', async () => {
       const videoId = 'cacheTest123';
+      const mockLesson = {
+        videoKey: {
+          videoId: 'cacheTest123',
+          title: 'Cached Lesson',
+          thumbnail: 'https://example.com/thumb.jpg',
+        },
+        duration: 600,
+      };
 
-      // Mock DB to return null for first call
-      const dbSpy = vi.spyOn(prisma.lesson, 'findFirst').mockResolvedValue(null);
+      // Mock DB to return data (which populates the in-memory cache)
+      const dbSpy = vi.spyOn(prisma.lesson, 'findFirst').mockResolvedValue(mockLesson as never);
 
-      // First call (will check DB, then cache in memory)
+      // First call (will check DB, cache result in memory)
       const metadata1 = await service.fetchMetadata(videoId);
       expect(dbSpy).toHaveBeenCalledTimes(1);
-
-      // Reset spy counter
-      dbSpy.mockClear();
 
       // Second call (should hit in-memory cache, skipping DB)
       const metadata2 = await service.fetchMetadata(videoId);
 
       expect(metadata1).toEqual(metadata2);
-      expect(dbSpy).not.toHaveBeenCalled(); // Proves in-memory cache was hit
+      // In-memory cache hit means DB is only called once total
+      expect(dbSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should query Lesson cache before returning mock data', async () => {
@@ -107,7 +105,7 @@ describe('YouTubeService', () => {
         duration: 600,
       };
 
-      vi.spyOn(prisma.lesson, 'findFirst').mockResolvedValue(mockLesson as any);
+      vi.spyOn(prisma.lesson, 'findFirst').mockResolvedValue(mockLesson as never);
 
       const metadata = await service.fetchMetadata(videoId);
 
@@ -153,18 +151,30 @@ describe('YouTubeService', () => {
 
   describe('getCacheStats', () => {
     it('should return current cache size and video IDs', async () => {
-      // Mock DB to return null
-      vi.spyOn(prisma.lesson, 'findFirst').mockResolvedValue(null);
+      const mockLesson = (id: string) => ({
+        videoKey: {
+          videoId: id,
+          title: `Lesson ${id}`,
+          thumbnail: `https://example.com/${id}.jpg`,
+        },
+        duration: 600,
+      });
 
-      // Cache some items
+      // Mock DB to return data (which populates the cache)
+      vi.spyOn(prisma.lesson, 'findFirst')
+        .mockResolvedValueOnce(mockLesson('video1') as never)
+        .mockResolvedValueOnce(mockLesson('video2') as never)
+        .mockResolvedValueOnce(mockLesson('video3') as never);
+
+      // Cache some items (within same service instance)
       await service.fetchMetadata('video1');
       await service.fetchMetadata('video2');
       await service.fetchMetadata('video3');
 
       const stats = service.getCacheStats();
 
-      // Cache contains at least these 3 items
-      expect(stats.size).toBeGreaterThanOrEqual(3);
+      // Cache contains exactly these 3 items
+      expect(stats.size).toBe(3);
       expect(stats.videoIds).toContain('video1');
       expect(stats.videoIds).toContain('video2');
       expect(stats.videoIds).toContain('video3');

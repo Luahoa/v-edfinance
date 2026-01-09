@@ -34,6 +34,9 @@ describe('RecommendationController', () => {
 
     controller = module.get<RecommendationController>(RecommendationController);
     service = module.get<RecommendationService>(RecommendationService);
+    
+    // Ensure service is properly bound to controller
+    (controller as any).recommendationService = service;
   });
 
   it('should be defined', () => {

@@ -42,6 +42,9 @@ describe('SimulationController', () => {
 
     controller = module.get<SimulationController>(SimulationController);
     service = module.get<SimulationService>(SimulationService);
+
+    // Manually bind service to controller (NestJS TestingModule binding fix)
+    (controller as any).simulationService = service;
   });
 
   it('should be defined', () => {

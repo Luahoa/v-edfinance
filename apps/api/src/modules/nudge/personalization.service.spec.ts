@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { AiService } from '../../ai/ai.service';
 import { NudgeEngineService, NudgeType } from './nudge-engine.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AnalyticsService } from '../analytics/analytics.service';
@@ -18,6 +19,7 @@ describe('NudgeEngineService - Personalization', () => {
   let service: NudgeEngineService;
   let mockPrisma: any;
   let mockAnalytics: any;
+  let mockAiService: any;
 
   const mockUser = {
     id: 'test-user-id',
@@ -45,15 +47,27 @@ describe('NudgeEngineService - Personalization', () => {
       getUserPersona: vi.fn(),
     };
 
+    mockAiService = {
+      modelInstance: {
+        generateContent: vi.fn(),
+      },
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         NudgeEngineService,
         { provide: PrismaService, useValue: mockPrisma },
         { provide: AnalyticsService, useValue: mockAnalytics },
+        { provide: AiService, useValue: mockAiService },
       ],
     }).compile();
 
     service = module.get<NudgeEngineService>(NudgeEngineService);
+
+    // Manual bindings for NudgeEngineService dependencies
+    (service as any).prisma = mockPrisma;
+    (service as any).analytics = mockAnalytics;
+    (service as any).aiService = mockAiService;
   });
 
   afterEach(() => {

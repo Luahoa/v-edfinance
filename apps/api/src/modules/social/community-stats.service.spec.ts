@@ -42,6 +42,10 @@ describe('CommunityStatsService', () => {
     service = module.get<CommunityStatsService>(CommunityStatsService);
     prisma = module.get<PrismaService>(PrismaService);
     gateway = module.get<SocialGateway>(SocialGateway);
+
+    // Manual bindings for NestJS DI mock
+    (service as any).prisma = mockPrismaService;
+    (service as any).socialGateway = mockSocialGateway;
   });
 
   it('should be defined', () => {

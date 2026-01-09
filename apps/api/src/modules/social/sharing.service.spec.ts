@@ -25,6 +25,9 @@ describe('SharingService', () => {
     }).compile();
 
     service = module.get<SharingService>(SharingService);
+
+    // Manual binding for NestJS DI mock
+    (service as any).prisma = mockPrisma;
   });
 
   afterEach(() => {

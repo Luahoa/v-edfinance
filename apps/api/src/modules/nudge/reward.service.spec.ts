@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { AiService } from '../../ai/ai.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { GamificationService } from '../../common/gamification.service';
 import { AnalyticsService } from '../analytics/analytics.service';
@@ -35,6 +36,12 @@ describe('RewardDistributionSystem (Dopamine-Driven Mechanics)', () => {
     emit: vi.fn(),
   };
 
+  const mockAiService = {
+    modelInstance: {
+      generateContent: vi.fn(),
+    },
+  };
+
   beforeEach(async () => {
     vi.clearAllMocks();
 
@@ -50,6 +57,7 @@ describe('RewardDistributionSystem (Dopamine-Driven Mechanics)', () => {
             getUserPersona: vi.fn().mockResolvedValue('HUNTER'),
           },
         },
+        { provide: AiService, useValue: mockAiService },
       ],
     }).compile();
 
@@ -58,6 +66,15 @@ describe('RewardDistributionSystem (Dopamine-Driven Mechanics)', () => {
     analyticsService = module.get<AnalyticsService>(AnalyticsService);
     nudgeEngineService = module.get<NudgeEngineService>(NudgeEngineService);
     eventEmitter = module.get<EventEmitter2>(EventEmitter2);
+
+    // Manual bindings for GamificationService dependencies
+    (gamificationService as any).prisma = mockPrisma;
+    (gamificationService as any).eventEmitter = mockEventEmitter;
+
+    // Manual bindings for NudgeEngineService dependencies
+    (nudgeEngineService as any).prisma = mockPrisma;
+    (nudgeEngineService as any).analytics = analyticsService;
+    (nudgeEngineService as any).aiService = mockAiService;
   });
 
   describe('Variable Reward Algorithms', () => {
