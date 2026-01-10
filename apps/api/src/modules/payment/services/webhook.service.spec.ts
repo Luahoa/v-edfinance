@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { WebhookService } from './webhook.service';
 import { PrismaService } from '../../../prisma/prisma.service';
 import { StripeService } from './stripe.service';
@@ -38,15 +38,9 @@ describe('WebhookService', () => {
     title: { vi: 'Khóa học test', en: 'Test Course' },
     price: 500000,
     published: true,
-    chapters: [
+    lessons: [
       {
-        id: 'chapter_123',
-        order: 1,
-        lessons: [
-          {
-            id: 'lesson_123',
-          },
-        ],
+        id: 'lesson_123',
       },
     ],
   };
@@ -58,31 +52,31 @@ describe('WebhookService', () => {
         {
           provide: PrismaService,
           useValue: {
-            transaction: jest.fn(),
+            transaction: vi.fn(),
             course: {
-              findUnique: jest.fn(),
+              findUnique: vi.fn(),
             },
             userProgress: {
-              create: jest.fn(),
-              findFirst: jest.fn(),
+              create: vi.fn(),
+              findFirst: vi.fn(),
             },
             behaviorLog: {
-              create: jest.fn(),
+              create: vi.fn(),
             },
           },
         },
         {
           provide: StripeService,
           useValue: {
-            constructWebhookEvent: jest.fn(),
+            constructWebhookEvent: vi.fn(),
           },
         },
         {
           provide: TransactionService,
           useValue: {
-            getTransactionById: jest.fn(),
-            getTransactionByStripePaymentIntentId: jest.fn(),
-            updateTransaction: jest.fn(),
+            getTransactionById: vi.fn(),
+            getTransactionByStripePaymentIntentId: vi.fn(),
+            updateTransaction: vi.fn(),
           },
         },
       ],
@@ -92,10 +86,15 @@ describe('WebhookService', () => {
     prismaService = module.get(PrismaService);
     stripeService = module.get(StripeService);
     transactionService = module.get(TransactionService);
+
+    // Manual binding to ensure mocks are properly injected (NestJS DI issue workaround)
+    (service as any).prisma = prismaService;
+    (service as any).stripeService = stripeService;
+    (service as any).transactionService = transactionService;
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -562,7 +561,7 @@ describe('WebhookService', () => {
       } as any);
       prismaService.course.findUnique.mockResolvedValue({
         ...mockCourse,
-        chapters: [],
+        lessons: [],
       } as any);
       prismaService.behaviorLog.create.mockResolvedValue({} as any);
 

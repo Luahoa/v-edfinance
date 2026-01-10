@@ -97,6 +97,11 @@ describe('Social Integration', () => {
     socialGateway = moduleFixture.get<SocialGateway>(SocialGateway);
     // prismaService = moduleFixture.get<PrismaService>(PrismaService);
 
+    // Manual binding to ensure mocks are properly injected (NestJS DI issue workaround)
+    (socialService as any).prisma = mockPrisma;
+    (socialService as any).eventEmitter = mockEventEmitter;
+    (socialService as any).socialGateway = socialGateway;
+
     // Mock WebSocket server
     socialGateway.server = {
       emit: vi.fn(),

@@ -9,8 +9,9 @@ import { PrismaModule } from '../../src/prisma/prisma.module';
 import { PrismaService } from '../../src/prisma/prisma.service';
 import { UsersModule } from '../../src/users/users.module';
 import { CoursesModule } from '../../src/courses/courses.module';
-import { SocialModule } from '../../src/social/social.module';
-import { GamificationModule } from '../../src/gamification/gamification.module';
+// These modules don't exist yet - they're placeholders for future implementation
+// import { SocialModule } from '../../src/modules/social/social.module';
+// import { GamificationModule } from '../../src/modules/gamification/gamification.module';
 
 /**
  * I025: Full User Lifecycle Integration Test
@@ -48,8 +49,7 @@ describe.skip('[SKIP: Missing social module] Full User Lifecycle Integration (I0
         UsersModule,
         AuthModule,
         CoursesModule,
-        SocialModule,
-        GamificationModule,
+        // SocialModule and GamificationModule don't exist yet
       ],
     })
       .overrideProvider(ConfigService)

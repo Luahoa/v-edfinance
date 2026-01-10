@@ -74,12 +74,13 @@ describe('Analytics Reporting Integration', () => {
     socialGateway = module.get<SocialGateway>(SocialGateway);
     prisma = module.get<PrismaService>(PrismaService);
 
-    // Manual binding to ensure mocks are properly injected
+    // Manual binding to ensure mocks are properly injected (NestJS DI issue workaround)
     (reportsService as any).prisma = mockPrisma;
+    (reportsService as any).i18n = { t: vi.fn().mockReturnValue('daily') };
     (funnelService as any).prisma = mockPrisma;
     (segmentationService as any).prisma = mockPrisma;
     (diagnosticService as any).prisma = mockPrisma;
-    (diagnosticService as any).socialGateway = mockSocialGateway;
+    (diagnosticService as any).social = mockSocialGateway;
   });
 
   describe('Pipeline: Actions -> BehaviorLog -> Daily Report -> Export CSV', () => {
