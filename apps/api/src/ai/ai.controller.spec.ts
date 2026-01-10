@@ -25,6 +25,9 @@ describe('AiController', () => {
     }).compile();
 
     controller = module.get<AiController>(AiController);
+
+    // Manually bind service to fix NestJS TestingModule mock binding issue
+    (controller as any).aiService = aiService;
   });
 
   it('should be defined', () => {

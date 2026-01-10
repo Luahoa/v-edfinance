@@ -30,6 +30,9 @@ describe('PersonaAnalysisService (via AnalyticsService)', () => {
     }).compile();
 
     analyticsService = module.get<AnalyticsService>(AnalyticsService);
+
+    // Manually bind prisma to fix NestJS TestingModule mock binding issue
+    (analyticsService as any).prisma = mockPrisma;
   });
 
   describe('User Behavior Analysis', () => {

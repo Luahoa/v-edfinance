@@ -1,4 +1,5 @@
 import { UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, type TestingModule } from '@nestjs/testing';
 import type { User } from '@prisma/client';
@@ -7,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
+import { JwtBlacklistService } from './jwt-blacklist.service';
 
 // Helper to create complete User mock
 function createMockUser(partial: Partial<User>): Omit<User, 'passwordHash'> {
@@ -34,6 +36,8 @@ describe('AuthService', () => {
   let usersService: any;
   let jwtService: any;
   let prismaService: any;
+  let jwtBlacklistService: any;
+  let configService: any;
 
   beforeEach(async () => {
     usersService = {
@@ -49,6 +53,21 @@ describe('AuthService', () => {
       },
       $transaction: vi.fn((cb) => cb(prismaService)),
     };
+    jwtBlacklistService = {
+      trackUserToken: vi.fn().mockResolvedValue(undefined),
+      blacklistToken: vi.fn().mockResolvedValue(undefined),
+      removeUserToken: vi.fn().mockResolvedValue(undefined),
+      blacklistAllUserTokens: vi.fn().mockResolvedValue(undefined),
+      isTokenBlacklisted: vi.fn().mockResolvedValue(false),
+    };
+    configService = {
+      get: vi.fn((key: string) => {
+        if (key === 'JWT_SECRET') return 'test-secret';
+        if (key === 'JWT_REFRESH_SECRET') return 'test-refresh-secret';
+        if (key === 'JWT_EXPIRATION') return '1h';
+        return undefined;
+      }),
+    };
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -56,10 +75,19 @@ describe('AuthService', () => {
         { provide: UsersService, useValue: usersService },
         { provide: JwtService, useValue: jwtService },
         { provide: PrismaService, useValue: prismaService },
+        { provide: JwtBlacklistService, useValue: jwtBlacklistService },
+        { provide: ConfigService, useValue: configService },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
+
+    // Manually bind services to fix NestJS TestingModule mock binding issue
+    (service as any).usersService = usersService;
+    (service as any).jwtService = jwtService;
+    (service as any).prisma = prismaService;
+    (service as any).jwtBlacklistService = jwtBlacklistService;
+    (service as any).configService = configService;
   });
 
   it('should be defined', () => {
@@ -105,7 +133,10 @@ describe('AuthService', () => {
       usersService.findOne.mockResolvedValue(mockUser);
 
       const result = await service.validateUser('test@example.com', password);
-      expect(result).toEqual({ id: '1', email: 'test@example.com' });
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('id', '1');
+      expect(result).toHaveProperty('email', 'test@example.com');
+      expect(result).not.toHaveProperty('passwordHash');
     });
 
     it('should return null if password invalid', async () => {

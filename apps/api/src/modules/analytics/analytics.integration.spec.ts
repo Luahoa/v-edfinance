@@ -61,6 +61,16 @@ describe('Analytics System Integration Tests', () => {
     analyticsService = module.get<AnalyticsService>(AnalyticsService);
     predictiveService = module.get<PredictiveService>(PredictiveService);
     mentorService = module.get<MentorService>(MentorService);
+
+    // Manually bind prisma to fix NestJS TestingModule mock binding issue
+    (analyticsService as any).prisma = mockPrisma;
+    (predictiveService as any).prisma = mockPrisma;
+    (predictiveService as any).analytics = analyticsService;
+    (mentorService as any).prisma = mockPrisma;
+    (mentorService as any).gemini = mockGemini;
+    (mentorService as any).analytics = analyticsService;
+    (mentorService as any).predictive = predictiveService;
+    (mentorService as any).eventEmitter = mockEventEmitter;
   });
 
   describe('End-to-End Analytics Flows', () => {

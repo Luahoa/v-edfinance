@@ -249,6 +249,8 @@ describe('CoursesService', () => {
         id: 'p1',
         status: ProgressStatus.COMPLETED,
       });
+      // Mock lesson lookup required by updateProgress
+      prisma.lesson.findUnique.mockResolvedValue({ id: lessonId, duration: 100, videoKey: 'key' });
 
       await service.updateProgress(
         userId,
@@ -280,6 +282,8 @@ describe('CoursesService', () => {
       prisma.userProgress.upsert.mockResolvedValue({
         status: ProgressStatus.COMPLETED,
       });
+      // Mock lesson lookup required by updateProgress
+      prisma.lesson.findUnique.mockResolvedValue({ id: lessonId, duration: 100, videoKey: 'key' });
 
       await service.updateProgress(
         userId,
@@ -316,6 +320,8 @@ describe('CoursesService', () => {
         expect(args.create.completedAt).toBeInstanceOf(Date);
         return Promise.resolve({ completedAt: new Date() });
       });
+      // Mock lesson lookup required by updateProgress
+      prisma.lesson.findUnique.mockResolvedValue({ id: 'l1', duration: 100, videoKey: 'key' });
 
       await service.updateProgress('u1', 'l1', ProgressStatus.COMPLETED, 100);
     });

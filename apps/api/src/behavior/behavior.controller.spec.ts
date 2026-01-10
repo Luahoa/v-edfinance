@@ -38,6 +38,9 @@ describe('BehaviorController (Gamification)', () => {
     controller = module.get<BehaviorController>(BehaviorController);
     behaviorService = module.get<BehaviorService>(BehaviorService);
 
+    // Manually bind service to fix NestJS TestingModule mock binding issue
+    (controller as any).behaviorService = mockBehaviorService;
+
     vi.clearAllMocks();
   });
 
@@ -248,6 +251,8 @@ describe('BehaviorController (Gamification)', () => {
         .compile();
 
       const testController = module.get<BehaviorController>(BehaviorController);
+      // Manually bind service to fix NestJS TestingModule mock binding issue
+      (testController as any).behaviorService = mockBehaviorService;
 
       mockBehaviorService.getUserBehaviors.mockImplementation(() => {
         throw new UnauthorizedException();

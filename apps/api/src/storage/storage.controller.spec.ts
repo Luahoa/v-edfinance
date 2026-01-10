@@ -52,6 +52,9 @@ describe('StorageController (C013)', () => {
 
     controller = module.get<StorageController>(StorageController);
     service = module.get<UnstorageService>(UnstorageService);
+
+    // Manually bind service to fix NestJS TestingModule mock binding issue
+    (controller as any).unstorageService = service;
   });
 
   it('should be defined', () => {

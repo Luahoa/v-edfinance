@@ -159,6 +159,11 @@ describe('FramingService - Message Framing with Nudge Theory', () => {
     }).compile();
 
     service = module.get<FramingService>(FramingService);
+
+    // Manually bind dependencies to fix NestJS TestingModule mock binding issue
+    (service as any).i18n = mockI18nService;
+    (service as any).abTesting = mockABTestingService;
+    (service as any).prisma = mockPrisma;
   });
 
   it('should be defined', () => {

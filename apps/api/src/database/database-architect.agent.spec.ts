@@ -52,6 +52,9 @@ describe('DatabaseArchitectAgent', () => {
     }).compile();
 
     agent = module.get<DatabaseArchitectAgent>(DatabaseArchitectAgent);
+
+    // Manually bind service to fix NestJS TestingModule mock binding issue
+    (agent as any).pgvector = mockPgvector;
   });
 
   describe('Heuristic Rules Engine', () => {

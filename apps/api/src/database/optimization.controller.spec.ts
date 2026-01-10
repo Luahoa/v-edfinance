@@ -92,6 +92,11 @@ describe('OptimizationController', () => {
     }).compile();
 
     controller = module.get<OptimizationController>(OptimizationController);
+
+    // Manually bind services to fix NestJS TestingModule mock binding issue
+    (controller as any).database = mockDatabase;
+    (controller as any).pgvector = mockPgvector;
+    (controller as any).agent = mockAgent;
   });
 
   it('should be defined', () => {

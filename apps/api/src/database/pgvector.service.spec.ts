@@ -72,6 +72,9 @@ describe('PgvectorService', () => {
 
     service = module.get<PgvectorService>(PgvectorService);
     databaseService = module.get(DatabaseService);
+
+    // Manually bind service to fix NestJS TestingModule mock binding issue
+    (service as any).databaseService = databaseService;
   });
 
   afterEach(() => {

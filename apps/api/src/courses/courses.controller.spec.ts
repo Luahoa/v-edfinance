@@ -60,6 +60,10 @@ describe('CoursesController', () => {
     coursesService = module.get<CoursesService>(CoursesService);
     aiService = module.get<AiService>(AiService);
 
+    // Manually bind services to fix NestJS TestingModule mock binding issue
+    (controller as any).coursesService = mockCoursesService;
+    (controller as any).aiService = mockAiService;
+
     vi.clearAllMocks();
   });
 

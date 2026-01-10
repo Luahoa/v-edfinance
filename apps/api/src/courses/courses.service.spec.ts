@@ -34,6 +34,9 @@ describe('CoursesService (Pure Unit Test)', () => {
       user: {
         update: vi.fn(),
       },
+      behaviorLog: {
+        create: vi.fn(),
+      },
       $transaction: vi.fn((cb) => cb(mockPrisma)),
     };
     mockGamification = {
@@ -85,6 +88,7 @@ describe('CoursesService (Pure Unit Test)', () => {
     const lessonId = 'l1';
 
     it('should upsert progress and reward points for first completion', async () => {
+      mockPrisma.lesson.findUnique.mockResolvedValue({ id: 'l1', duration: 100, videoKey: 'key' });
       mockPrisma.userProgress.findUnique.mockResolvedValue(null);
       mockPrisma.userProgress.upsert.mockResolvedValue({
         userId,
@@ -105,6 +109,7 @@ describe('CoursesService (Pure Unit Test)', () => {
     });
 
     it('should not reward points if already completed', async () => {
+      mockPrisma.lesson.findUnique.mockResolvedValue({ id: 'l1', duration: 100, videoKey: 'key' });
       mockPrisma.userProgress.findUnique.mockResolvedValue({
         status: ProgressStatus.COMPLETED,
       });
@@ -240,6 +245,7 @@ describe('CoursesService (Pure Unit Test)', () => {
     });
 
     it('should not reward points for re-completing same lesson', async () => {
+      mockPrisma.lesson.findUnique.mockResolvedValue({ id: 'l1', duration: 20, videoKey: 'key' });
       mockPrisma.userProgress.findUnique.mockResolvedValue({
         userId: 'u1',
         lessonId: 'l1',
@@ -255,6 +261,7 @@ describe('CoursesService (Pure Unit Test)', () => {
     });
 
     it('should set completedAt timestamp on first completion', async () => {
+      mockPrisma.lesson.findUnique.mockResolvedValue({ id: 'l1', duration: 60, videoKey: 'key' });
       mockPrisma.userProgress.findUnique.mockResolvedValue({
         userId: 'u1',
         lessonId: 'l1',

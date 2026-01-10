@@ -53,6 +53,9 @@ describe('UsersController', () => {
     controller = module.get<UsersController>(UsersController);
     usersService = module.get<UsersService>(UsersService);
 
+    // Manually bind service to fix NestJS TestingModule mock binding issue
+    (controller as any).usersService = mockUsersService;
+
     vi.clearAllMocks();
   });
 

@@ -24,6 +24,9 @@ describe('RolesGuard', () => {
 
     guard = module.get<RolesGuard>(RolesGuard);
     reflector = module.get<Reflector>(Reflector);
+
+    // Manually bind reflector to fix NestJS TestingModule mock binding issue
+    (guard as any).reflector = reflector;
   });
 
   it('should be defined', () => {
