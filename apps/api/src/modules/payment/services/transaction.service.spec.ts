@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { TransactionService } from './transaction.service';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { TransactionStatus, TransactionType } from '../dto/payment.dto';
 
@@ -38,6 +39,9 @@ describe('TransactionService', () => {
 
     service = module.get<TransactionService>(TransactionService);
     prisma = module.get<PrismaService>(PrismaService);
+
+    // Manual binding to ensure mock is properly injected
+    (service as any).prisma = mockPrismaService;
 
     // Reset mocks before each test
     vi.clearAllMocks();

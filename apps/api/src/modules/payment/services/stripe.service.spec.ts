@@ -1,33 +1,20 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
+import { describe, it, expect, vi } from 'vitest';
 import { StripeService } from './stripe.service';
 
 describe('StripeService', () => {
-  let service: StripeService;
-  let configService: ConfigService;
+  const mockConfigService = {
+    get: vi.fn((key: string) => {
+      const config: Record<string, string> = {
+        STRIPE_SECRET_KEY: 'sk_test_mock_key_for_testing',
+        STRIPE_WEBHOOK_SECRET: 'whsec_mock_secret_for_testing',
+      };
+      return config[key];
+    }),
+  };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        StripeService,
-        {
-          provide: ConfigService,
-          useValue: {
-            get: vi.fn((key: string) => {
-              const config = {
-                STRIPE_SECRET_KEY: 'sk_test_mock_key_for_testing',
-                STRIPE_WEBHOOK_SECRET: 'whsec_mock_secret_for_testing',
-              };
-              return config[key];
-            }),
-          },
-        },
-      ],
-    }).compile();
-
-    service = module.get<StripeService>(StripeService);
-    configService = module.get<ConfigService>(ConfigService);
-  });
+  // Create service directly without NestJS DI
+  const service = new StripeService(mockConfigService as unknown as ConfigService);
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -36,16 +23,18 @@ describe('StripeService', () => {
   it('should initialize Stripe client', () => {
     const client = service.getClient();
     expect(client).toBeDefined();
-    expect(client.constructor.name).toBe('Stripe');
+    // Stripe SDK doesn't expose class name consistently, check for Stripe-specific methods instead
+    expect(typeof client.checkout).toBe('object');
+    expect(typeof client.paymentIntents).toBe('object');
   });
 
   it('should throw error if STRIPE_SECRET_KEY is missing', () => {
-    const mockConfigService = {
+    const configWithNoKey = {
       get: vi.fn(() => undefined),
     };
 
     expect(() => {
-      new StripeService(mockConfigService as any);
+      new StripeService(configWithNoKey as unknown as ConfigService);
     }).toThrow('STRIPE_SECRET_KEY is not configured');
   });
 

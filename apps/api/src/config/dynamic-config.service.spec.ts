@@ -50,6 +50,9 @@ describe('DynamicConfigService', () => {
 
     service = module.get<DynamicConfigService>(DynamicConfigService);
     prismaService = module.get<PrismaService>(PrismaService);
+    
+    // Manual binding to ensure mock is properly injected
+    (service as any).prisma = mockPrismaService;
   });
 
   it('should be defined', () => {

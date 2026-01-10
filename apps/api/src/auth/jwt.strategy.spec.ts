@@ -1,34 +1,35 @@
 import { ConfigService } from '@nestjs/config';
-import { Test, type TestingModule } from '@nestjs/testing';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { JwtStrategy } from './jwt.strategy';
+import { JwtBlacklistService } from './jwt-blacklist.service';
 
 describe('JwtStrategy', () => {
-  let strategy: JwtStrategy;
-  let configService: ConfigService;
+  const mockJwtBlacklistService = {
+    isTokenBlacklisted: vi.fn().mockResolvedValue(false),
+    addToBlacklist: vi.fn(),
+  };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        JwtStrategy,
-        {
-          provide: ConfigService,
-          useValue: {
-            get: vi.fn().mockReturnValue('test-secret'),
-          },
-        },
-      ],
-    }).compile();
+  const mockConfigService = {
+    get: vi.fn().mockReturnValue('test-secret-key-for-jwt-testing'),
+  };
 
-    strategy = module.get<JwtStrategy>(JwtStrategy);
-    configService = module.get<ConfigService>(ConfigService);
-  });
+  // Create strategy directly without NestJS DI
+  const strategy = new JwtStrategy(
+    mockConfigService as unknown as ConfigService,
+    mockJwtBlacklistService as unknown as JwtBlacklistService,
+  );
 
   it('should be defined', () => {
     expect(strategy).toBeDefined();
   });
 
   describe('validate', () => {
+    const mockRequest = {
+      headers: {
+        authorization: 'Bearer test-token',
+      },
+    };
+
     it('should extract user from JWT payload', async () => {
       const payload = {
         sub: 'user-id-123',
@@ -36,7 +37,7 @@ describe('JwtStrategy', () => {
         role: 'STUDENT',
       };
 
-      const result = await strategy.validate(payload);
+      const result = await strategy.validate(mockRequest as any, payload);
 
       expect(result).toEqual({
         id: 'user-id-123',
@@ -53,7 +54,7 @@ describe('JwtStrategy', () => {
         role: 'ADMIN',
       };
 
-      const result = await strategy.validate(payload);
+      const result = await strategy.validate(mockRequest as any, payload);
 
       expect(result.role).toBe('ADMIN');
       expect(result.id).toBe('admin-id');
@@ -66,7 +67,7 @@ describe('JwtStrategy', () => {
         role: 'TEACHER',
       };
 
-      const result = await strategy.validate(payload);
+      const result = await strategy.validate(mockRequest as any, payload);
 
       expect(result.id).toBe('unique-user-id');
       expect(result.userId).toBe('unique-user-id');
@@ -79,29 +80,42 @@ describe('JwtStrategy', () => {
         role: 'STUDENT',
       };
 
-      const result = await strategy.validate(payload);
+      const result = await strategy.validate(mockRequest as any, payload);
 
       expect(result.email).toBe('specific@domain.com');
+    });
+
+    it('should throw UnauthorizedException for blacklisted token', async () => {
+      mockJwtBlacklistService.isTokenBlacklisted.mockResolvedValueOnce(true);
+
+      const payload = {
+        sub: 'user-id',
+        email: 'test@example.com',
+        role: 'STUDENT',
+      };
+
+      await expect(strategy.validate(mockRequest as any, payload)).rejects.toThrow(
+        'Token has been revoked',
+      );
     });
   });
 
   describe('constructor', () => {
     it('should use JWT_SECRET from ConfigService', () => {
-      expect(configService.get).toHaveBeenCalledWith('JWT_SECRET');
+      expect(mockConfigService.get).toHaveBeenCalledWith('JWT_SECRET');
     });
 
-    it('should fallback to dev_secret if ConfigService fails', () => {
-      const fallbackModule = Test.createTestingModule({
-        providers: [
-          JwtStrategy,
-          {
-            provide: ConfigService,
-            useValue: null,
-          },
-        ],
-      });
+    it('should throw error when JWT_SECRET is missing', () => {
+      const configWithNoSecret = {
+        get: vi.fn().mockReturnValue(undefined),
+      };
 
-      expect(fallbackModule).toBeDefined();
+      expect(() => {
+        new JwtStrategy(
+          configWithNoSecret as unknown as ConfigService,
+          mockJwtBlacklistService as unknown as JwtBlacklistService,
+        );
+      }).toThrow('CRITICAL SECURITY ERROR');
     });
   });
 });

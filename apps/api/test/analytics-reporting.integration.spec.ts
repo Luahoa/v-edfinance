@@ -73,6 +73,13 @@ describe('Analytics Reporting Integration', () => {
     diagnosticService = module.get<DiagnosticService>(DiagnosticService);
     socialGateway = module.get<SocialGateway>(SocialGateway);
     prisma = module.get<PrismaService>(PrismaService);
+
+    // Manual binding to ensure mocks are properly injected
+    (reportsService as any).prisma = mockPrisma;
+    (funnelService as any).prisma = mockPrisma;
+    (segmentationService as any).prisma = mockPrisma;
+    (diagnosticService as any).prisma = mockPrisma;
+    (diagnosticService as any).socialGateway = mockSocialGateway;
   });
 
   describe('Pipeline: Actions -> BehaviorLog -> Daily Report -> Export CSV', () => {

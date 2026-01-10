@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { WebhookService } from './webhook.service';
-import { PrismaService } from '../../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service';
 import { StripeService } from './stripe.service';
 import { TransactionService } from './transaction.service';
 import { TransactionStatus, TransactionType } from '../dto/payment.dto';
@@ -9,9 +10,9 @@ import Stripe from 'stripe';
 
 describe('WebhookService', () => {
   let service: WebhookService;
-  let prismaService: jest.Mocked<PrismaService>;
-  let stripeService: jest.Mocked<StripeService>;
-  let transactionService: jest.Mocked<TransactionService>;
+  let prismaService: { transaction: { findFirst: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn> }; courseEnrollment: { create: ReturnType<typeof vi.fn> } };
+  let stripeService: { verifyWebhookSignature: ReturnType<typeof vi.fn> };
+  let transactionService: { updateTransactionStatus: ReturnType<typeof vi.fn> };
 
   const mockTransaction = {
     id: 'txn_123',

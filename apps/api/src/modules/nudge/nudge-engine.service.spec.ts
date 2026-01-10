@@ -1,4 +1,4 @@
-﻿import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { NudgeEngineService, NudgeType } from './nudge-engine.service';
 
 describe('NudgeEngineService (Pure Unit Test)', () => {
@@ -126,8 +126,6 @@ describe('NudgeEngineService (Pure Unit Test)', () => {
       });
     });
   });
-});
-
 
   describe('AI Variants', () => {
     it('should generate AI variant for 10% of traffic', async () => {

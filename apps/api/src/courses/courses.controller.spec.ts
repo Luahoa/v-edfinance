@@ -329,6 +329,7 @@ describe('CoursesController', () => {
         'lesson-1',
         ProgressStatus.COMPLETED,
         300,
+        undefined,
       );
       expect(result).toEqual(progress);
     });
@@ -351,6 +352,7 @@ describe('CoursesController', () => {
         'lesson-2',
         ProgressStatus.IN_PROGRESS,
         120,
+        undefined,
       );
     });
 

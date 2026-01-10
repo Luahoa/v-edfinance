@@ -4,6 +4,7 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { PrismaService } from '../prisma/prisma.service';
 import { DatabaseService } from '../database/database.service';
 import { KyselyService } from '../database/kysely.service';

@@ -1,35 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { VannaService } from './vanna.service';
-import { vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('VannaService', () => {
-  let service: VannaService;
-  let configService: ConfigService;
+  const mockConfigService = {
+    get: vi.fn((key: string, defaultValue?: unknown) => {
+      const config: Record<string, unknown> = {
+        VANNA_API_KEY: 'test-api-key',
+        VANNA_BASE_URL: 'https://api.vanna.test',
+        VANNA_ENABLE_CACHE: true,
+      };
+      return config[key] ?? defaultValue;
+    }),
+  };
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        VannaService,
-        {
-          provide: ConfigService,
-          useValue: {
-            get: vi.fn((key: string, defaultValue?: any) => {
-              const config: Record<string, any> = {
-                VANNA_API_KEY: 'test-api-key',
-                VANNA_BASE_URL: 'https://api.vanna.test',
-                VANNA_ENABLE_CACHE: true,
-              };
-              return config[key] ?? defaultValue;
-            }),
-          },
-        },
-      ],
-    }).compile();
-
-    service = module.get<VannaService>(VannaService);
-    configService = module.get<ConfigService>(ConfigService);
-  });
+  // Create service directly without NestJS DI
+  const service = new VannaService(mockConfigService as unknown as ConfigService);
 
   it('should be defined', () => {
     expect(service).toBeDefined();
@@ -67,7 +53,6 @@ describe('VannaService', () => {
         userId: 'test-user-id',
       });
 
-      // Mock mode may not have embedding, but structure should be valid
       expect(result).toHaveProperty('sql');
       expect(result).toHaveProperty('confidence');
       expect(result).toHaveProperty('fromCache');
@@ -118,9 +103,9 @@ describe('VannaService', () => {
   });
 
   describe('configuration', () => {
-    it('should log warning when VANNA_API_KEY is missing', async () => {
+    it('should log warning when VANNA_API_KEY is missing', () => {
       const mockConfig = {
-        get: vi.fn((key: string, defaultValue?: any) => {
+        get: vi.fn((key: string, defaultValue?: unknown) => {
           if (key === 'VANNA_API_KEY') return undefined;
           if (key === 'VANNA_BASE_URL') return 'https://api.vanna.test';
           if (key === 'VANNA_ENABLE_CACHE') return true;
@@ -128,17 +113,7 @@ describe('VannaService', () => {
         }),
       };
 
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          VannaService,
-          {
-            provide: ConfigService,
-            useValue: mockConfig,
-          },
-        ],
-      }).compile();
-
-      const serviceWithoutKey = module.get<VannaService>(VannaService);
+      const serviceWithoutKey = new VannaService(mockConfig as unknown as ConfigService);
       expect(serviceWithoutKey).toBeDefined();
     });
   });
@@ -146,8 +121,8 @@ describe('VannaService', () => {
   describe('vector caching', () => {
     it('should skip cache when disabled', async () => {
       const mockConfig = {
-        get: vi.fn((key: string, defaultValue?: any) => {
-          const config: Record<string, any> = {
+        get: vi.fn((key: string, defaultValue?: unknown) => {
+          const config: Record<string, unknown> = {
             VANNA_API_KEY: 'test-key',
             VANNA_BASE_URL: 'https://api.vanna.test',
             VANNA_ENABLE_CACHE: false,
@@ -156,17 +131,7 @@ describe('VannaService', () => {
         }),
       };
 
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          VannaService,
-          {
-            provide: ConfigService,
-            useValue: mockConfig,
-          },
-        ],
-      }).compile();
-
-      const serviceNoCache = module.get<VannaService>(VannaService);
+      const serviceNoCache = new VannaService(mockConfig as unknown as ConfigService);
       const result = await serviceNoCache.generateSQL({
         question: 'Test',
         userId: 'test-user',

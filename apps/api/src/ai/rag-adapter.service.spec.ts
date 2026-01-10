@@ -1,15 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { RagAdapterService } from './rag-adapter.service';
 import { PgvectorService } from '../database/pgvector.service';
 
 describe('RagAdapterService', () => {
   let service: RagAdapterService;
-  let pgvectorMock: jest.Mocked<PgvectorService>;
+  let pgvectorMock: { generateEmbedding: ReturnType<typeof vi.fn>; findSimilarOptimizations: ReturnType<typeof vi.fn> };
   
   beforeEach(async () => {
     pgvectorMock = {
-      generateEmbedding: jest.fn(),
-      findSimilarOptimizations: jest.fn(),
+      generateEmbedding: vi.fn(),
+      findSimilarOptimizations: vi.fn(),
     } as any;
     
     const module: TestingModule = await Test.createTestingModule({
@@ -20,6 +21,9 @@ describe('RagAdapterService', () => {
     }).compile();
     
     service = module.get<RagAdapterService>(RagAdapterService);
+    
+    // Manual binding to ensure mock is properly injected
+    (service as any).pgvector = pgvectorMock;
   });
   
   it('should retrieve relevant context', async () => {

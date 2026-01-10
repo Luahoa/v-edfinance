@@ -1,4 +1,5 @@
 import { Test, type TestingModule } from '@nestjs/testing';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SocialGateway } from './social.gateway';
 import { WsJwtGuard } from '../../auth/ws-jwt.guard';
 import { JwtService } from '@nestjs/jwt';

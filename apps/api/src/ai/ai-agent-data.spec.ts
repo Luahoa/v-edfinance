@@ -4,6 +4,7 @@
  */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { DatabaseArchitectAgent } from '../database/database-architect.agent';
 import { PgvectorService } from '../database/pgvector.service';
 import { KyselyService } from '../database/kysely.service';

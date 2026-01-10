@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AuthService } from './auth.service';
 import { JwtBlacklistService } from './jwt-blacklist.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -190,6 +191,11 @@ describe('JWT Blacklist (Logout Functionality)', () => {
       }).compile();
 
       blacklistService = module.get<JwtBlacklistService>(JwtBlacklistService);
+      
+      // Manual binding to ensure mocks are properly injected
+      (blacklistService as any).cacheManager = mockCacheManager;
+      (blacklistService as any).configService = mockConfigService;
+      
       vi.clearAllMocks();
     });
 

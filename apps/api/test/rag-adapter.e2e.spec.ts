@@ -1,4 +1,5 @@
 import { Test } from '@nestjs/testing';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { RagAdapterService } from '../src/ai/rag-adapter.service';
 import { DatabaseModule } from '../src/database/database.module';
 

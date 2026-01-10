@@ -8,7 +8,7 @@ import { SocialGateway } from './social.gateway';
 import { PrismaService } from '../../prisma/prisma.service';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { WsJwtGuard } from '../../auth/ws-jwt.guard';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('Social Integration', () => {
   let app: INestApplication;
