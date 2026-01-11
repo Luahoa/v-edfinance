@@ -58,6 +58,9 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
             
             // Retry the original request
             return request<T>(path, options);
+          } else {
+            // Refresh failed (token expired/invalid)
+            throw new Error('Token refresh failed');
           }
         } catch {
           isRefreshing = false;
@@ -69,6 +72,14 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
             localStorage.removeItem('refresh_token');
             window.location.href = '/login';
           }
+        }
+      } else {
+        // No refresh token available - force logout
+        isRefreshing = false;
+        if (typeof window !== 'undefined') {
+          Cookies.remove('token');
+          localStorage.removeItem('token');
+          window.location.href = '/login';
         }
       }
     } else {

@@ -15,7 +15,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "vitest run",
-    "test:fast": "vitest run --exclude **/nudge-scheduler.service.spec.ts --exclude **/ai.integration.spec.ts --exclude **/moderation.service.spec.ts --exclude **/ai-cache.service.spec.ts --exclude **/analytics.service.spec.ts --exclude **/heatmap.service.spec.ts --exclude **/metrics.service.spec.ts --exclude **/reports.service.spec.ts --exclude **/user-segmentation.service.spec.ts --exclude **/realtime-dashboard.service.spec.ts --exclude **/ab-testing.service.spec.ts",
+    "test:fast": "vitest run --exclude **/ai.integration.spec.ts",
     "test:ava": "ava \"src/**/*.ava.ts\" --no-cache",
     "test:ava:file": "ava",
     "test:watch": "vitest",

@@ -45,8 +45,11 @@ export class SocialGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('identify')
   @UseGuards(WsJwtGuard)
-  handleIdentify(client: Socket, data: any) {
-    const userId = typeof data === 'string' ? data : data.userId;
+  handleIdentify(client: Socket, data: { user?: { sub: string }; userId?: string }) {
+    const userId = data.user?.sub || (typeof data === 'string' ? data : data.userId);
+    if (!userId) {
+      return { status: 'error', message: 'User ID not found' };
+    }
     // Check if user already has a connection and clean up to prevent ghosts
     const connected = this.connectedClients;
     if (connected.has(userId)) {

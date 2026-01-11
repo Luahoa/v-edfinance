@@ -122,11 +122,11 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
           <TabsContent value="curriculum" className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold">Course Content</h2>
-              <span className="text-sm text-zinc-500">{course.lessons.length} lessons</span>
+              <span className="text-sm text-zinc-500">{(course.lessons || []).length} lessons</span>
             </div>
 
             <div className="space-y-4">
-              {course.lessons.map((lesson: Lesson, index: number) => {
+              {(course.lessons || []).map((lesson: Lesson, index: number) => {
                 const lessonTitle = lesson.title[locale as keyof typeof lesson.title] || lesson.title['en'] || lesson.title['vi'];
                 return (
                   <Card key={lesson.id} className="overflow-hidden transition-all hover:border-green-500/50 hover:shadow-md">

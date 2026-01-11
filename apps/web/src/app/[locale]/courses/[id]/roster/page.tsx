@@ -209,7 +209,7 @@ export default function CourseRosterPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {roster?.students.map((student) => (
+                {(roster?.students || []).map((student) => (
                   <TableRow key={student.userId}>
                     {/* Student Info */}
                     <TableCell>

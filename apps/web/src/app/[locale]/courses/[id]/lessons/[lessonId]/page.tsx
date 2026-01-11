@@ -111,7 +111,7 @@ export default function LessonPage({ params }: { params: Promise<{ id: string; l
           
           <ScrollArea className="flex-1">
             <div className="p-4 space-y-1">
-              {course?.lessons.map((l: Lesson, idx: number) => {
+              {(course?.lessons || []).map((l: Lesson, idx: number) => {
                 const isActive = l.id === lessonId;
                 return (
                   <Link

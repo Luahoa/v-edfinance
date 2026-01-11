@@ -81,10 +81,10 @@ export default async function GroupDetailsPage({ params }: { params: Promise<{ l
           <div className="space-y-6">
             <section className="bg-white dark:bg-zinc-900 rounded-2xl p-6 border dark:border-zinc-800">
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                <Users className="text-blue-500" /> {ts('members')} ({group.members.length})
-              </h2>
-              <div className="space-y-4">
-                {group.members.map((m: BuddyMember) => (
+                <Users className="text-blue-500" /> {ts('members')} ({(group.members || []).length})
+                </h2>
+                <div className="space-y-4">
+                {(group.members || []).map((m: BuddyMember) => (
                   <div key={m.id} className="flex items-center gap-3">
                     <BuddyAvatar displayName={m.user.metadata?.displayName || m.user.email} />
                     <div>
