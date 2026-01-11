@@ -1,9 +1,5 @@
-import { Test, type TestingModule } from '@nestjs/testing';
-import { SchedulerRegistry } from '@nestjs/schedule';
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
-import { PrismaService } from '../../prisma/prisma.service';
 import { NudgeSchedulerService } from './nudge-scheduler.service';
-import { NudgeEngineService } from './nudge-engine.service';
 import { createMockPrismaService } from '../../test-utils/prisma-mock.helper';
 
 describe('NudgeSchedulerService', () => {
@@ -13,7 +9,7 @@ describe('NudgeSchedulerService', () => {
   let schedulerRegistry: any;
   let notificationService: any;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
 
@@ -36,21 +32,17 @@ describe('NudgeSchedulerService', () => {
 
     // Mock NotificationService
     notificationService = {
-      sendPushNotification: vi.fn(),
-      sendEmail: vi.fn(),
+      sendPushNotification: vi.fn().mockResolvedValue({ success: true }),
+      sendEmail: vi.fn().mockResolvedValue({ success: true }),
     };
 
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        NudgeSchedulerService,
-        { provide: PrismaService, useValue: mockPrisma },
-        { provide: NudgeEngineService, useValue: nudgeEngineService },
-        { provide: SchedulerRegistry, useValue: schedulerRegistry },
-        { provide: 'NotificationService', useValue: notificationService },
-      ],
-    }).compile();
-
-    service = module.get<NudgeSchedulerService>(NudgeSchedulerService);
+    // Direct instantiation to avoid NestJS TestingModule timeout issues
+    service = new NudgeSchedulerService(
+      mockPrisma as any,
+      nudgeEngineService,
+      schedulerRegistry,
+      notificationService,
+    );
   });
 
   afterEach(() => {

@@ -96,6 +96,12 @@ describe('RealtimeDashboardService (Integration)', () => {
     socialGateway = module.get<SocialGateway>(SocialGateway);
     prismaService = module.get<PrismaService>(PrismaService);
     aiService = module.get<AiService>(AiService);
+
+    // Manually bind mocks to service internals (NestJS DI doesn't always propagate correctly)
+    (diagnosticService as any).prisma = mockPrismaService;
+    (diagnosticService as any).social = mockSocialGateway;
+    (diagnosticService as any).ai = mockAiService;
+    (analyticsService as any).prisma = mockPrismaService;
   });
 
   afterEach(() => {

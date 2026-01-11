@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, afterAll } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { register } from 'prom-client';
 import { AiMetricsService } from './metrics.service';
