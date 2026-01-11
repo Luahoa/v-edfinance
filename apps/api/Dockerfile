@@ -8,6 +8,9 @@ RUN apk add --no-cache libc6-compat
 # Stage 2: Dependencies
 FROM base AS deps
 WORKDIR /app
+# Install build dependencies for sharp
+RUN apk add --no-cache python3 make g++ vips-dev
+
 # Copy root workspace files
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 # Copy api package.json
