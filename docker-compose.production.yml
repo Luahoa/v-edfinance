@@ -1,7 +1,7 @@
 services:
   nginx:
     image: luahoa/v-edfinance-nginx:staging
-    pull_policy: always
+    pull_policy: never
     ports:
       - "80:80"
     depends_on:
@@ -18,7 +18,7 @@ services:
 
   web:
     image: luahoa/v-edfinance-web:staging
-    pull_policy: always
+    pull_policy: never
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=http://api:3001
@@ -40,7 +40,7 @@ services:
 
   api:
     image: luahoa/v-edfinance-api:staging
-    pull_policy: always
+    pull_policy: never
     environment:
       - NODE_ENV=production
       - PORT=3001
