@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     g++ \
     libvips-dev \
+    pkg-config \
+    libc6-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy root workspace files
