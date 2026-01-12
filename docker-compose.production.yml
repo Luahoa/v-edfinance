@@ -41,15 +41,11 @@ services:
   api:
     image: luahoa/v-edfinance-api:staging
     pull_policy: never
+    env_file:
+      - .env.production
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/vedfinance
-      - JWT_SECRET=${JWT_SECRET}
-      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-${JWT_SECRET}}
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-https://staging.v-edfinance.com}
-    env_file:
-      - .env.production
     networks:
       - vedfinance-net
     restart: unless-stopped
