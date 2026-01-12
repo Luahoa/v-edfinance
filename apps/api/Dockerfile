@@ -1,15 +1,19 @@
-# Stage 1: Base image
-FROM node:20-alpine AS base
+# Stage 1: Base image (Debian-based for glibc compatibility with onnxruntime)
+FROM node:20-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
-RUN apk add --no-cache libc6-compat
 
 # Stage 2: Dependencies
 FROM base AS deps
 WORKDIR /app
-# Install build dependencies for sharp
-RUN apk add --no-cache python3 make g++ vips-dev
+# Install build dependencies for sharp and native modules
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    make \
+    g++ \
+    libvips-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy root workspace files
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
@@ -36,15 +40,18 @@ RUN pnpm --filter api exec prisma generate --schema=prisma/schema.prisma
 RUN pnpm --filter api build
 
 # Stage 4: Runner
-FROM node:20-alpine AS runner
+FROM node:20-slim AS runner
 WORKDIR /app
 
-# Install OpenSSL for Prisma and glibc compatibility for onnxruntime
-RUN apk add --no-cache openssl gcompat
+# Install OpenSSL for Prisma
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    openssl \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV NODE_ENV=production
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nestjs
+RUN groupadd --system --gid 1001 nodejs
+RUN useradd --system --uid 1001 --gid nodejs nestjs
 
 # Copy only necessary files
 COPY --from=builder --chown=nestjs:nodejs /app/apps/api/dist ./apps/api/dist
@@ -61,5 +68,5 @@ EXPOSE 3001
 HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
   CMD node -e "require('http').get('http://localhost:3001/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); });"
 
-# Start the application (skip migrations for now - run manually or use existing DB)
+# Start the application
 CMD ["node", "apps/api/dist/src/main"]
