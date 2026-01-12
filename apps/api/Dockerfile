@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     g++ \
     libvips-dev \
+    libglib2.0-dev \
     pkg-config \
     libc6-dev \
     && rm -rf /var/lib/apt/lists/*
