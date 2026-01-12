@@ -39,8 +39,8 @@ RUN pnpm --filter api build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl
+# Install OpenSSL for Prisma and glibc compatibility for onnxruntime
+RUN apk add --no-cache openssl gcompat
 
 ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
