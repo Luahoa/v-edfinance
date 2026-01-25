@@ -4999,6 +4999,734 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
             meta: object;
         }>;
     }>>;
+    lesson: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        getById: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                id: string;
+            };
+            output: {
+                duration: number | null;
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                type: "VIDEO" | "READING" | "QUIZ" | "INTERACTIVE";
+                title: unknown;
+                content: unknown;
+                courseId: string;
+                published: boolean;
+                order: number;
+                videoKey: unknown;
+                course: {
+                    level: "BEGINNER" | "INTERMEDIATE" | "EXPERT";
+                    id: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    description: unknown;
+                    title: unknown;
+                    slug: string;
+                    thumbnailKey: string;
+                    price: number;
+                    published: boolean;
+                };
+            } | undefined;
+            meta: object;
+        }>;
+        getByCourse: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                courseId: string;
+            };
+            output: {
+                duration: number | null;
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                type: "VIDEO" | "READING" | "QUIZ" | "INTERACTIVE";
+                title: unknown;
+                content: unknown;
+                courseId: string;
+                published: boolean;
+                order: number;
+                videoKey: unknown;
+            }[];
+            meta: object;
+        }>;
+        getProgress: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                lessonId: string;
+            };
+            output: {
+                status: "STARTED" | "IN_PROGRESS" | "COMPLETED";
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                lessonId: string;
+                durationSpent: number;
+                progressPercentage: number | null;
+                completedAt: Date | null;
+            } | undefined;
+            meta: object;
+        }>;
+        markComplete: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                lessonId: string;
+            };
+            output: {
+                status: "STARTED" | "IN_PROGRESS" | "COMPLETED";
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                lessonId: string;
+                durationSpent: number;
+                progressPercentage: number | null;
+                completedAt: Date | null;
+            };
+            meta: object;
+        }>;
+        updateWatchTime: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                lessonId: string;
+                durationSpent: number;
+                progressPercentage?: number | undefined;
+            };
+            output: {
+                status: "STARTED" | "IN_PROGRESS" | "COMPLETED";
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                lessonId: string;
+                durationSpent: number;
+                progressPercentage: number | null;
+                completedAt: Date | null;
+            };
+            meta: object;
+        }>;
+    }>>;
+    simulation: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        listScenarios: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                limit?: number | undefined;
+                offset?: number | undefined;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                userId: string;
+                title: unknown;
+                scenarioData: unknown;
+                result: unknown;
+            }[];
+            meta: object;
+        }>;
+        getScenario: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                id: string;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                userId: string;
+                title: unknown;
+                scenarioData: unknown;
+                result: unknown;
+                commitments: {
+                    id: string;
+                    createdAt: Date;
+                    userId: string;
+                    scenarioId: string;
+                    commitment: string;
+                    isCompleted: boolean;
+                }[];
+            } | undefined;
+            meta: object;
+        }>;
+        createCommitment: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                scenarioId: string;
+                commitment: string;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                userId: string;
+                scenarioId: string;
+                commitment: string;
+                isCompleted: boolean;
+            };
+            meta: object;
+        }>;
+        getPortfolio: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                balance: number;
+                holdings: unknown;
+                transactions: unknown;
+            };
+            meta: object;
+        }>;
+        updatePortfolio: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                balance?: number | undefined;
+                holdings?: Record<PropertyKey, unknown>[] | undefined;
+                transactions?: Record<PropertyKey, unknown>[] | undefined;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                balance: number;
+                holdings: unknown;
+                transactions: unknown;
+            };
+            meta: object;
+        }>;
+    }>>;
+    ai: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        listThreads: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                limit?: number | undefined;
+                offset?: number | undefined;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                title: string;
+                module: string | null;
+            }[];
+            meta: object;
+        }>;
+        getThread: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                id: string;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                title: string;
+                module: string | null;
+                messages: {
+                    role: "USER" | "ASSISTANT" | "SYSTEM";
+                    id: string;
+                    metadata: unknown;
+                    createdAt: Date;
+                    content: string;
+                    threadId: string;
+                }[];
+            } | undefined;
+            meta: object;
+        }>;
+        createThread: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                title: string;
+                module?: string | undefined;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                title: string;
+                module: string | null;
+            };
+            meta: object;
+        }>;
+        sendMessage: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                threadId: string;
+                content: string;
+                metadata?: Record<PropertyKey, unknown> | undefined;
+            };
+            output: {
+                role: "USER" | "ASSISTANT" | "SYSTEM";
+                id: string;
+                metadata: unknown;
+                createdAt: Date;
+                content: string;
+                threadId: string;
+            };
+            meta: object;
+        }>;
+        deleteThread: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                id: string;
+            };
+            output: {
+                success: boolean;
+            };
+            meta: object;
+        }>;
+    }>>;
+    payment: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        listTransactions: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                limit?: number | undefined;
+                offset?: number | undefined;
+                status?: "COMPLETED" | "PENDING" | "PROCESSING" | "FAILED" | "REFUNDED" | "CANCELLED" | undefined;
+            };
+            output: {
+                status: "COMPLETED" | "PENDING" | "PROCESSING" | "FAILED" | "REFUNDED" | "CANCELLED";
+                id: string;
+                metadata: unknown;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                type: "COURSE_PURCHASE" | "SUBSCRIPTION" | "CREDITS" | "DONATION";
+                courseId: string | null;
+                completedAt: Date | null;
+                amount: number;
+                currency: string;
+                stripeSessionId: string | null;
+                stripePaymentIntentId: string | null;
+                failedAt: Date | null;
+                refundedAt: Date | null;
+                course: {
+                    level: "BEGINNER" | "INTERMEDIATE" | "EXPERT";
+                    id: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    description: unknown;
+                    title: unknown;
+                    slug: string;
+                    thumbnailKey: string;
+                    price: number;
+                    published: boolean;
+                } | null;
+            }[];
+            meta: object;
+        }>;
+        getTransaction: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                id: string;
+            };
+            output: {
+                status: "COMPLETED" | "PENDING" | "PROCESSING" | "FAILED" | "REFUNDED" | "CANCELLED";
+                id: string;
+                metadata: unknown;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                type: "COURSE_PURCHASE" | "SUBSCRIPTION" | "CREDITS" | "DONATION";
+                courseId: string | null;
+                completedAt: Date | null;
+                amount: number;
+                currency: string;
+                stripeSessionId: string | null;
+                stripePaymentIntentId: string | null;
+                failedAt: Date | null;
+                refundedAt: Date | null;
+                course: {
+                    level: "BEGINNER" | "INTERMEDIATE" | "EXPERT";
+                    id: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    description: unknown;
+                    title: unknown;
+                    slug: string;
+                    thumbnailKey: string;
+                    price: number;
+                    published: boolean;
+                } | null;
+            } | undefined;
+            meta: object;
+        }>;
+        createCheckoutSession: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                courseId: string;
+                currency?: string | undefined;
+            };
+            output: {
+                transactionId: string;
+                sessionUrl: string;
+                amount: number;
+                currency: string;
+            };
+            meta: object;
+        }>;
+        getTransactionByCourse: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                courseId: string;
+            };
+            output: {
+                purchased: boolean;
+                transaction: {
+                    status: "COMPLETED" | "PENDING" | "PROCESSING" | "FAILED" | "REFUNDED" | "CANCELLED";
+                    id: string;
+                    metadata: unknown;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    userId: string;
+                    type: "COURSE_PURCHASE" | "SUBSCRIPTION" | "CREDITS" | "DONATION";
+                    courseId: string | null;
+                    completedAt: Date | null;
+                    amount: number;
+                    currency: string;
+                    stripeSessionId: string | null;
+                    stripePaymentIntentId: string | null;
+                    failedAt: Date | null;
+                    refundedAt: Date | null;
+                } | undefined;
+            };
+            meta: object;
+        }>;
+        completeTransaction: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                transactionId: string;
+                stripePaymentIntentId?: string | undefined;
+            };
+            output: {
+                id: string;
+                userId: string;
+                courseId: string | null;
+                amount: number;
+                currency: string;
+                status: "COMPLETED" | "PENDING" | "PROCESSING" | "FAILED" | "REFUNDED" | "CANCELLED";
+                type: "COURSE_PURCHASE" | "SUBSCRIPTION" | "CREDITS" | "DONATION";
+                stripeSessionId: string | null;
+                stripePaymentIntentId: string | null;
+                metadata: unknown;
+                createdAt: Date;
+                updatedAt: Date;
+                completedAt: Date | null;
+                failedAt: Date | null;
+                refundedAt: Date | null;
+            };
+            meta: object;
+        }>;
+    }>>;
+    notification: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        list: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: never[];
+            meta: object;
+        }>;
+        markAsRead: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                notificationId: string;
+            };
+            output: {
+                success: boolean;
+            };
+            meta: object;
+        }>;
+        markAllRead: _trpc_server.TRPCMutationProcedure<{
+            input: void;
+            output: {
+                success: boolean;
+                count: number;
+            };
+            meta: object;
+        }>;
+        getUnreadCount: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                count: number;
+            };
+            meta: object;
+        }>;
+    }>>;
+    analytics: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        logEvent: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                action: string;
+                metadata?: Record<PropertyKey, unknown> | undefined;
+                module?: string | undefined;
+            };
+            output: {
+                timestamp: Date;
+                path: string;
+                duration: number | null;
+                id: string;
+                userId: string | null;
+                sessionId: string;
+                eventType: string;
+                actionCategory: string | null;
+                deviceInfo: unknown;
+                payload: unknown;
+            };
+            meta: object;
+        }>;
+        getRecentActivity: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                limit?: number | undefined;
+            } | undefined;
+            output: {
+                timestamp: Date;
+                path: string;
+                duration: number | null;
+                id: string;
+                userId: string | null;
+                sessionId: string;
+                eventType: string;
+                actionCategory: string | null;
+                deviceInfo: unknown;
+                payload: unknown;
+            }[];
+            meta: object;
+        }>;
+        getLearningStats: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                lessonsCompleted: number;
+                totalTimeSpent: number;
+                lessonsStarted: number;
+            };
+            meta: object;
+        }>;
+        getStreak: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                currentStreak: number;
+                longestStreak: number;
+                lastActivityDate: Date | null;
+            };
+            meta: object;
+        }>;
+    }>>;
 }>>;
 type AppRouter = typeof appRouter;
 

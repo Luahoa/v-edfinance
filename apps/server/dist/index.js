@@ -1359,6 +1359,495 @@ var socialRouter = router({
   })
 });
 
+// src/trpc/routers/lesson.ts
+import { z as z7 } from "zod";
+import { eq as eq7, and as and6, asc } from "drizzle-orm";
+var lessonRouter = router({
+  // Get lesson by ID with course info
+  getById: publicProcedure.input(z7.object({ id: z7.string().uuid() })).query(async ({ ctx, input }) => {
+    const lesson = await ctx.db.query.lessons.findFirst({
+      where: eq7(lessons.id, input.id),
+      with: {
+        course: true
+      }
+    });
+    return lesson;
+  }),
+  // List lessons for a course
+  getByCourse: publicProcedure.input(z7.object({ courseId: z7.string().uuid() })).query(async ({ ctx, input }) => {
+    const result = await ctx.db.query.lessons.findMany({
+      where: and6(
+        eq7(lessons.courseId, input.courseId),
+        eq7(lessons.published, true)
+      ),
+      orderBy: asc(lessons.order)
+    });
+    return result;
+  }),
+  // Get user's progress for a lesson
+  getProgress: protectedProcedure.input(z7.object({ lessonId: z7.string().uuid() })).query(async ({ ctx, input }) => {
+    const progress = await ctx.db.query.userProgress.findFirst({
+      where: and6(
+        eq7(userProgress.userId, ctx.user.id),
+        eq7(userProgress.lessonId, input.lessonId)
+      )
+    });
+    return progress;
+  }),
+  // Mark lesson as completed
+  markComplete: protectedProcedure.input(z7.object({ lessonId: z7.string().uuid() })).mutation(async ({ ctx, input }) => {
+    const existing = await ctx.db.query.userProgress.findFirst({
+      where: and6(
+        eq7(userProgress.userId, ctx.user.id),
+        eq7(userProgress.lessonId, input.lessonId)
+      )
+    });
+    if (existing) {
+      const updated = await ctx.db.update(userProgress).set({
+        status: "COMPLETED",
+        completedAt: /* @__PURE__ */ new Date(),
+        updatedAt: /* @__PURE__ */ new Date()
+      }).where(eq7(userProgress.id, existing.id)).returning();
+      return updated[0];
+    }
+    const created = await ctx.db.insert(userProgress).values({
+      userId: ctx.user.id,
+      lessonId: input.lessonId,
+      status: "COMPLETED",
+      completedAt: /* @__PURE__ */ new Date()
+    }).returning();
+    return created[0];
+  }),
+  // Update watch time
+  updateWatchTime: protectedProcedure.input(
+    z7.object({
+      lessonId: z7.string().uuid(),
+      durationSpent: z7.number().min(0),
+      progressPercentage: z7.number().min(0).max(100).optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const existing = await ctx.db.query.userProgress.findFirst({
+      where: and6(
+        eq7(userProgress.userId, ctx.user.id),
+        eq7(userProgress.lessonId, input.lessonId)
+      )
+    });
+    if (existing) {
+      const updated = await ctx.db.update(userProgress).set({
+        durationSpent: input.durationSpent,
+        progressPercentage: input.progressPercentage ?? existing.progressPercentage,
+        status: existing.status === "STARTED" ? "IN_PROGRESS" : existing.status,
+        updatedAt: /* @__PURE__ */ new Date()
+      }).where(eq7(userProgress.id, existing.id)).returning();
+      return updated[0];
+    }
+    const created = await ctx.db.insert(userProgress).values({
+      userId: ctx.user.id,
+      lessonId: input.lessonId,
+      durationSpent: input.durationSpent,
+      progressPercentage: input.progressPercentage ?? 0,
+      status: "IN_PROGRESS"
+    }).returning();
+    return created[0];
+  })
+});
+
+// src/trpc/routers/simulation.ts
+import { z as z8 } from "zod";
+import { eq as eq8, desc as desc6 } from "drizzle-orm";
+var simulationRouter = router({
+  // List simulation scenarios
+  listScenarios: publicProcedure.input(
+    z8.object({
+      limit: z8.number().min(1).max(50).default(20),
+      offset: z8.number().min(0).default(0)
+    })
+  ).query(async ({ ctx, input }) => {
+    const result = await ctx.db.query.simulationScenarios.findMany({
+      limit: input.limit,
+      offset: input.offset,
+      orderBy: desc6(simulationScenarios.createdAt)
+    });
+    return result;
+  }),
+  // Get scenario by ID with commitments
+  getScenario: publicProcedure.input(z8.object({ id: z8.string().uuid() })).query(async ({ ctx, input }) => {
+    const scenario = await ctx.db.query.simulationScenarios.findFirst({
+      where: eq8(simulationScenarios.id, input.id),
+      with: {
+        commitments: {
+          orderBy: desc6(simulationCommitments.createdAt)
+        }
+      }
+    });
+    return scenario;
+  }),
+  // User commits to a scenario decision
+  createCommitment: protectedProcedure.input(
+    z8.object({
+      scenarioId: z8.string().uuid(),
+      commitment: z8.string().min(1).max(1e3)
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const scenario = await ctx.db.query.simulationScenarios.findFirst({
+      where: eq8(simulationScenarios.id, input.scenarioId)
+    });
+    if (!scenario) {
+      throw new Error("Scenario not found");
+    }
+    const created = await ctx.db.insert(simulationCommitments).values({
+      userId: ctx.user.id,
+      scenarioId: input.scenarioId,
+      commitment: input.commitment
+    }).returning();
+    return created[0];
+  }),
+  // Get user's virtual portfolio
+  getPortfolio: protectedProcedure.query(async ({ ctx }) => {
+    const portfolio = await ctx.db.query.virtualPortfolios.findFirst({
+      where: eq8(virtualPortfolios.userId, ctx.user.id)
+    });
+    if (!portfolio) {
+      const created = await ctx.db.insert(virtualPortfolios).values({
+        userId: ctx.user.id,
+        balance: 1e7,
+        holdings: [],
+        transactions: []
+      }).returning();
+      return created[0];
+    }
+    return portfolio;
+  }),
+  // Update portfolio after simulation
+  updatePortfolio: protectedProcedure.input(
+    z8.object({
+      balance: z8.number().optional(),
+      holdings: z8.array(z8.record(z8.unknown())).optional(),
+      transactions: z8.array(z8.record(z8.unknown())).optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const existing = await ctx.db.query.virtualPortfolios.findFirst({
+      where: eq8(virtualPortfolios.userId, ctx.user.id)
+    });
+    if (!existing) {
+      const created = await ctx.db.insert(virtualPortfolios).values({
+        userId: ctx.user.id,
+        balance: input.balance ?? 1e7,
+        holdings: input.holdings ?? [],
+        transactions: input.transactions ?? []
+      }).returning();
+      return created[0];
+    }
+    const updated = await ctx.db.update(virtualPortfolios).set({
+      balance: input.balance ?? existing.balance,
+      holdings: input.holdings ?? existing.holdings,
+      transactions: input.transactions ?? existing.transactions,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq8(virtualPortfolios.id, existing.id)).returning();
+    return updated[0];
+  })
+});
+
+// src/trpc/routers/ai.ts
+import { z as z9 } from "zod";
+import { eq as eq9, and as and8, desc as desc7 } from "drizzle-orm";
+var aiRouter = router({
+  // List user's chat threads
+  listThreads: protectedProcedure.input(
+    z9.object({
+      limit: z9.number().min(1).max(50).default(20),
+      offset: z9.number().min(0).default(0)
+    })
+  ).query(async ({ ctx, input }) => {
+    const threads = await ctx.db.query.chatThreads.findMany({
+      where: eq9(chatThreads.userId, ctx.user.id),
+      limit: input.limit,
+      offset: input.offset,
+      orderBy: desc7(chatThreads.updatedAt)
+    });
+    return threads;
+  }),
+  // Get thread with messages
+  getThread: protectedProcedure.input(z9.object({ id: z9.string().uuid() })).query(async ({ ctx, input }) => {
+    const thread = await ctx.db.query.chatThreads.findFirst({
+      where: and8(
+        eq9(chatThreads.id, input.id),
+        eq9(chatThreads.userId, ctx.user.id)
+      ),
+      with: {
+        messages: {
+          orderBy: chatMessages.createdAt
+        }
+      }
+    });
+    return thread;
+  }),
+  // Create new chat thread
+  createThread: protectedProcedure.input(
+    z9.object({
+      title: z9.string().min(1).max(255),
+      module: z9.string().optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const created = await ctx.db.insert(chatThreads).values({
+      userId: ctx.user.id,
+      title: input.title,
+      module: input.module
+    }).returning();
+    return created[0];
+  }),
+  // Send message to thread
+  sendMessage: protectedProcedure.input(
+    z9.object({
+      threadId: z9.string().uuid(),
+      content: z9.string().min(1),
+      metadata: z9.record(z9.unknown()).optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const thread = await ctx.db.query.chatThreads.findFirst({
+      where: and8(
+        eq9(chatThreads.id, input.threadId),
+        eq9(chatThreads.userId, ctx.user.id)
+      )
+    });
+    if (!thread) {
+      throw new Error("Thread not found");
+    }
+    const message = await ctx.db.insert(chatMessages).values({
+      threadId: input.threadId,
+      role: "USER",
+      content: input.content,
+      metadata: input.metadata
+    }).returning();
+    await ctx.db.update(chatThreads).set({ updatedAt: /* @__PURE__ */ new Date() }).where(eq9(chatThreads.id, input.threadId));
+    return message[0];
+  }),
+  // Delete thread
+  deleteThread: protectedProcedure.input(z9.object({ id: z9.string().uuid() })).mutation(async ({ ctx, input }) => {
+    const thread = await ctx.db.query.chatThreads.findFirst({
+      where: and8(
+        eq9(chatThreads.id, input.id),
+        eq9(chatThreads.userId, ctx.user.id)
+      )
+    });
+    if (!thread) {
+      throw new Error("Thread not found");
+    }
+    await ctx.db.delete(chatMessages).where(eq9(chatMessages.threadId, input.id));
+    await ctx.db.delete(chatThreads).where(eq9(chatThreads.id, input.id));
+    return { success: true };
+  })
+});
+
+// src/trpc/routers/payment.ts
+import { z as z10 } from "zod";
+import { eq as eq10, and as and9, desc as desc8 } from "drizzle-orm";
+var paymentRouter = router({
+  // List user's transactions
+  listTransactions: protectedProcedure.input(
+    z10.object({
+      limit: z10.number().min(1).max(50).default(20),
+      offset: z10.number().min(0).default(0),
+      status: z10.enum(["PENDING", "PROCESSING", "COMPLETED", "FAILED", "REFUNDED", "CANCELLED"]).optional()
+    })
+  ).query(async ({ ctx, input }) => {
+    const whereConditions = [eq10(transactions.userId, ctx.user.id)];
+    if (input.status) {
+      whereConditions.push(eq10(transactions.status, input.status));
+    }
+    const result = await ctx.db.query.transactions.findMany({
+      where: and9(...whereConditions),
+      limit: input.limit,
+      offset: input.offset,
+      orderBy: desc8(transactions.createdAt),
+      with: {
+        course: true
+      }
+    });
+    return result;
+  }),
+  // Get transaction by ID
+  getTransaction: protectedProcedure.input(z10.object({ id: z10.string().uuid() })).query(async ({ ctx, input }) => {
+    const transaction = await ctx.db.query.transactions.findFirst({
+      where: and9(
+        eq10(transactions.id, input.id),
+        eq10(transactions.userId, ctx.user.id)
+      ),
+      with: {
+        course: true
+      }
+    });
+    return transaction;
+  }),
+  // Create checkout session for course purchase
+  createCheckoutSession: protectedProcedure.input(
+    z10.object({
+      courseId: z10.string().uuid(),
+      currency: z10.string().default("vnd")
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const course = await ctx.db.query.courses.findFirst({
+      where: eq10(courses.id, input.courseId)
+    });
+    if (!course) {
+      throw new Error("Course not found");
+    }
+    const existing = await ctx.db.query.transactions.findFirst({
+      where: and9(
+        eq10(transactions.userId, ctx.user.id),
+        eq10(transactions.courseId, input.courseId),
+        eq10(transactions.status, "COMPLETED")
+      )
+    });
+    if (existing) {
+      throw new Error("Course already purchased");
+    }
+    const transaction = await ctx.db.insert(transactions).values({
+      userId: ctx.user.id,
+      courseId: input.courseId,
+      amount: course.price,
+      currency: input.currency,
+      status: "PENDING",
+      type: "COURSE_PURCHASE"
+    }).returning();
+    return {
+      transactionId: transaction[0].id,
+      sessionUrl: `/checkout/${transaction[0].id}`,
+      amount: course.price,
+      currency: input.currency
+    };
+  }),
+  // Check if user purchased a course
+  getTransactionByCourse: protectedProcedure.input(z10.object({ courseId: z10.string().uuid() })).query(async ({ ctx, input }) => {
+    const transaction = await ctx.db.query.transactions.findFirst({
+      where: and9(
+        eq10(transactions.userId, ctx.user.id),
+        eq10(transactions.courseId, input.courseId),
+        eq10(transactions.status, "COMPLETED")
+      )
+    });
+    return {
+      purchased: !!transaction,
+      transaction
+    };
+  }),
+  // Complete transaction (webhook handler helper)
+  completeTransaction: protectedProcedure.input(
+    z10.object({
+      transactionId: z10.string().uuid(),
+      stripePaymentIntentId: z10.string().optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const updated = await ctx.db.update(transactions).set({
+      status: "COMPLETED",
+      stripePaymentIntentId: input.stripePaymentIntentId,
+      completedAt: /* @__PURE__ */ new Date(),
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(
+      and9(
+        eq10(transactions.id, input.transactionId),
+        eq10(transactions.userId, ctx.user.id)
+      )
+    ).returning();
+    return updated[0];
+  })
+});
+
+// src/trpc/routers/notification.ts
+import { z as z11 } from "zod";
+var notificationRouter = router({
+  // TODO: Query notifications table filtered by ctx.user.id
+  list: protectedProcedure.query(async () => {
+    return [];
+  }),
+  // TODO: Update notification isRead = true where id = input.notificationId AND userId = ctx.user.id
+  markAsRead: protectedProcedure.input(z11.object({ notificationId: z11.string().uuid() })).mutation(async () => {
+    return { success: true };
+  }),
+  // TODO: Update all notifications isRead = true where userId = ctx.user.id
+  markAllRead: protectedProcedure.mutation(async () => {
+    return { success: true, count: 0 };
+  }),
+  // TODO: Count notifications where userId = ctx.user.id AND isRead = false
+  getUnreadCount: protectedProcedure.query(async () => {
+    return { count: 0 };
+  })
+});
+
+// src/trpc/routers/analytics.ts
+import { z as z12 } from "zod";
+import { eq as eq11, desc as desc9, sql as sql2 } from "drizzle-orm";
+var analyticsRouter = router({
+  // Create behavior log entry
+  logEvent: protectedProcedure.input(
+    z12.object({
+      action: z12.string(),
+      metadata: z12.record(z12.unknown()).optional(),
+      module: z12.string().optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const created = await ctx.db.insert(behaviorLogs).values({
+      userId: ctx.user.id,
+      sessionId: crypto.randomUUID(),
+      path: input.module ?? "/",
+      eventType: input.action,
+      actionCategory: input.module,
+      payload: input.metadata
+    }).returning();
+    return created[0];
+  }),
+  // Get user's recent behavior logs
+  getRecentActivity: protectedProcedure.input(
+    z12.object({
+      limit: z12.number().min(1).max(50).default(50)
+    }).optional()
+  ).query(async ({ ctx, input }) => {
+    const limit = input?.limit ?? 50;
+    const logs = await ctx.db.query.behaviorLogs.findMany({
+      where: eq11(behaviorLogs.userId, ctx.user.id),
+      orderBy: desc9(behaviorLogs.timestamp),
+      limit
+    });
+    return logs;
+  }),
+  // Get aggregated learning stats
+  getLearningStats: protectedProcedure.query(async ({ ctx }) => {
+    const progressRows = await ctx.db.select({
+      lessonsCompleted: sql2`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
+      totalTimeSpent: sql2`coalesce(sum(${userProgress.durationSpent}), 0)`,
+      lessonsStarted: sql2`count(*)`
+    }).from(userProgress).where(eq11(userProgress.userId, ctx.user.id));
+    const stats = progressRows[0] ?? {
+      lessonsCompleted: 0,
+      totalTimeSpent: 0,
+      lessonsStarted: 0
+    };
+    return {
+      lessonsCompleted: Number(stats.lessonsCompleted),
+      totalTimeSpent: Number(stats.totalTimeSpent),
+      lessonsStarted: Number(stats.lessonsStarted)
+    };
+  }),
+  // Get current learning streak
+  getStreak: protectedProcedure.query(async ({ ctx }) => {
+    const streak = await ctx.db.query.userStreaks.findFirst({
+      where: eq11(userStreaks.userId, ctx.user.id)
+    });
+    if (!streak) {
+      return {
+        currentStreak: 0,
+        longestStreak: 0,
+        lastActivityDate: null
+      };
+    }
+    return {
+      currentStreak: streak.currentStreak,
+      longestStreak: streak.longestStreak,
+      lastActivityDate: streak.lastActivityDate
+    };
+  })
+});
+
 // src/trpc/router.ts
 var appRouter = router({
   user: userRouter,
@@ -1366,7 +1855,13 @@ var appRouter = router({
   quiz: quizRouter,
   gamification: gamificationRouter,
   certificate: certificateRouter,
-  social: socialRouter
+  social: socialRouter,
+  lesson: lessonRouter,
+  simulation: simulationRouter,
+  ai: aiRouter,
+  payment: paymentRouter,
+  notification: notificationRouter,
+  analytics: analyticsRouter
 });
 
 // src/lib/auth.ts
