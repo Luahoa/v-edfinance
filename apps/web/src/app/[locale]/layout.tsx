@@ -7,6 +7,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/organisms/Header";
 import Footer from "@/components/organisms/Footer";
 import { GlobalErrorBoundary } from '@/components/atoms/GlobalErrorBoundary';
+import { TRPCProvider } from '@/components/providers/TRPCProvider';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,15 +41,17 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}>
-        <NextIntlClientProvider messages={messages}>
-          <GlobalErrorBoundary>
-            <Header />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </GlobalErrorBoundary>
-        </NextIntlClientProvider>
+        <TRPCProvider>
+          <NextIntlClientProvider messages={messages}>
+            <GlobalErrorBoundary>
+              <Header />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </GlobalErrorBoundary>
+          </NextIntlClientProvider>
+        </TRPCProvider>
       </body>
     </html>
   );

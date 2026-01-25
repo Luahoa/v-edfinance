@@ -947,10 +947,426 @@ var courseRouter = router({
   })
 });
 
+// src/trpc/routers/quiz.ts
+import { z as z3 } from "zod";
+import { eq as eq3, and as and2, desc as desc2 } from "drizzle-orm";
+var quizRouter = router({
+  // Get quiz by ID with questions
+  getById: protectedProcedure.input(z3.object({ id: z3.string() })).query(async ({ ctx, input }) => {
+    const quiz = await ctx.db.query.quizzes.findFirst({
+      where: eq3(quizzes.id, input.id),
+      with: {
+        questions: {
+          orderBy: quizQuestions.order
+        }
+      }
+    });
+    return quiz;
+  }),
+  // Get quizzes for a lesson
+  getByLesson: protectedProcedure.input(z3.object({ lessonId: z3.string() })).query(async ({ ctx, input }) => {
+    const lessonQuizzes = await ctx.db.query.quizzes.findMany({
+      where: and2(
+        eq3(quizzes.lessonId, input.lessonId),
+        eq3(quizzes.published, true)
+      )
+    });
+    return lessonQuizzes;
+  }),
+  // Submit quiz attempt
+  submit: protectedProcedure.input(
+    z3.object({
+      quizId: z3.string(),
+      answers: z3.record(z3.string(), z3.unknown())
+      // questionId -> answer
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const quiz = await ctx.db.query.quizzes.findFirst({
+      where: eq3(quizzes.id, input.quizId),
+      with: {
+        questions: true
+      }
+    });
+    if (!quiz) {
+      throw new Error("Quiz not found");
+    }
+    let score = 0;
+    const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
+    for (const question of quiz.questions) {
+      const userAnswer = input.answers[question.id];
+      if (JSON.stringify(userAnswer) === JSON.stringify(question.correctAnswer)) {
+        score += question.points;
+      }
+    }
+    const percentage = totalPoints > 0 ? score / totalPoints * 100 : 0;
+    const [attempt] = await ctx.db.insert(quizAttempts).values({
+      userId: ctx.user.id,
+      quizId: input.quizId,
+      answers: input.answers,
+      score,
+      percentage,
+      completedAt: /* @__PURE__ */ new Date()
+    }).returning();
+    return attempt;
+  }),
+  // Get user's attempts for a quiz
+  getAttempts: protectedProcedure.input(z3.object({ quizId: z3.string() })).query(async ({ ctx, input }) => {
+    const attempts = await ctx.db.query.quizAttempts.findMany({
+      where: and2(
+        eq3(quizAttempts.userId, ctx.user.id),
+        eq3(quizAttempts.quizId, input.quizId)
+      ),
+      orderBy: desc2(quizAttempts.startedAt)
+    });
+    return attempts;
+  })
+});
+
+// src/trpc/routers/gamification.ts
+import { z as z4 } from "zod";
+import { eq as eq4, desc as desc3, sql } from "drizzle-orm";
+var gamificationRouter = router({
+  // Get leaderboard
+  leaderboard: publicProcedure.input(
+    z4.object({
+      limit: z4.number().min(1).max(100).default(10),
+      period: z4.enum(["all", "weekly", "monthly"]).default("all")
+    })
+  ).query(async ({ ctx, input }) => {
+    const topUsers = await ctx.db.query.users.findMany({
+      columns: {
+        id: true,
+        name: true,
+        points: true,
+        role: true
+      },
+      orderBy: desc3(users.points),
+      limit: input.limit
+    });
+    return topUsers;
+  }),
+  // Get user's streak
+  getStreak: protectedProcedure.query(async ({ ctx }) => {
+    const streak = await ctx.db.query.userStreaks.findFirst({
+      where: eq4(userStreaks.userId, ctx.user.id)
+    });
+    return streak || { currentStreak: 0, longestStreak: 0, lastActivityDate: null };
+  }),
+  // Update streak (called on daily activity)
+  updateStreak: protectedProcedure.mutation(async ({ ctx }) => {
+    const existing = await ctx.db.query.userStreaks.findFirst({
+      where: eq4(userStreaks.userId, ctx.user.id)
+    });
+    const today = /* @__PURE__ */ new Date();
+    today.setHours(0, 0, 0, 0);
+    if (existing) {
+      const lastActivity = existing.lastActivityDate ? new Date(existing.lastActivityDate) : null;
+      if (lastActivity) {
+        lastActivity.setHours(0, 0, 0, 0);
+        const diffDays = Math.floor(
+          (today.getTime() - lastActivity.getTime()) / (1e3 * 60 * 60 * 24)
+        );
+        if (diffDays === 0) {
+          return existing;
+        }
+        if (diffDays === 1) {
+          const newStreak = existing.currentStreak + 1;
+          const [updated2] = await ctx.db.update(userStreaks).set({
+            currentStreak: newStreak,
+            longestStreak: Math.max(newStreak, existing.longestStreak),
+            lastActivityDate: today,
+            updatedAt: /* @__PURE__ */ new Date()
+          }).where(eq4(userStreaks.id, existing.id)).returning();
+          return updated2;
+        }
+        const [updated] = await ctx.db.update(userStreaks).set({
+          currentStreak: 1,
+          lastActivityDate: today,
+          updatedAt: /* @__PURE__ */ new Date()
+        }).where(eq4(userStreaks.id, existing.id)).returning();
+        return updated;
+      }
+    }
+    const [created] = await ctx.db.insert(userStreaks).values({
+      userId: ctx.user.id,
+      currentStreak: 1,
+      longestStreak: 1,
+      lastActivityDate: today
+    }).returning();
+    return created;
+  }),
+  // Get user's achievements
+  getAchievements: protectedProcedure.query(async ({ ctx }) => {
+    const userAchievementsList = await ctx.db.query.userAchievements.findMany({
+      where: eq4(userAchievements.userId, ctx.user.id)
+    });
+    return userAchievementsList;
+  }),
+  // Add points to user
+  addPoints: protectedProcedure.input(
+    z4.object({
+      points: z4.number().min(1).max(1e3),
+      reason: z4.string().optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const [updated] = await ctx.db.update(users).set({
+      points: sql`${users.points} + ${input.points}`,
+      updatedAt: /* @__PURE__ */ new Date()
+    }).where(eq4(users.id, ctx.user.id)).returning();
+    return updated;
+  })
+});
+
+// src/trpc/routers/certificate.ts
+import { z as z5 } from "zod";
+import { eq as eq5, desc as desc4, and as and4 } from "drizzle-orm";
+var certificateRouter = router({
+  // Get user's certificates
+  list: protectedProcedure.query(async ({ ctx }) => {
+    const userCertificates = await ctx.db.query.certificates.findMany({
+      where: eq5(certificates.userId, ctx.user.id),
+      with: {
+        course: true
+      },
+      orderBy: desc4(certificates.completedAt)
+    });
+    return userCertificates;
+  }),
+  // Get certificate by ID
+  getById: protectedProcedure.input(z5.object({ id: z5.string() })).query(async ({ ctx, input }) => {
+    const certificate = await ctx.db.query.certificates.findFirst({
+      where: and4(
+        eq5(certificates.id, input.id),
+        eq5(certificates.userId, ctx.user.id)
+      ),
+      with: {
+        course: true
+      }
+    });
+    return certificate;
+  }),
+  // Check eligibility for course certificate
+  checkEligibility: protectedProcedure.input(z5.object({ courseId: z5.string() })).query(async ({ ctx, input }) => {
+    const course = await ctx.db.query.courses.findFirst({
+      where: eq5(courses.id, input.courseId),
+      with: {
+        lessons: {
+          where: eq5(lessons.published, true)
+        }
+      }
+    });
+    if (!course) {
+      return { eligible: false, reason: "Course not found" };
+    }
+    const existingCert = await ctx.db.query.certificates.findFirst({
+      where: and4(
+        eq5(certificates.userId, ctx.user.id),
+        eq5(certificates.courseId, input.courseId)
+      )
+    });
+    if (existingCert) {
+      return { eligible: false, reason: "Certificate already issued", certificate: existingCert };
+    }
+    const lessonIds = course.lessons.map((l) => l.id);
+    const progress = await ctx.db.query.userProgress.findMany({
+      where: and4(
+        eq5(userProgress.userId, ctx.user.id),
+        eq5(userProgress.status, "COMPLETED")
+      )
+    });
+    const completedLessonIds = new Set(progress.map((p) => p.lessonId));
+    const allCompleted = lessonIds.every((id) => completedLessonIds.has(id));
+    if (!allCompleted) {
+      const completedCount = lessonIds.filter((id) => completedLessonIds.has(id)).length;
+      return {
+        eligible: false,
+        reason: `Complete all lessons first (${completedCount}/${lessonIds.length})`,
+        progress: {
+          completed: completedCount,
+          total: lessonIds.length
+        }
+      };
+    }
+    return { eligible: true };
+  }),
+  // Generate certificate
+  generate: protectedProcedure.input(z5.object({ courseId: z5.string() })).mutation(async ({ ctx, input }) => {
+    const course = await ctx.db.query.courses.findFirst({
+      where: eq5(courses.id, input.courseId)
+    });
+    if (!course) {
+      throw new Error("Course not found");
+    }
+    const existingCert = await ctx.db.query.certificates.findFirst({
+      where: and4(
+        eq5(certificates.userId, ctx.user.id),
+        eq5(certificates.courseId, input.courseId)
+      )
+    });
+    if (existingCert) {
+      return existingCert;
+    }
+    const user = await ctx.db.query.users.findFirst({
+      where: eq5(ctx.db.users.id, ctx.user.id)
+    });
+    const [certificate] = await ctx.db.insert(certificates).values({
+      userId: ctx.user.id,
+      courseId: input.courseId,
+      studentName: user?.name || { vi: "H\u1ECDc vi\xEAn", en: "Student", zh: "\u5B66\u751F" },
+      courseTitle: course.title,
+      completedAt: /* @__PURE__ */ new Date()
+    }).returning();
+    return certificate;
+  })
+});
+
+// src/trpc/routers/social.ts
+import { z as z6 } from "zod";
+import { eq as eq6, desc as desc5, and as and5 } from "drizzle-orm";
+var socialRouter = router({
+  // Get social feed
+  feed: protectedProcedure.input(
+    z6.object({
+      limit: z6.number().min(1).max(50).default(20),
+      offset: z6.number().min(0).default(0)
+    })
+  ).query(async ({ ctx, input }) => {
+    const posts = await ctx.db.query.socialPosts.findMany({
+      with: {
+        user: {
+          columns: {
+            id: true,
+            name: true,
+            role: true
+          }
+        }
+      },
+      orderBy: desc5(socialPosts.createdAt),
+      limit: input.limit,
+      offset: input.offset
+    });
+    return posts;
+  }),
+  // Create post
+  createPost: protectedProcedure.input(
+    z6.object({
+      type: z6.enum(["ACHIEVEMENT", "MILESTONE", "NUDGE", "DISCUSSION"]),
+      content: z6.record(z6.string(), z6.unknown()).optional(),
+      groupId: z6.string().optional()
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const [post] = await ctx.db.insert(socialPosts).values({
+      userId: ctx.user.id,
+      type: input.type,
+      content: input.content,
+      groupId: input.groupId
+    }).returning();
+    return post;
+  }),
+  // Get user's groups
+  myGroups: protectedProcedure.query(async ({ ctx }) => {
+    const memberships = await ctx.db.query.buddyMembers.findMany({
+      where: eq6(buddyMembers.userId, ctx.user.id),
+      with: {
+        group: true
+      }
+    });
+    return memberships.map((m) => ({ ...m.group, role: m.role }));
+  }),
+  // Get group by ID
+  getGroup: protectedProcedure.input(z6.object({ id: z6.string() })).query(async ({ ctx, input }) => {
+    const group = await ctx.db.query.buddyGroups.findFirst({
+      where: eq6(buddyGroups.id, input.id),
+      with: {
+        members: {
+          with: {
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                role: true,
+                points: true
+              }
+            }
+          }
+        },
+        feedPosts: {
+          orderBy: desc5(socialPosts.createdAt),
+          limit: 20
+        }
+      }
+    });
+    return group;
+  }),
+  // Join group
+  joinGroup: protectedProcedure.input(z6.object({ groupId: z6.string() })).mutation(async ({ ctx, input }) => {
+    const existing = await ctx.db.query.buddyMembers.findFirst({
+      where: and5(
+        eq6(buddyMembers.groupId, input.groupId),
+        eq6(buddyMembers.userId, ctx.user.id)
+      )
+    });
+    if (existing) {
+      return existing;
+    }
+    const [member] = await ctx.db.insert(buddyMembers).values({
+      groupId: input.groupId,
+      userId: ctx.user.id,
+      role: "MEMBER"
+    }).returning();
+    return member;
+  }),
+  // Leave group
+  leaveGroup: protectedProcedure.input(z6.object({ groupId: z6.string() })).mutation(async ({ ctx, input }) => {
+    await ctx.db.delete(buddyMembers).where(
+      and5(
+        eq6(buddyMembers.groupId, input.groupId),
+        eq6(buddyMembers.userId, ctx.user.id)
+      )
+    );
+    return { success: true };
+  }),
+  // Follow user
+  follow: protectedProcedure.input(z6.object({ userId: z6.string() })).mutation(async ({ ctx, input }) => {
+    if (input.userId === ctx.user.id) {
+      throw new Error("Cannot follow yourself");
+    }
+    const existing = await ctx.db.query.userRelationships.findFirst({
+      where: and5(
+        eq6(userRelationships.followerId, ctx.user.id),
+        eq6(userRelationships.followedId, input.userId)
+      )
+    });
+    if (existing) {
+      return existing;
+    }
+    const [relationship] = await ctx.db.insert(userRelationships).values({
+      followerId: ctx.user.id,
+      followedId: input.userId,
+      status: "FOLLOWING"
+    }).returning();
+    return relationship;
+  }),
+  // Unfollow user
+  unfollow: protectedProcedure.input(z6.object({ userId: z6.string() })).mutation(async ({ ctx, input }) => {
+    await ctx.db.delete(userRelationships).where(
+      and5(
+        eq6(userRelationships.followerId, ctx.user.id),
+        eq6(userRelationships.followedId, input.userId)
+      )
+    );
+    return { success: true };
+  })
+});
+
 // src/trpc/router.ts
 var appRouter = router({
   user: userRouter,
-  course: courseRouter
+  course: courseRouter,
+  quiz: quizRouter,
+  gamification: gamificationRouter,
+  certificate: certificateRouter,
+  social: socialRouter
 });
 
 // src/lib/auth.ts

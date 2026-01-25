@@ -484,6 +484,18 @@ importers:
       '@stripe/stripe-js':
         specifier: ^8.6.0
         version: 8.6.0
+      '@tanstack/react-query':
+        specifier: ^5.62.16
+        version: 5.90.20(react@18.3.1)
+      '@trpc/client':
+        specifier: ^11.0.0-rc.666
+        version: 11.8.1(@trpc/server@11.8.1(typescript@5.9.3))(typescript@5.9.3)
+      '@trpc/react-query':
+        specifier: ^11.0.0-rc.666
+        version: 11.8.1(@tanstack/react-query@5.90.20(react@18.3.1))(@trpc/client@11.8.1(@trpc/server@11.8.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.8.1(typescript@5.9.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)
+      '@trpc/server':
+        specifier: ^11.0.0-rc.666
+        version: 11.8.1(typescript@5.9.3)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -529,6 +541,9 @@ importers:
       socket.io-client:
         specifier: ^4.8.1
         version: 4.8.1
+      superjson:
+        specifier: ^2.2.2
+        version: 2.2.6
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.4.0
@@ -779,9 +794,6 @@ importers:
       '@trpc/server':
         specifier: ^11.0.0-rc.666
         version: 11.8.1(typescript@5.9.3)
-      '@v-edfinance/server':
-        specifier: workspace:*
-        version: link:../../apps/server
       superjson:
         specifier: ^2.2.2
         version: 2.2.6
@@ -16389,6 +16401,15 @@ snapshots:
   '@trpc/client@11.8.1(@trpc/server@11.8.1(typescript@5.9.3))(typescript@5.9.3)':
     dependencies:
       '@trpc/server': 11.8.1(typescript@5.9.3)
+      typescript: 5.9.3
+
+  '@trpc/react-query@11.8.1(@tanstack/react-query@5.90.20(react@18.3.1))(@trpc/client@11.8.1(@trpc/server@11.8.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.8.1(typescript@5.9.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)':
+    dependencies:
+      '@tanstack/react-query': 5.90.20(react@18.3.1)
+      '@trpc/client': 11.8.1(@trpc/server@11.8.1(typescript@5.9.3))(typescript@5.9.3)
+      '@trpc/server': 11.8.1(typescript@5.9.3)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
       typescript: 5.9.3
 
   '@trpc/react-query@11.8.1(@tanstack/react-query@5.90.20(react@18.3.1))(@trpc/client@11.8.1(@trpc/server@11.8.1(typescript@5.9.3))(typescript@5.9.3))(@trpc/server@11.8.1(typescript@5.9.3))(react-dom@19.2.3(react@18.3.1))(react@18.3.1)(typescript@5.9.3)':

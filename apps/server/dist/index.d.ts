@@ -4432,6 +4432,573 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
             meta: object;
         }>;
     }>>;
+    quiz: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        getById: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                id: string;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                description: unknown;
+                title: unknown;
+                lessonId: string;
+                published: boolean;
+                questions: {
+                    id: string;
+                    points: number;
+                    type: "MULTIPLE_CHOICE" | "TRUE_FALSE" | "SHORT_ANSWER" | "MATCHING";
+                    order: number;
+                    quizId: string;
+                    question: unknown;
+                    options: unknown;
+                    correctAnswer: unknown;
+                    explanation: unknown;
+                }[];
+            } | undefined;
+            meta: object;
+        }>;
+        getByLesson: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                lessonId: string;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                description: unknown;
+                title: unknown;
+                lessonId: string;
+                published: boolean;
+            }[];
+            meta: object;
+        }>;
+        submit: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                quizId: string;
+                answers: Record<string, unknown>;
+            };
+            output: {
+                id: string;
+                userId: string;
+                completedAt: Date | null;
+                quizId: string;
+                answers: unknown;
+                score: number;
+                percentage: number;
+                startedAt: Date;
+            };
+            meta: object;
+        }>;
+        getAttempts: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                quizId: string;
+            };
+            output: {
+                id: string;
+                userId: string;
+                completedAt: Date | null;
+                quizId: string;
+                answers: unknown;
+                score: number;
+                percentage: number;
+                startedAt: Date;
+            }[];
+            meta: object;
+        }>;
+    }>>;
+    gamification: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        leaderboard: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                limit?: number | undefined;
+                period?: "all" | "weekly" | "monthly" | undefined;
+            };
+            output: {
+                role: "STUDENT" | "TEACHER" | "ADMIN";
+                id: string;
+                name: unknown;
+                points: number;
+            }[];
+            meta: object;
+        }>;
+        getStreak: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                currentStreak: number;
+                longestStreak: number;
+                lastActivityDate: Date | null;
+            } | {
+                currentStreak: number;
+                longestStreak: number;
+                lastActivityDate: null;
+            };
+            meta: object;
+        }>;
+        updateStreak: _trpc_server.TRPCMutationProcedure<{
+            input: void;
+            output: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                currentStreak: number;
+                longestStreak: number;
+                lastActivityDate: Date | null;
+            };
+            meta: object;
+        }>;
+        getAchievements: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                id: string;
+                createdAt: Date;
+                userId: string;
+                achievementId: string;
+                progress: number;
+                earnedAt: Date | null;
+            }[];
+            meta: object;
+        }>;
+        addPoints: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                points: number;
+                reason?: string | undefined;
+            };
+            output: {
+                id: string;
+                email: string;
+                passwordHash: string;
+                name: unknown;
+                role: "STUDENT" | "TEACHER" | "ADMIN";
+                points: number;
+                preferredLocale: string;
+                preferredLanguage: string | null;
+                dateOfBirth: Date | null;
+                moderationStrikes: number;
+                failedLoginAttempts: number;
+                lockedUntil: Date | null;
+                stripeCustomerId: string | null;
+                metadata: unknown;
+                createdAt: Date;
+                updatedAt: Date;
+            };
+            meta: object;
+        }>;
+    }>>;
+    certificate: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        list: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                id: string;
+                metadata: unknown;
+                createdAt: Date;
+                userId: string;
+                courseId: string;
+                completedAt: Date;
+                studentName: unknown;
+                courseTitle: unknown;
+                pdfUrl: string | null;
+                course: {
+                    level: "BEGINNER" | "INTERMEDIATE" | "EXPERT";
+                    id: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    description: unknown;
+                    title: unknown;
+                    slug: string;
+                    thumbnailKey: string;
+                    price: number;
+                    published: boolean;
+                };
+            }[];
+            meta: object;
+        }>;
+        getById: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                id: string;
+            };
+            output: {
+                id: string;
+                metadata: unknown;
+                createdAt: Date;
+                userId: string;
+                courseId: string;
+                completedAt: Date;
+                studentName: unknown;
+                courseTitle: unknown;
+                pdfUrl: string | null;
+                course: {
+                    level: "BEGINNER" | "INTERMEDIATE" | "EXPERT";
+                    id: string;
+                    createdAt: Date;
+                    updatedAt: Date;
+                    description: unknown;
+                    title: unknown;
+                    slug: string;
+                    thumbnailKey: string;
+                    price: number;
+                    published: boolean;
+                };
+            } | undefined;
+            meta: object;
+        }>;
+        checkEligibility: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                courseId: string;
+            };
+            output: {
+                eligible: boolean;
+                reason: string;
+                certificate?: undefined;
+                progress?: undefined;
+            } | {
+                eligible: boolean;
+                reason: string;
+                certificate: {
+                    id: string;
+                    metadata: unknown;
+                    createdAt: Date;
+                    userId: string;
+                    courseId: string;
+                    completedAt: Date;
+                    studentName: unknown;
+                    courseTitle: unknown;
+                    pdfUrl: string | null;
+                };
+                progress?: undefined;
+            } | {
+                eligible: boolean;
+                reason: string;
+                progress: {
+                    completed: number;
+                    total: number;
+                };
+                certificate?: undefined;
+            } | {
+                eligible: boolean;
+                reason?: undefined;
+                certificate?: undefined;
+                progress?: undefined;
+            };
+            meta: object;
+        }>;
+        generate: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                courseId: string;
+            };
+            output: {
+                id: string;
+                metadata: unknown;
+                createdAt: Date;
+                userId: string;
+                courseId: string;
+                completedAt: Date;
+                studentName: unknown;
+                courseTitle: unknown;
+                pdfUrl: string | null;
+            };
+            meta: object;
+        }>;
+    }>>;
+    social: _trpc_server.TRPCBuiltRouter<{
+        ctx: {
+            db: drizzle_orm_postgres_js.PostgresJsDatabase<typeof ______drizzle_schema> & {
+                $client: postgres.Sql<{}>;
+            };
+            session: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                userId: string;
+                expiresAt: Date;
+                token: string;
+                ipAddress?: string | null | undefined | undefined;
+                userAgent?: string | null | undefined | undefined;
+            } | null;
+            user: {
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                email: string;
+                emailVerified: boolean;
+                name: string;
+                image?: string | null | undefined | undefined;
+            } | null;
+            req: Request;
+        };
+        meta: object;
+        errorShape: {
+            data: {
+                zodError: string | null;
+                code: _trpc_server.TRPC_ERROR_CODE_KEY;
+                httpStatus: number;
+                path?: string;
+                stack?: string;
+            };
+            message: string;
+            code: _trpc_server.TRPC_ERROR_CODE_NUMBER;
+        };
+        transformer: true;
+    }, _trpc_server.TRPCDecorateCreateRouterOptions<{
+        feed: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                limit?: number | undefined;
+                offset?: number | undefined;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                userId: string;
+                groupId: string | null;
+                type: "ACHIEVEMENT" | "MILESTONE" | "NUDGE" | "DISCUSSION";
+                content: unknown;
+                likesCount: number;
+                user: {
+                    role: "STUDENT" | "TEACHER" | "ADMIN";
+                    id: string;
+                    name: unknown;
+                };
+            }[];
+            meta: object;
+        }>;
+        createPost: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                type: "ACHIEVEMENT" | "MILESTONE" | "NUDGE" | "DISCUSSION";
+                content?: Record<string, unknown> | undefined;
+                groupId?: string | undefined;
+            };
+            output: {
+                id: string;
+                createdAt: Date;
+                userId: string;
+                groupId: string | null;
+                type: "ACHIEVEMENT" | "MILESTONE" | "NUDGE" | "DISCUSSION";
+                content: unknown;
+                likesCount: number;
+            };
+            meta: object;
+        }>;
+        myGroups: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                role: "LEADER" | "MEMBER";
+                id: string;
+                name: string | null;
+                createdAt: Date;
+                updatedAt: Date;
+                description: string | null;
+                type: "LEARNING" | "SAVING" | "INVESTING";
+                totalPoints: number;
+                streak: number;
+            }[];
+            meta: object;
+        }>;
+        getGroup: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                id: string;
+            };
+            output: {
+                id: string;
+                name: string | null;
+                createdAt: Date;
+                updatedAt: Date;
+                description: string | null;
+                type: "LEARNING" | "SAVING" | "INVESTING";
+                totalPoints: number;
+                streak: number;
+                members: {
+                    role: "LEADER" | "MEMBER";
+                    id: string;
+                    userId: string;
+                    groupId: string;
+                    joinedAt: Date;
+                    user: {
+                        role: "STUDENT" | "TEACHER" | "ADMIN";
+                        id: string;
+                        name: unknown;
+                        points: number;
+                    };
+                }[];
+                feedPosts: {
+                    id: string;
+                    createdAt: Date;
+                    userId: string;
+                    groupId: string | null;
+                    type: "ACHIEVEMENT" | "MILESTONE" | "NUDGE" | "DISCUSSION";
+                    content: unknown;
+                    likesCount: number;
+                }[];
+            } | undefined;
+            meta: object;
+        }>;
+        joinGroup: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                groupId: string;
+            };
+            output: {
+                role: "LEADER" | "MEMBER";
+                id: string;
+                userId: string;
+                groupId: string;
+                joinedAt: Date;
+            };
+            meta: object;
+        }>;
+        leaveGroup: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                groupId: string;
+            };
+            output: {
+                success: boolean;
+            };
+            meta: object;
+        }>;
+        follow: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                userId: string;
+            };
+            output: {
+                status: "FOLLOWING" | "FRIEND_REQUESTED" | "FRIENDS" | "BLOCKED";
+                id: string;
+                createdAt: Date;
+                updatedAt: Date;
+                followerId: string;
+                followedId: string;
+            };
+            meta: object;
+        }>;
+        unfollow: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                userId: string;
+            };
+            output: {
+                success: boolean;
+            };
+            meta: object;
+        }>;
+    }>>;
 }>>;
 type AppRouter = typeof appRouter;
 

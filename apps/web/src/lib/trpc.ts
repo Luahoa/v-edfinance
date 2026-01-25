@@ -1,2 +1,2 @@
-// Re-export tRPC hooks for convenient imports
-export { api as trpc, api } from '@v-edfinance/api/client';
+// Re-export trpc hooks for convenient imports
+export { trpc } from '@/components/providers/TRPCProvider';

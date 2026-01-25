@@ -1,24 +1,53 @@
 'use client';
 
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { httpBatchLink } from '@trpc/client';
+import { createTRPCReact } from '@trpc/react-query';
 import { useState } from 'react';
+import superjson from 'superjson';
 
-import { api, createQueryClient, createTRPCClient } from '@v-edfinance/api/client';
+import type { AppRouter } from '../../../../server/src/trpc/router';
+
+// Create tRPC React hooks
+export const trpc = createTRPCReact<AppRouter>();
 
 interface TRPCProviderProps {
   children: React.ReactNode;
-  baseUrl?: string;
 }
 
-export function TRPCProvider({ children, baseUrl }: TRPCProviderProps) {
-  const [queryClient] = useState(() => createQueryClient());
+export function TRPCProvider({ children }: TRPCProviderProps) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 1000 * 60 * 5, // 5 minutes
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  );
+
   const [trpcClient] = useState(() =>
-    createTRPCClient(baseUrl || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000')
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/trpc`,
+          transformer: superjson,
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: 'include',
+            });
+          },
+        }),
+      ],
+    })
   );
 
   return (
-    <api.Provider client={trpcClient} queryClient={queryClient}>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </api.Provider>
+    </trpc.Provider>
   );
 }
