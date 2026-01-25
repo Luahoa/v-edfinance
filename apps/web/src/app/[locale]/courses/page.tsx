@@ -1,24 +1,28 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, getLocale } from 'next-intl/server';
 import CourseCard from '@/components/molecules/CourseCard';
-import { Course } from '@/types/course';
+import { serverTrpc } from '@/lib/trpc-server';
 
-async function getCourses(): Promise<Course[]> {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/courses`, {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    });
-    
-    if (!res.ok) return [];
-    return res.json();
-  } catch (error) {
-    console.error('Failed to fetch courses:', error);
-    return [];
-  }
+async function getCourses(locale: string) {
+  const courses = await serverTrpc.course.list({ limit: 50 });
+  
+  if (!courses) return [];
+  
+  return courses.map((course) => ({
+    id: course.id,
+    slug: course.slug,
+    title: course.title[locale] || course.title['vi'] || Object.values(course.title)[0] || '',
+    description: course.description[locale] || course.description['vi'] || Object.values(course.description)[0] || '',
+    thumbnailKey: course.thumbnailKey,
+    price: course.price,
+    level: course.level,
+    published: course.published,
+  }));
 }
 
 export default async function CoursesPage() {
   const t = await getTranslations('Courses');
-  const courses = await getCourses();
+  const locale = await getLocale();
+  const courses = await getCourses(locale);
 
   return (
     <div className="container mx-auto px-4 py-8">

@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Download, Share2, FileText, AlertCircle } from 'lucide-react';
 import { formatDate } from 'date-fns';
+import { trpc } from '@/lib/trpc';
 
 interface Certificate {
   id: string;
@@ -23,41 +24,18 @@ export default function CertificatesPage() {
   const tCommon = useTranslations('Common');
   const router = useRouter();
 
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchCertificates = async (): Promise<void> => {
-      try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-        const token = localStorage.getItem('token');
+  const { data: certificatesData, isLoading, error } = trpc.certificate.getMyCertificates.useQuery();
 
-        if (!token) {
-          router.push('/auth/login?redirect=/certificates');
-          return;
-        }
-
-        const response = await fetch(`${API_URL}/certificates/me`, {
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch certificates');
-        }
-
-        const data = await response.json();
-        setCertificates(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : tCommon('error'));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCertificates();
-  }, [router, tCommon]);
+  const certificates: Certificate[] = (certificatesData ?? []).map((cert) => ({
+    id: cert.id,
+    courseId: cert.course?.id ?? '',
+    courseName: cert.courseTitle?.['vi'] || cert.courseTitle?.['en'] || 'Course',
+    earnedDate: new Date(cert.completedAt),
+    certificateUrl: cert.pdfUrl ?? undefined,
+  }));
 
   const handleDownload = async (certificateId: string): Promise<void> => {
     try {
@@ -84,7 +62,7 @@ export default function CertificatesPage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('downloadError'));
+      setDownloadError(err instanceof Error ? err.message : t('downloadError'));
     }
   };
 
@@ -95,7 +73,7 @@ export default function CertificatesPage() {
     setTimeout(() => setShareMessage(null), 3000);
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <Skeleton className="h-8 w-48 mb-8" />
@@ -128,7 +106,14 @@ export default function CertificatesPage() {
       {error && (
         <Alert variant="destructive" className="mb-6">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
+      )}
+
+      {downloadError && (
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{downloadError}</AlertDescription>
         </Alert>
       )}
 

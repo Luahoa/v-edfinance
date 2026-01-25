@@ -4290,6 +4290,16 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
             };
             meta: object;
         }>;
+        getStats: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                enrolledCoursesCount: number;
+                completedLessonsCount: number;
+                points: number;
+                streak: number;
+            };
+            meta: object;
+        }>;
     }>>;
     course: _trpc_server.TRPCBuiltRouter<{
         ctx: {
@@ -4996,6 +5006,17 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
             output: {
                 success: boolean;
             };
+            meta: object;
+        }>;
+        getRecommendations: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                id: string;
+                name: string | null;
+                description: string | null;
+                type: "LEARNING" | "SAVING" | "INVESTING";
+                memberCount: number;
+            }[];
             meta: object;
         }>;
     }>>;

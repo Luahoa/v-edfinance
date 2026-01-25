@@ -4,68 +4,41 @@ import InteractiveChecklist from '@/components/organisms/InteractiveChecklist';
 import { SocialFeed } from '@/components/organisms/SocialFeed';
 import { BuddyRecommendations } from '@/components/molecules/BuddyRecommendations';
 import { BookOpen, TrendingUp, Award, Zap, ListTodo, Users } from 'lucide-react';
-import { cookies } from 'next/headers';
 import type { BuddyGroup, DashboardStats, Post as SocialPostType } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { serverTrpc } from '@/lib/trpc-server';
 
 async function getDashboardStats(): Promise<DashboardStats | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/users/dashboard-stats`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      next: { revalidate: 60 },
-    });
-    
-    if (!res.ok) return null;
-    return res.json();
-  } catch (err) {
-    console.error('Fetch dashboard stats error:', err);
-    return null;
-  }
+  return serverTrpc.user.getStats();
 }
 
 async function getSocialFeed(): Promise<SocialPostType[]> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+  const feed = await serverTrpc.social.getFeed(5);
+  if (!feed) return [];
   
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/social/feed?limit=5`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      next: { revalidate: 30 },
-    });
-    
-    if (!res.ok) return [];
-    return res.json();
-  } catch (err) {
-    console.error('Fetch social feed error:', err);
-    return [];
-  }
+  return feed.map((post) => ({
+    id: post.id,
+    content: post.content,
+    type: post.type as SocialPostType['type'],
+    createdAt: post.createdAt,
+    user: {
+      id: post.user.id,
+      name: post.user.name?.['vi'] || post.user.name?.['en'] || 'Anonymous',
+    },
+  }));
 }
 
 async function getBuddyRecommendations(): Promise<BuddyGroup[]> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
+  const recommendations = await serverTrpc.social.getRecommendations();
+  if (!recommendations) return [];
   
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/social/recommendations`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      next: { revalidate: 300 },
-    });
-    
-    if (!res.ok) return [];
-    return res.json();
-  } catch (err) {
-    console.error('Fetch recommendations error:', err);
-    return [];
-  }
+  return recommendations.map((group) => ({
+    id: group.id,
+    name: group.name,
+    description: group.description || '',
+    type: group.type as BuddyGroup['type'],
+    memberCount: group.memberCount,
+  }));
 }
 
 export default async function Dashboard({ params }: { params: Promise<{ locale: string }> }) {

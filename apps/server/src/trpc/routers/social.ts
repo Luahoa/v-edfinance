@@ -183,4 +183,31 @@ export const socialRouter = router({
         );
       return { success: true };
     }),
+
+  // Get buddy group recommendations
+  getRecommendations: protectedProcedure.query(async ({ ctx }) => {
+    // Get groups the user is NOT a member of
+    const userMemberships = await ctx.db.query.buddyMembers.findMany({
+      where: eq(buddyMembers.userId, ctx.user.id),
+      columns: { groupId: true },
+    });
+
+    const userGroupIds = userMemberships.map((m) => m.groupId);
+
+    const recommendedGroups = await ctx.db.query.buddyGroups.findMany({
+      limit: 5,
+      orderBy: desc(buddyGroups.createdAt),
+    });
+
+    // Filter out groups user is already in
+    return recommendedGroups
+      .filter((g) => !userGroupIds.includes(g.id))
+      .map((g) => ({
+        id: g.id,
+        name: g.name,
+        description: g.description,
+        type: g.type,
+        memberCount: 0, // TODO: Add member count aggregation
+      }));
+  }),
 });

@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { router, publicProcedure, protectedProcedure } from '../trpc';
-import { users } from '../../../drizzle/schema';
+import { users, userProgress, userStreaks } from '../../../drizzle/schema';
 
 export const userRouter = router({
   // Get current user profile
@@ -51,4 +51,31 @@ export const userRouter = router({
 
       return updated[0];
     }),
+
+  // Get dashboard stats
+  getStats: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.query.users.findFirst({
+      where: eq(users.id, ctx.user.id),
+      columns: { points: true },
+    });
+
+    const progressStats = await ctx.db
+      .select({
+        enrolledCoursesCount: sql<number>`count(distinct ${userProgress.lessonId})`,
+        completedLessonsCount: sql<number>`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
+      })
+      .from(userProgress)
+      .where(eq(userProgress.userId, ctx.user.id));
+
+    const streak = await ctx.db.query.userStreaks.findFirst({
+      where: eq(userStreaks.userId, ctx.user.id),
+    });
+
+    return {
+      enrolledCoursesCount: Number(progressStats[0]?.enrolledCoursesCount ?? 0),
+      completedLessonsCount: Number(progressStats[0]?.completedLessonsCount ?? 0),
+      points: user?.points ?? 0,
+      streak: streak?.currentStreak ?? 0,
+    };
+  }),
 });

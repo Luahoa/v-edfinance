@@ -43,7 +43,7 @@ var protectedProcedure = t.procedure.use(({ ctx, next }) => {
 
 // src/trpc/routers/user.ts
 import { z } from "zod";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 // drizzle/schema.ts
 var schema_exports = {};
@@ -861,6 +861,26 @@ var userRouter = router({
       updatedAt: /* @__PURE__ */ new Date()
     }).where(eq(users.id, ctx.user.id)).returning();
     return updated[0];
+  }),
+  // Get dashboard stats
+  getStats: protectedProcedure.query(async ({ ctx }) => {
+    const user = await ctx.db.query.users.findFirst({
+      where: eq(users.id, ctx.user.id),
+      columns: { points: true }
+    });
+    const progressStats = await ctx.db.select({
+      enrolledCoursesCount: sql`count(distinct ${userProgress.lessonId})`,
+      completedLessonsCount: sql`count(*) filter (where ${userProgress.status} = 'COMPLETED')`
+    }).from(userProgress).where(eq(userProgress.userId, ctx.user.id));
+    const streak = await ctx.db.query.userStreaks.findFirst({
+      where: eq(userStreaks.userId, ctx.user.id)
+    });
+    return {
+      enrolledCoursesCount: Number(progressStats[0]?.enrolledCoursesCount ?? 0),
+      completedLessonsCount: Number(progressStats[0]?.completedLessonsCount ?? 0),
+      points: user?.points ?? 0,
+      streak: streak?.currentStreak ?? 0
+    };
   })
 });
 
@@ -1024,7 +1044,7 @@ var quizRouter = router({
 
 // src/trpc/routers/gamification.ts
 import { z as z4 } from "zod";
-import { eq as eq4, desc as desc3, sql } from "drizzle-orm";
+import { eq as eq4, desc as desc3, sql as sql2 } from "drizzle-orm";
 var gamificationRouter = router({
   // Get leaderboard
   leaderboard: publicProcedure.input(
@@ -1110,7 +1130,7 @@ var gamificationRouter = router({
     })
   ).mutation(async ({ ctx, input }) => {
     const [updated] = await ctx.db.update(users).set({
-      points: sql`${users.points} + ${input.points}`,
+      points: sql2`${users.points} + ${input.points}`,
       updatedAt: /* @__PURE__ */ new Date()
     }).where(eq4(users.id, ctx.user.id)).returning();
     return updated;
@@ -1356,6 +1376,26 @@ var socialRouter = router({
       )
     );
     return { success: true };
+  }),
+  // Get buddy group recommendations
+  getRecommendations: protectedProcedure.query(async ({ ctx }) => {
+    const userMemberships = await ctx.db.query.buddyMembers.findMany({
+      where: eq6(buddyMembers.userId, ctx.user.id),
+      columns: { groupId: true }
+    });
+    const userGroupIds = userMemberships.map((m) => m.groupId);
+    const recommendedGroups = await ctx.db.query.buddyGroups.findMany({
+      limit: 5,
+      orderBy: desc5(buddyGroups.createdAt)
+    });
+    return recommendedGroups.filter((g) => !userGroupIds.includes(g.id)).map((g) => ({
+      id: g.id,
+      name: g.name,
+      description: g.description,
+      type: g.type,
+      memberCount: 0
+      // TODO: Add member count aggregation
+    }));
   })
 });
 
@@ -1776,7 +1816,7 @@ var notificationRouter = router({
 
 // src/trpc/routers/analytics.ts
 import { z as z12 } from "zod";
-import { eq as eq11, desc as desc9, sql as sql2 } from "drizzle-orm";
+import { eq as eq11, desc as desc9, sql as sql3 } from "drizzle-orm";
 var analyticsRouter = router({
   // Create behavior log entry
   logEvent: protectedProcedure.input(
@@ -1813,9 +1853,9 @@ var analyticsRouter = router({
   // Get aggregated learning stats
   getLearningStats: protectedProcedure.query(async ({ ctx }) => {
     const progressRows = await ctx.db.select({
-      lessonsCompleted: sql2`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
-      totalTimeSpent: sql2`coalesce(sum(${userProgress.durationSpent}), 0)`,
-      lessonsStarted: sql2`count(*)`
+      lessonsCompleted: sql3`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
+      totalTimeSpent: sql3`coalesce(sum(${userProgress.durationSpent}), 0)`,
+      lessonsStarted: sql3`count(*)`
     }).from(userProgress).where(eq11(userProgress.userId, ctx.user.id));
     const stats = progressRows[0] ?? {
       lessonsCompleted: 0,

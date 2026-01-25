@@ -2,22 +2,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import type { Course, Lesson } from '@/types';
+import type { Lesson } from '@/types';
 import { BookOpen, CheckCircle, Clock, FileText, PlayCircle, Star, Users } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { serverTrpc } from '@/lib/trpc-server';
 
-async function getCourse(id: string): Promise<Course | null> {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses/${id}`, {
-      cache: 'no-store',
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch (error) {
-    console.error('Failed to fetch course:', error);
-    return null;
-  }
+async function getCourse(slug: string) {
+  return serverTrpc.course.getBySlug(slug);
 }
 
 export default async function CourseDetailPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
