@@ -88,3 +88,11 @@ scripts/vps-toolkit/*.log
 ".turbo/cache/" 
 .turbo/cache/*.tar.zst  
 build-context.tar.gz 
+  
+# Agentic Toolkit - external repos  
+beads_viewer/  
+destructive_command_guard/  
+gastown/  
+mcp_agent_mail/  
+meta_skill/  
+repo_updater/ 

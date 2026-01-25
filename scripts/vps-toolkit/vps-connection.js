@@ -16,7 +16,7 @@ class VPSConnection {
       port: config.port || process.env.VPS_PORT || 22,
       username: config.username || process.env.VPS_USER || 'root',
       privateKey: config.privateKey || this.loadPrivateKey(),
-      readyTimeout: 120000,
+      readyTimeout: 300000,
       keepaliveInterval: 60000,
       keepaliveCountMax: 3,
     };
