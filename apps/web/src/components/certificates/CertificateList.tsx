@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { CertificateCard } from './CertificateCard';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface Certificate {
   id: string;
@@ -16,7 +15,6 @@ interface Certificate {
 export function CertificateList({ userId }: { userId: string }) {
   const locale = useLocale();
   const t = useTranslations('Certificates');
-  const a = useTranslations('Accessibility');
   
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,14 +50,10 @@ export function CertificateList({ userId }: { userId: string }) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12" aria-live="polite" aria-busy={isLoading}>
-        <div className="space-y-4 w-full max-w-4xl">
-          <Skeleton className="h-32 w-full" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-32 w-full" />
-          </div>
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-solid border-blue-600 border-r-transparent mb-4" />
+          <p className="text-gray-600 dark:text-gray-400">Loading certificates...</p>
         </div>
       </div>
     );
@@ -81,7 +75,6 @@ export function CertificateList({ userId }: { userId: string }) {
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
@@ -91,10 +84,10 @@ export function CertificateList({ userId }: { userId: string }) {
           />
         </svg>
         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-          {t('noCertificates')}
+          No certificates yet
         </h3>
         <p className="text-gray-600 dark:text-gray-400">
-          {t('completeCourses')}
+          Complete courses to earn certificates!
         </p>
       </div>
     );
@@ -103,9 +96,9 @@ export function CertificateList({ userId }: { userId: string }) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">{t('title')}</h2>
+        <h2 className="text-2xl font-bold">My Certificates</h2>
         <span className="text-sm text-gray-600 dark:text-gray-400">
-          {t('count', { count: certificates.length })}
+          {certificates.length} {certificates.length === 1 ? 'certificate' : 'certificates'}
         </span>
       </div>
 

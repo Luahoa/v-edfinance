@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Send, Bot, MessageSquare, Plus, ExternalLink, Play, ClipboardCheck } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Send, Bot, Loader2, MessageSquare, Plus, ExternalLink, Play, ClipboardCheck } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { ChatThread, ChatMessage } from '@/types/chat';
 import ReactMarkdown from 'react-markdown';
@@ -11,7 +10,6 @@ import { useAnalytics } from '@/hooks/useAnalytics';
 
 export default function AiMentor() {
     const t = useTranslations('Dashboard');
-    const a = useTranslations('Accessibility');
     const { token } = useAuthStore();
     const { trackEvent } = useAnalytics();
 
@@ -74,7 +72,7 @@ export default function AiMentor() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({ title: t('newThreadTitle', { time: new Date().toLocaleTimeString() }) }),
+                body: JSON.stringify({ title: `Hội thoại mới ${new Date().toLocaleTimeString()}` }),
             });
             const newThread = await res.json();
             setThreads([newThread, ...threads]);
@@ -126,7 +124,7 @@ export default function AiMentor() {
                 <button
                     onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                     className="rounded-lg p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none"
-                    aria-label={isSidebarOpen ? a('closeThreadList') : a('openThreadList')}
+                    aria-label={isSidebarOpen ? "Close thread list" : "Open thread list"}
                 >
                     <MessageSquare className="h-5 w-5" />
                 </button>
@@ -139,11 +137,10 @@ export default function AiMentor() {
                         <div className="p-4">
                             <button
                                 onClick={createNewThread}
-                                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                                aria-label={a('newThread')}
+                                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700"
                             >
                                 <Plus className="h-4 w-4" />
-                                {t('newThread')}
+                                Thread mới
                             </button>
                         </div>
                         <div className="flex-1 overflow-y-auto p-2 space-y-1">
@@ -179,15 +176,14 @@ export default function AiMentor() {
                                 <h3 className="text-lg font-semibold">{t('aiWelcome')}</h3>
                                 <button
                                     onClick={createNewThread}
-                                    className="rounded-lg border border-blue-600 px-6 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                                    aria-label={a('startDiscussion')}
+                                    className="rounded-lg border border-blue-600 px-6 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50"
                                 >
-                                    {t('startDiscussion')}
+                                    Bắt đầu thảo luận ngay
                                 </button>
                             </div>
                         ) : messages.length === 0 && !isLoading ? (
                             <div className="text-center text-zinc-500 mt-10">
-                                {t('startFirstQuestion')}
+                                Hãy bắt đầu câu hỏi đầu tiên của bạn...
                             </div>
                         ) : (
                             messages.map((m) => (
@@ -197,7 +193,7 @@ export default function AiMentor() {
                                             : 'bg-zinc-100 dark:bg-zinc-800 dark:text-zinc-100'
                                         }`}>
                                         {m.role === 'ASSISTANT' && <Bot className="h-5 w-5 shrink-0 mt-1" />}
-                                        <div aria-live="polite" aria-atomic="true" className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed">
+                                        <div className="prose prose-sm dark:prose-invert max-w-none prose-p:leading-relaxed">
                                             <ReactMarkdown>{m.content}</ReactMarkdown>
                                         </div>
                                         {/* Action Card Renderer */}
@@ -226,9 +222,8 @@ export default function AiMentor() {
                                                             }
                                                         }}
                                                         className="rounded-lg bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900"
-                                                        aria-label={a('performAction')}
                                                     >
-                                                        {t('performAction')}
+                                                        Thực hiện
                                                     </button>
                                                 </div>
                                             </div>
@@ -237,17 +232,13 @@ export default function AiMentor() {
                                 </div>
                             ))
                         )}
-                        <div aria-live="polite" aria-busy={isLoading}>
-                            {isLoading && (
-                                <div className="flex justify-start">
-                                    <div className="bg-zinc-100 dark:bg-zinc-800 rounded-2xl p-4 flex flex-col gap-2">
-                                        <Skeleton className="h-4 w-48" />
-                                        <Skeleton className="h-4 w-40" />
-                                        <Skeleton className="h-4 w-44" />
-                                    </div>
+                        {isLoading && (
+                            <div className="flex justify-start">
+                                <div className="bg-zinc-100 dark:bg-zinc-800 rounded-2xl p-4">
+                                    <Loader2 className="h-5 w-5 animate-spin text-zinc-500" />
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
 
                     {/* Input Area */}
@@ -258,17 +249,14 @@ export default function AiMentor() {
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                                placeholder={currentThread ? t('aiPlaceholder') : t('selectThreadPrompt')}
+                                placeholder={currentThread ? t('aiPlaceholder') : 'Chọn thread để bắt đầu...'}
                                 disabled={!currentThread || isLoading}
-                                className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white"
-                                aria-label={a('messageInput')}
-                                aria-busy={isLoading}
+                                className="flex-1 rounded-xl border border-zinc-200 bg-zinc-50 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-white"
                             />
                             <button
                                 onClick={sendMessage}
                                 disabled={isLoading || !input.trim() || !currentThread}
-                                className="rounded-xl bg-blue-600 p-3 text-white transition-all hover:bg-blue-700 disabled:opacity-50 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                                aria-label={a('sendMessage')}
+                                className="rounded-xl bg-blue-600 p-3 text-white transition-all hover:bg-blue-700 disabled:opacity-50"
                             >
                                 <Send className="h-5 w-5" />
                             </button>

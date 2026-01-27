@@ -9,11 +9,9 @@ export const ConfigSchema = z.object({
 	maxIterations: z.number().int().positive().default(30),
 	defaultWorkers: z.number().int().nonnegative().default(0),
 	qualityGates: z.boolean().default(true),
-	knowledgeExtraction: z.boolean().default(true),
 	beadsCommand: z.string().default(process.platform === "win32" ? "beads.exe" : "bd"),
 	bvCommand: z.string().default(process.platform === "win32" ? "bv.exe" : "bv"),
 	qualityGateScript: z.string().default("scripts/quality-gate.sh"),
-	knowledgeExtractionPrompt: z.string().default(".agents/skills/knowledge/epic-completion-prompt.txt"),
 	historyDir: z.string().default("history/"),
 	logDir: z.string().default(".ralph/logs/"),
 });

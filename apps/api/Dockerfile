@@ -24,7 +24,7 @@ COPY --from=deps /app/apps/api/node_modules ./apps/api/node_modules
 COPY . .
 
 # Generate Prisma client
-RUN pnpm --filter api exec prisma generate --schema=prisma/schema.prisma
+RUN pnpm --filter api exec prisma generate --schema=apps/api/prisma/schema.prisma
 
 # Build the app
 RUN pnpm --filter api build
@@ -46,11 +46,7 @@ COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=builder /app/package.json ./package.json
 
 USER nestjs
-EXPOSE 3001
+EXPOSE 3000
 
-# Healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s \
-  CMD node -e "require('http').get('http://localhost:3001/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1); });"
-
-# Start the application (run migrations first)
-CMD ["sh", "-c", "npx prisma migrate deploy --schema=apps/api/prisma/schema.prisma && node apps/api/dist/main"]
+# Start the application
+CMD ["node", "apps/api/dist/main"]

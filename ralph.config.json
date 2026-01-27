@@ -2,11 +2,9 @@
 	"maxIterations": 30,
 	"defaultWorkers": 0,
 	"qualityGates": true,
-	"knowledgeExtraction": true,
 	"beadsCommand": "beads.exe",
 	"bvCommand": "bv.exe",
 	"qualityGateScript": "scripts/quality-gate-ultra-fast.bat",
-	"knowledgeExtractionPrompt": ".agents/skills/knowledge/epic-completion-prompt.txt",
 	"historyDir": "history/",
 	"logDir": ".ralph/logs/"
 }
