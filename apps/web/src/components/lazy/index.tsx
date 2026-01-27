@@ -70,3 +70,29 @@ export const LazyQuickActionsGrid = dynamic(
     ssr: true,
   }
 );
+
+export const LazyEngagementAnalytics = dynamic(
+  () => import('@/components/organisms/EngagementAnalytics'),
+  {
+    loading: () => (
+      <div className="space-y-6">
+        <div className="h-6 w-48 bg-zinc-200 dark:bg-zinc-700 rounded animate-pulse" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="p-4 rounded-xl bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 animate-pulse">
+              <div className="h-16 w-full bg-zinc-200 dark:bg-zinc-700 rounded" />
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="p-4 rounded-xl bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 animate-pulse">
+              <div className="h-64 w-full bg-zinc-200 dark:bg-zinc-700 rounded" />
+            </div>
+          ))}
+        </div>
+      </div>
+    ),
+    ssr: false,
+  }
+);

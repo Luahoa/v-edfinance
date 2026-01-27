@@ -308,6 +308,9 @@
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单",
     "moreOptions": "更多选项",
-    "selectThread": "选择主题：{title}"
+    "selectThread": "选择主题：{title}",
+    "loadingContent": "正在加载内容...",
+    "chartTimeSpent": "每课学习时间图表",
+    "chartCompletionTrend": "课程完成趋势图表"
   }
 }

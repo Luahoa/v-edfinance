@@ -308,6 +308,9 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "moreOptions": "More options",
-    "selectThread": "Select thread: {title}"
+    "selectThread": "Select thread: {title}",
+    "loadingContent": "Loading content...",
+    "chartTimeSpent": "Chart showing time spent per lesson",
+    "chartCompletionTrend": "Chart showing lesson completion trend over time"
   }
 }

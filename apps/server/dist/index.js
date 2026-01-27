@@ -49,6 +49,10 @@ import { eq, sql } from "drizzle-orm";
 var schema_exports = {};
 __export(schema_exports, {
   achievements: () => achievements,
+  authAccounts: () => authAccounts,
+  authSessions: () => authSessions,
+  authUsers: () => authUsers,
+  authVerifications: () => authVerifications,
   behaviorLogs: () => behaviorLogs,
   behaviorLogsRelations: () => behaviorLogsRelations,
   buddyChallenges: () => buddyChallenges,
@@ -824,9 +828,72 @@ var refreshTokensRelations = relations(refreshTokens, ({ one }) => ({
     references: [users.id]
   })
 }));
+var authUsers = pgTable(
+  "user",
+  {
+    id: text("id").primaryKey(),
+    name: text("name"),
+    email: text("email").unique().notNull(),
+    emailVerified: boolean("emailVerified").default(false).notNull(),
+    image: text("image"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull()
+  }
+);
+var authSessions = pgTable(
+  "session",
+  {
+    id: text("id").primaryKey(),
+    expiresAt: timestamp("expiresAt").notNull(),
+    token: text("token").unique().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+    ipAddress: text("ipAddress"),
+    userAgent: text("userAgent"),
+    userId: text("userId").notNull().references(() => authUsers.id, { onDelete: "cascade" })
+  }
+);
+var authAccounts = pgTable(
+  "account",
+  {
+    id: text("id").primaryKey(),
+    accountId: text("accountId").notNull(),
+    providerId: text("providerId").notNull(),
+    userId: text("userId").notNull().references(() => authUsers.id, { onDelete: "cascade" }),
+    accessToken: text("accessToken"),
+    refreshToken: text("refreshToken"),
+    idToken: text("idToken"),
+    accessTokenExpiresAt: timestamp("accessTokenExpiresAt"),
+    refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt"),
+    scope: text("scope"),
+    password: text("password"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull()
+  }
+);
+var authVerifications = pgTable(
+  "verification",
+  {
+    id: text("id").primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: timestamp("expiresAt").notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt").defaultNow()
+  }
+);
 
 // src/trpc/routers/user.ts
 var userRouter = router({
+  // Test database connection
+  testDb: publicProcedure.query(async ({ ctx }) => {
+    try {
+      const count2 = await ctx.db.select({ count: sql`count(*)` }).from(users);
+      return { success: true, userCount: count2[0]?.count ?? 0 };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
+  }),
   // Get current user profile
   me: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.query.users.findFirst({
@@ -1816,7 +1883,7 @@ var notificationRouter = router({
 
 // src/trpc/routers/analytics.ts
 import { z as z12 } from "zod";
-import { eq as eq11, desc as desc9, sql as sql3 } from "drizzle-orm";
+import { eq as eq11, and as and10, desc as desc9, gte, sql as sql3, count } from "drizzle-orm";
 var analyticsRouter = router({
   // Create behavior log entry
   logEvent: protectedProcedure.input(
@@ -1884,6 +1951,80 @@ var analyticsRouter = router({
       currentStreak: streak.currentStreak,
       longestStreak: streak.longestStreak,
       lastActivityDate: streak.lastActivityDate
+    };
+  }),
+  // Get time spent per lesson (for chart)
+  getTimeSpentPerLesson: protectedProcedure.input(
+    z12.object({
+      courseId: z12.string().uuid().optional(),
+      limit: z12.number().min(1).max(20).default(10)
+    }).optional()
+  ).query(async ({ ctx, input }) => {
+    const limit = input?.limit ?? 10;
+    const query = ctx.db.select({
+      lessonId: userProgress.lessonId,
+      lessonTitle: lessons.title,
+      courseTitle: courses.title,
+      timeSpent: sql3`coalesce(${userProgress.durationSpent}, 0)`,
+      progressPercentage: userProgress.progressPercentage
+    }).from(userProgress).innerJoin(lessons, eq11(userProgress.lessonId, lessons.id)).innerJoin(courses, eq11(lessons.courseId, courses.id)).where(eq11(userProgress.userId, ctx.user.id)).orderBy(desc9(userProgress.updatedAt)).limit(limit);
+    const results = await query;
+    return results.map((r) => ({
+      lessonId: r.lessonId,
+      lessonTitle: r.lessonTitle?.["vi"] || r.lessonTitle?.["en"] || "Untitled",
+      courseTitle: r.courseTitle?.["vi"] || r.courseTitle?.["en"] || "Untitled",
+      timeSpent: Number(r.timeSpent),
+      progressPercentage: r.progressPercentage ?? 0
+    }));
+  }),
+  // Get completion trend over time (last 7/14/30 days)
+  getCompletionTrend: protectedProcedure.input(
+    z12.object({
+      days: z12.number().min(7).max(90).default(7)
+    }).optional()
+  ).query(async ({ ctx, input }) => {
+    const days = input?.days ?? 7;
+    const startDate = /* @__PURE__ */ new Date();
+    startDate.setDate(startDate.getDate() - days);
+    const results = await ctx.db.select({
+      date: sql3`date_trunc('day', ${userProgress.completedAt})::date`,
+      completedCount: count()
+    }).from(userProgress).where(
+      and10(
+        eq11(userProgress.userId, ctx.user.id),
+        eq11(userProgress.status, "COMPLETED"),
+        gte(userProgress.completedAt, startDate)
+      )
+    ).groupBy(sql3`date_trunc('day', ${userProgress.completedAt})::date`).orderBy(sql3`date_trunc('day', ${userProgress.completedAt})::date`);
+    const trendData = [];
+    const dateMap = new Map(results.map((r) => [r.date, Number(r.completedCount)]));
+    for (let i = days - 1; i >= 0; i--) {
+      const date = /* @__PURE__ */ new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split("T")[0];
+      trendData.push({
+        date: dateStr,
+        completed: dateMap.get(dateStr) ?? 0
+      });
+    }
+    return trendData;
+  }),
+  // Get engagement summary (completion rate, avg time, etc.)
+  getEngagementSummary: protectedProcedure.query(async ({ ctx }) => {
+    const stats = await ctx.db.select({
+      total: count(),
+      completed: sql3`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
+      totalTime: sql3`coalesce(sum(${userProgress.durationSpent}), 0)`,
+      avgProgress: sql3`coalesce(avg(${userProgress.progressPercentage}), 0)`
+    }).from(userProgress).where(eq11(userProgress.userId, ctx.user.id));
+    const result = stats[0] ?? { total: 0, completed: 0, totalTime: 0, avgProgress: 0 };
+    const completionRate = result.total > 0 ? Math.round(Number(result.completed) / Number(result.total) * 100) : 0;
+    return {
+      totalLessons: Number(result.total),
+      completedLessons: Number(result.completed),
+      completionRate,
+      totalTimeMinutes: Math.round(Number(result.totalTime) / 60),
+      avgProgress: Math.round(Number(result.avgProgress))
     };
   })
 });

@@ -313,6 +313,9 @@
     "openMenu": "Mở menu",
     "closeMenu": "Đóng menu",
     "moreOptions": "Tùy chọn khác",
-    "selectThread": "Chọn chủ đề: {title}"
+    "selectThread": "Chọn chủ đề: {title}",
+    "loadingContent": "Đang tải nội dung...",
+    "chartTimeSpent": "Biểu đồ thời gian học mỗi bài",
+    "chartCompletionTrend": "Biểu đồ xu hướng hoàn thành bài học"
   }
 }

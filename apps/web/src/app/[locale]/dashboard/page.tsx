@@ -5,7 +5,8 @@ import {
   LazyInteractiveChecklist, 
   LazySocialFeed, 
   LazyBuddyRecommendations,
-  LazyQuickActionsGrid
+  LazyQuickActionsGrid,
+  LazyEngagementAnalytics
 } from '@/components/lazy';
 import { 
   StatGridSkeleton, 
@@ -98,6 +99,11 @@ export default async function Dashboard({ params }: { params: Promise<{ locale: 
         {/* Quick Actions Grid */}
         <Suspense fallback={<SkeletonGrid cols={3} />}>
           <LazyQuickActionsGrid />
+        </Suspense>
+
+        {/* Engagement Analytics */}
+        <Suspense fallback={<SkeletonGrid cols={4} />}>
+          <LazyEngagementAnalytics />
         </Suspense>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
