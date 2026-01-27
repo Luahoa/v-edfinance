@@ -1,8 +1,20 @@
 import { getTranslations } from 'next-intl/server';
-import AiMentor from '@/components/AiMentor';
-import InteractiveChecklist from '@/components/organisms/InteractiveChecklist';
-import { SocialFeed } from '@/components/organisms/SocialFeed';
-import { BuddyRecommendations } from '@/components/molecules/BuddyRecommendations';
+import { Suspense } from 'react';
+import { 
+  LazyAiMentor, 
+  LazyInteractiveChecklist, 
+  LazySocialFeed, 
+  LazyBuddyRecommendations,
+  LazyQuickActionsGrid
+} from '@/components/lazy';
+import { 
+  StatGridSkeleton, 
+  ChecklistSkeleton, 
+  SocialFeedSkeleton, 
+  BuddyCardSkeleton, 
+  AiMentorSkeleton,
+  SkeletonGrid
+} from '@/components/atoms/Skeleton';
 import { BookOpen, TrendingUp, Award, Zap, ListTodo, Users } from 'lucide-react';
 import type { BuddyGroup, DashboardStats, Post as SocialPostType } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -83,6 +95,11 @@ export default async function Dashboard({ params }: { params: Promise<{ locale: 
           />
         </div>
 
+        {/* Quick Actions Grid */}
+        <Suspense fallback={<SkeletonGrid cols={3} />}>
+          <LazyQuickActionsGrid />
+        </Suspense>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <Card>
@@ -93,7 +110,9 @@ export default async function Dashboard({ params }: { params: Promise<{ locale: 
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <InteractiveChecklist />
+                <Suspense fallback={<ChecklistSkeleton />}>
+                  <LazyInteractiveChecklist />
+                </Suspense>
               </CardContent>
             </Card>
 
@@ -105,14 +124,20 @@ export default async function Dashboard({ params }: { params: Promise<{ locale: 
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <SocialFeed initialPosts={feedPosts} />
+                <Suspense fallback={<SocialFeedSkeleton />}>
+                  <LazySocialFeed initialPosts={feedPosts} />
+                </Suspense>
               </CardContent>
             </Card>
           </div>
 
           <div className="lg:col-span-1 space-y-6">
-            <BuddyRecommendations recommendations={recommendations} />
-            <AiMentor />
+            <Suspense fallback={<BuddyCardSkeleton />}>
+              <LazyBuddyRecommendations recommendations={recommendations} />
+            </Suspense>
+            <Suspense fallback={<AiMentorSkeleton />}>
+              <LazyAiMentor />
+            </Suspense>
           </div>
         </div>
       </div>

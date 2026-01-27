@@ -83,6 +83,9 @@ export default function Sidebar({ className = '', onClose }: SidebarProps) {
                                 }
                             />
                             {item.label}
+                            <span className="ml-auto text-[10px] text-zinc-400 hidden lg:inline-block opacity-0 group-hover:opacity-100 transition-opacity">
+                              {item.shortcut}
+                            </span>
                             {isActive && (
                                 <motion.div
                                     layoutId="active-nav"

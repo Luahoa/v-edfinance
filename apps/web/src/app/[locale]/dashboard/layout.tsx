@@ -3,7 +3,7 @@
 import Header from '@/components/organisms/Header';
 import Sidebar from '@/components/organisms/Sidebar';
 import { CommandPalette } from '@/components/organisms/CommandPalette';
-import { useNavigationShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { useNavigationShortcuts } from '@/hooks/useNavigationShortcuts';
 
 export default function DashboardLayout({
   children,
