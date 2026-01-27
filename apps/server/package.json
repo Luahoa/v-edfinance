@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsup src/index.ts --format esm --dts",
+    "build:worker": "tsup src/worker.ts --format esm --outDir dist-worker",
     "start": "node dist/index.js",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -16,6 +19,7 @@
   "dependencies": {
     "@hono/node-server": "^1.13.7",
     "@hono/trpc-server": "^0.3.2",
+    "@neondatabase/serverless": "^0.10.4",
     "@trpc/server": "^11.0.0-rc.666",
     "better-auth": "^1.1.14",
     "drizzle-orm": "^0.45.1",
@@ -25,10 +29,12 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241230.0",
     "@types/node": "^22.10.5",
     "drizzle-kit": "^0.31.8",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "wrangler": "^3.99.0"
   }
 }

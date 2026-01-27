@@ -5,6 +5,16 @@ import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { users, userProgress, userStreaks } from '../../../drizzle/schema';
 
 export const userRouter = router({
+  // Test database connection
+  testDb: publicProcedure.query(async ({ ctx }) => {
+    try {
+      const count = await ctx.db.select({ count: sql<number>`count(*)` }).from(users);
+      return { success: true, userCount: count[0]?.count ?? 0 };
+    } catch (error) {
+      return { success: false, error: error instanceof Error ? error.message : String(error) };
+    }
+  }),
+
   // Get current user profile
   me: protectedProcedure.query(async ({ ctx }) => {
     const user = await ctx.db.query.users.findFirst({

@@ -381,6 +381,140 @@ Update to `completed` when done with detailed `resolution` and `actions_complete
 
 ---
 
+## Agentic Toolkit Integration
+
+V-EdFinance uses a complete multi-agent orchestration toolkit for parallel task execution.
+
+### Installed Tools
+
+| Tool | Command | Purpose |
+|------|---------|---------|
+| **beads** | `.\beads.exe` | Issue/bead tracking |
+| **bv** | `.\bv.exe` | AI-powered triage & graph analysis |
+| **gt** | `.\gt.exe` | Multi-agent orchestration (Gastown) |
+| **dcg** | `.\dcg.exe` | Destructive command guard |
+| **ms** | `.\ms.exe` | Skill management |
+| **mcp-agent-mail** | `mcp_agent_mail\.venv\` | File reservations & messaging |
+
+### Quick Scripts
+
+All scripts in `scripts/agentic/`:
+
+```bash
+# Setup PATH for session
+scripts\agentic\setup-path.bat
+
+# UNIFIED PIPELINE (recommended)
+scripts\agentic\pipeline.bat start           # Sync + get next task
+scripts\agentic\pipeline.bat claim ved-xxxx  # Claim task
+scripts\agentic\pipeline.bat done ved-xxxx   # Close + sync + next
+scripts\agentic\pipeline.bat full ved-xxxx   # Full cycle (claim→done→sync)
+
+# Individual commands
+scripts\agentic\next-task.bat       # Get AI-recommended task
+scripts\agentic\claim.bat ved-xxxx  # Claim task
+scripts\agentic\close.bat ved-xxxx  # Close task
+scripts\agentic\triage.bat          # Full triage report
+scripts\agentic\safe-check.bat "rm -rf /"  # Check command safety
+```
+
+### Daily Workflow
+
+```bash
+# 1. Start session (sync + get recommendation)
+scripts\agentic\pipeline.bat start
+
+# 2. Claim the task
+scripts\agentic\pipeline.bat claim ved-xxxx
+
+# 3. Do work (DCG auto-blocks dangerous commands via hook)
+# DCG is configured as PreToolUse hook in ~/.claude/settings.json
+
+# 4. Complete task (close + sync + show next)
+scripts\agentic\pipeline.bat done ved-xxxx "Reason"
+
+# Or one-shot full pipeline:
+scripts\agentic\pipeline.bat full ved-xxxx "Completed feature X"
+```
+
+### Multi-Agent Parallel Execution
+
+For complex epics, spawn Polecats (parallel workers):
+
+```bash
+# Mayor coordinates from main thread
+.\bv.exe --robot-triage  # Get prioritized work
+
+# Spawn parallel workers
+scripts\agentic\spawn-workers.bat ved-track1 ved-track2 ved-track3
+
+# Or directly
+.\gt.exe polecat spawn --bead ved-track1
+
+# Monitor progress
+.\gt.exe status
+.\gt.exe agents
+```
+
+### File Reservations (Prevent Conflicts)
+
+When multiple agents work in parallel:
+
+```bash
+# Start MCP Agent Mail server
+scripts\agentic\mail-serve.bat
+
+# Agents reserve files before editing via MCP protocol
+```
+
+### Vietnamese Command Support
+
+Bạn có thể ra lệnh bằng tiếng Việt. Agent sẽ dịch sang commands:
+
+| Tiếng Việt | Command |
+|------------|---------|
+| "Task tiếp theo là gì?" | `.\bv.exe --robot-next` |
+| "Nhận task ved-xxxx" | `.\beads.exe update ved-xxxx --status=in_progress` |
+| "Đóng task ved-xxxx" | `.\beads.exe close ved-xxxx --reason "..."` |
+| "Kiểm tra lệnh có an toàn không" | `.\dcg.exe` (auto via hook) |
+| "Spawn 3 workers song song" | `scripts\agentic\spawn-workers.bat ...` |
+| "Triage toàn bộ" | `.\bv.exe --robot-triage` |
+
+### Integration with Task Tool
+
+When spawning sub-agents via `Task()`, include toolkit usage:
+
+```markdown
+Before editing files, check if safe:
+.\dcg.exe check "the command"
+
+After completing, close the bead:
+.\beads.exe close ved-xxxx --reason "Done"
+```
+
+### Complete Orchestration Flow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    PIPELINE ORCHESTRATION                        │
+├─────────────────────────────────────────────────────────────────┤
+│  pipeline start    → beads sync → bv --robot-next              │
+│  pipeline claim    → beads update → (DCG protects all Bash)    │
+│  pipeline done     → beads close → beads sync → bv --robot-next│
+│  pipeline parallel → gt polecat spawn (multiple workers)        │
+└─────────────────────────────────────────────────────────────────┘
+
+DCG (PreToolUse Hook) automatically protects ALL Bash commands:
+  ✗ git reset --hard, git push --force
+  ✗ rm -rf outside /tmp
+  ✗ docker system prune -f
+  ✗ kubectl delete namespace
+```
+
+**Full documentation:** [docs/AGENTIC_ORCHESTRATION_PLAN.md](docs/AGENTIC_ORCHESTRATION_PLAN.md)
+
+---
+
 ### 1. Nudge Orchestration (Richard Thaler)
 - **Engine Design**: Centralized service to calculate and deliver psychological triggers.
 - **Key Tactics**:

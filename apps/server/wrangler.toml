@@ -1,0 +1,40 @@
+# Cloudflare Workers configuration for V-EdFinance API
+name = "vedfinance-api"
+main = "dist-worker/worker.js"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Production environment (default)
+[vars]
+ENVIRONMENT = "production"
+
+# Secrets (set via wrangler secret put)
+# DATABASE_URL - Neon PostgreSQL connection string
+# GOOGLE_CLIENT_ID - Google OAuth client ID
+# GOOGLE_CLIENT_SECRET - Google OAuth client secret
+# BETTER_AUTH_SECRET - better-auth secret key
+
+# Custom domain routes
+routes = [
+  { pattern = "api.hochcungkhoan.com.vn", custom_domain = true }
+]
+
+# Staging environment
+[env.staging]
+name = "vedfinance-api-staging"
+[env.staging.vars]
+ENVIRONMENT = "staging"
+
+# Development environment (local)
+[env.dev]
+name = "vedfinance-api-dev"
+[env.dev.vars]
+ENVIRONMENT = "development"
+
+# Build configuration
+[build]
+command = "pnpm build:worker"
+
+# Observability
+[observability]
+enabled = true

@@ -22,7 +22,7 @@ setup() {
 
 @test "App structure is valid" {
     [ -d "$PROJECT_ROOT/apps/web" ]
-    [ -d "$PROJECT_ROOT/apps/api" ]
+    [ -d "$PROJECT_ROOT/apps/server" ]
 }
 
 @test "Prisma schema exists" {
@@ -37,5 +37,5 @@ setup() {
 
 @test "Docker configuration exists" {
     [ -f "$PROJECT_ROOT/docker-compose.yml" ]
-    [ -f "$PROJECT_ROOT/apps/api/Dockerfile" ]
+    [ -f "$PROJECT_ROOT/apps/server/Dockerfile" ]
 }

@@ -4,9 +4,9 @@
   [ -f "START_DEV.bat" ]
 }
 
-@test "Verify apps/api directory structure" {
-  [ -d "apps/api/src" ]
-  [ -d "apps/api/prisma" ]
+@test "Verify apps/server directory structure" {
+  [ -d "apps/server/src" ]
+  [ -d "apps/server/drizzle" ]
 }
 
 @test "Check if pnpm-workspace.yaml is valid" {
