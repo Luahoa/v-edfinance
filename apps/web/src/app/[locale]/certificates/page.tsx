@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,6 +23,7 @@ export default function CertificatesPage() {
   const t = useTranslations('Certificates');
   const tCommon = useTranslations('Common');
   const router = useRouter();
+  const locale = useLocale();
 
   const [shareMessage, setShareMessage] = useState<string | null>(null);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -32,7 +33,7 @@ export default function CertificatesPage() {
   const certificates: Certificate[] = (certificatesData ?? []).map((cert) => ({
     id: cert.id,
     courseId: cert.course?.id ?? '',
-    courseName: cert.courseTitle?.['vi'] || cert.courseTitle?.['en'] || 'Course',
+    courseName: cert.courseTitle?.[locale] ?? cert.courseTitle?.vi ?? t('untitledCourse'),
     earnedDate: new Date(cert.completedAt),
     certificateUrl: cert.pdfUrl ?? undefined,
   }));
@@ -99,7 +100,7 @@ export default function CertificatesPage() {
       <header className="mb-8">
         <h1 className="text-3xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-zinc-600">
-          View and download your earned certificates
+          {t('subtitle')}
         </p>
       </header>
 
@@ -130,7 +131,7 @@ export default function CertificatesPage() {
             <FileText className="h-16 w-16 text-zinc-300 mb-4" />
             <p className="text-lg text-zinc-500 mb-4">{t('noCertificates')}</p>
             <Button onClick={() => router.push('/courses')} variant="outline">
-              Browse Courses
+              {t('browseCourses')}
             </Button>
           </CardContent>
         </Card>

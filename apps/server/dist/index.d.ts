@@ -318,6 +318,7 @@ declare const usersRelations: drizzle_orm.Relations<"User", {
     quizAttempts: drizzle_orm.Many<"QuizAttempt">;
     certificates: drizzle_orm.Many<"Certificate">;
     transactions: drizzle_orm.Many<"Transaction">;
+    enrollments: drizzle_orm.Many<"Enrollment">;
 }>;
 declare const courses: drizzle_orm_pg_core.PgTableWithColumns<{
     name: "Course";
@@ -459,6 +460,23 @@ declare const courses: drizzle_orm_pg_core.PgTableWithColumns<{
             identity: undefined;
             generated: undefined;
         }, {}, {}>;
+        instructorId: drizzle_orm_pg_core.PgColumn<{
+            name: "instructorId";
+            tableName: "Course";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
         createdAt: drizzle_orm_pg_core.PgColumn<{
             name: "createdAt";
             tableName: "Course";
@@ -497,9 +515,124 @@ declare const courses: drizzle_orm_pg_core.PgTableWithColumns<{
     dialect: "pg";
 }>;
 declare const coursesRelations: drizzle_orm.Relations<"Course", {
+    instructor: drizzle_orm.One<"User", false>;
     lessons: drizzle_orm.Many<"Lesson">;
     certificates: drizzle_orm.Many<"Certificate">;
     transactions: drizzle_orm.Many<"Transaction">;
+    enrollments: drizzle_orm.Many<"Enrollment">;
+}>;
+declare const enrollments: drizzle_orm_pg_core.PgTableWithColumns<{
+    name: "Enrollment";
+    schema: undefined;
+    columns: {
+        id: drizzle_orm_pg_core.PgColumn<{
+            name: "id";
+            tableName: "Enrollment";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: true;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        userId: drizzle_orm_pg_core.PgColumn<{
+            name: "userId";
+            tableName: "Enrollment";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        courseId: drizzle_orm_pg_core.PgColumn<{
+            name: "courseId";
+            tableName: "Enrollment";
+            dataType: "string";
+            columnType: "PgUUID";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        enrolledAt: drizzle_orm_pg_core.PgColumn<{
+            name: "enrolledAt";
+            tableName: "Enrollment";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        emailSentAt: drizzle_orm_pg_core.PgColumn<{
+            name: "emailSentAt";
+            tableName: "Enrollment";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+        completedAt: drizzle_orm_pg_core.PgColumn<{
+            name: "completedAt";
+            tableName: "Enrollment";
+            dataType: "date";
+            columnType: "PgTimestamp";
+            data: Date;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: undefined;
+            baseColumn: never;
+            identity: undefined;
+            generated: undefined;
+        }, {}, {}>;
+    };
+    dialect: "pg";
+}>;
+declare const enrollmentsRelations: drizzle_orm.Relations<"Enrollment", {
+    user: drizzle_orm.One<"User", true>;
+    course: drizzle_orm.One<"Course", true>;
 }>;
 declare const lessons: drizzle_orm_pg_core.PgTableWithColumns<{
     name: "Lesson";
@@ -4711,6 +4844,8 @@ declare const ______drizzle_schema_chatThreads: typeof chatThreads;
 declare const ______drizzle_schema_chatThreadsRelations: typeof chatThreadsRelations;
 declare const ______drizzle_schema_courses: typeof courses;
 declare const ______drizzle_schema_coursesRelations: typeof coursesRelations;
+declare const ______drizzle_schema_enrollments: typeof enrollments;
+declare const ______drizzle_schema_enrollmentsRelations: typeof enrollmentsRelations;
 declare const ______drizzle_schema_investmentProfiles: typeof investmentProfiles;
 declare const ______drizzle_schema_investmentProfilesRelations: typeof investmentProfilesRelations;
 declare const ______drizzle_schema_lessonTypeEnum: typeof lessonTypeEnum;
@@ -4757,7 +4892,7 @@ declare const ______drizzle_schema_usersRelations: typeof usersRelations;
 declare const ______drizzle_schema_virtualPortfolios: typeof virtualPortfolios;
 declare const ______drizzle_schema_virtualPortfoliosRelations: typeof virtualPortfoliosRelations;
 declare namespace ______drizzle_schema {
-  export { ______drizzle_schema_achievements as achievements, ______drizzle_schema_authAccounts as authAccounts, ______drizzle_schema_authSessions as authSessions, ______drizzle_schema_authUsers as authUsers, ______drizzle_schema_authVerifications as authVerifications, ______drizzle_schema_behaviorLogs as behaviorLogs, ______drizzle_schema_behaviorLogsRelations as behaviorLogsRelations, ______drizzle_schema_buddyChallenges as buddyChallenges, ______drizzle_schema_buddyChallengesRelations as buddyChallengesRelations, ______drizzle_schema_buddyGroupTypeEnum as buddyGroupTypeEnum, ______drizzle_schema_buddyGroups as buddyGroups, ______drizzle_schema_buddyGroupsRelations as buddyGroupsRelations, ______drizzle_schema_buddyMembers as buddyMembers, ______drizzle_schema_buddyMembersRelations as buddyMembersRelations, ______drizzle_schema_buddyRoleEnum as buddyRoleEnum, ______drizzle_schema_certificates as certificates, ______drizzle_schema_certificatesRelations as certificatesRelations, ______drizzle_schema_chatMessages as chatMessages, ______drizzle_schema_chatMessagesRelations as chatMessagesRelations, ______drizzle_schema_chatRoleEnum as chatRoleEnum, ______drizzle_schema_chatThreads as chatThreads, ______drizzle_schema_chatThreadsRelations as chatThreadsRelations, ______drizzle_schema_courses as courses, ______drizzle_schema_coursesRelations as coursesRelations, ______drizzle_schema_investmentProfiles as investmentProfiles, ______drizzle_schema_investmentProfilesRelations as investmentProfilesRelations, ______drizzle_schema_lessonTypeEnum as lessonTypeEnum, ______drizzle_schema_lessons as lessons, ______drizzle_schema_lessonsRelations as lessonsRelations, ______drizzle_schema_levelEnum as levelEnum, ______drizzle_schema_moderationLogs as moderationLogs, ______drizzle_schema_moderationLogsRelations as moderationLogsRelations, ______drizzle_schema_postTypeEnum as postTypeEnum, ______drizzle_schema_progressStatusEnum as progressStatusEnum, ______drizzle_schema_questionTypeEnum as questionTypeEnum, ______drizzle_schema_quizAttempts as quizAttempts, ______drizzle_schema_quizAttemptsRelations as quizAttemptsRelations, ______drizzle_schema_quizQuestions as quizQuestions, ______drizzle_schema_quizQuestionsRelations as quizQuestionsRelations, ______drizzle_schema_quizzes as quizzes, ______drizzle_schema_quizzesRelations as quizzesRelations, ______drizzle_schema_refreshTokens as refreshTokens, ______drizzle_schema_refreshTokensRelations as refreshTokensRelations, ______drizzle_schema_relationStatusEnum as relationStatusEnum, ______drizzle_schema_roleEnum as roleEnum, ______drizzle_schema_simulationCommitments as simulationCommitments, ______drizzle_schema_simulationCommitmentsRelations as simulationCommitmentsRelations, ______drizzle_schema_simulationScenarios as simulationScenarios, ______drizzle_schema_simulationScenariosRelations as simulationScenariosRelations, ______drizzle_schema_socialPosts as socialPosts, ______drizzle_schema_socialPostsRelations as socialPostsRelations, ______drizzle_schema_transactionStatusEnum as transactionStatusEnum, ______drizzle_schema_transactionTypeEnum as transactionTypeEnum, ______drizzle_schema_transactions as transactions, ______drizzle_schema_transactionsRelations as transactionsRelations, ______drizzle_schema_userAchievements as userAchievements, ______drizzle_schema_userAchievementsRelations as userAchievementsRelations, ______drizzle_schema_userChecklists as userChecklists, ______drizzle_schema_userChecklistsRelations as userChecklistsRelations, ______drizzle_schema_userProgress as userProgress, ______drizzle_schema_userProgressRelations as userProgressRelations, ______drizzle_schema_userRelationships as userRelationships, ______drizzle_schema_userRelationshipsRelations as userRelationshipsRelations, ______drizzle_schema_userStreaks as userStreaks, ______drizzle_schema_userStreaksRelations as userStreaksRelations, ______drizzle_schema_users as users, ______drizzle_schema_usersRelations as usersRelations, ______drizzle_schema_virtualPortfolios as virtualPortfolios, ______drizzle_schema_virtualPortfoliosRelations as virtualPortfoliosRelations };
+  export { ______drizzle_schema_achievements as achievements, ______drizzle_schema_authAccounts as authAccounts, ______drizzle_schema_authSessions as authSessions, ______drizzle_schema_authUsers as authUsers, ______drizzle_schema_authVerifications as authVerifications, ______drizzle_schema_behaviorLogs as behaviorLogs, ______drizzle_schema_behaviorLogsRelations as behaviorLogsRelations, ______drizzle_schema_buddyChallenges as buddyChallenges, ______drizzle_schema_buddyChallengesRelations as buddyChallengesRelations, ______drizzle_schema_buddyGroupTypeEnum as buddyGroupTypeEnum, ______drizzle_schema_buddyGroups as buddyGroups, ______drizzle_schema_buddyGroupsRelations as buddyGroupsRelations, ______drizzle_schema_buddyMembers as buddyMembers, ______drizzle_schema_buddyMembersRelations as buddyMembersRelations, ______drizzle_schema_buddyRoleEnum as buddyRoleEnum, ______drizzle_schema_certificates as certificates, ______drizzle_schema_certificatesRelations as certificatesRelations, ______drizzle_schema_chatMessages as chatMessages, ______drizzle_schema_chatMessagesRelations as chatMessagesRelations, ______drizzle_schema_chatRoleEnum as chatRoleEnum, ______drizzle_schema_chatThreads as chatThreads, ______drizzle_schema_chatThreadsRelations as chatThreadsRelations, ______drizzle_schema_courses as courses, ______drizzle_schema_coursesRelations as coursesRelations, ______drizzle_schema_enrollments as enrollments, ______drizzle_schema_enrollmentsRelations as enrollmentsRelations, ______drizzle_schema_investmentProfiles as investmentProfiles, ______drizzle_schema_investmentProfilesRelations as investmentProfilesRelations, ______drizzle_schema_lessonTypeEnum as lessonTypeEnum, ______drizzle_schema_lessons as lessons, ______drizzle_schema_lessonsRelations as lessonsRelations, ______drizzle_schema_levelEnum as levelEnum, ______drizzle_schema_moderationLogs as moderationLogs, ______drizzle_schema_moderationLogsRelations as moderationLogsRelations, ______drizzle_schema_postTypeEnum as postTypeEnum, ______drizzle_schema_progressStatusEnum as progressStatusEnum, ______drizzle_schema_questionTypeEnum as questionTypeEnum, ______drizzle_schema_quizAttempts as quizAttempts, ______drizzle_schema_quizAttemptsRelations as quizAttemptsRelations, ______drizzle_schema_quizQuestions as quizQuestions, ______drizzle_schema_quizQuestionsRelations as quizQuestionsRelations, ______drizzle_schema_quizzes as quizzes, ______drizzle_schema_quizzesRelations as quizzesRelations, ______drizzle_schema_refreshTokens as refreshTokens, ______drizzle_schema_refreshTokensRelations as refreshTokensRelations, ______drizzle_schema_relationStatusEnum as relationStatusEnum, ______drizzle_schema_roleEnum as roleEnum, ______drizzle_schema_simulationCommitments as simulationCommitments, ______drizzle_schema_simulationCommitmentsRelations as simulationCommitmentsRelations, ______drizzle_schema_simulationScenarios as simulationScenarios, ______drizzle_schema_simulationScenariosRelations as simulationScenariosRelations, ______drizzle_schema_socialPosts as socialPosts, ______drizzle_schema_socialPostsRelations as socialPostsRelations, ______drizzle_schema_transactionStatusEnum as transactionStatusEnum, ______drizzle_schema_transactionTypeEnum as transactionTypeEnum, ______drizzle_schema_transactions as transactions, ______drizzle_schema_transactionsRelations as transactionsRelations, ______drizzle_schema_userAchievements as userAchievements, ______drizzle_schema_userAchievementsRelations as userAchievementsRelations, ______drizzle_schema_userChecklists as userChecklists, ______drizzle_schema_userChecklistsRelations as userChecklistsRelations, ______drizzle_schema_userProgress as userProgress, ______drizzle_schema_userProgressRelations as userProgressRelations, ______drizzle_schema_userRelationships as userRelationships, ______drizzle_schema_userRelationshipsRelations as userRelationshipsRelations, ______drizzle_schema_userStreaks as userStreaks, ______drizzle_schema_userStreaksRelations as userStreaksRelations, ______drizzle_schema_users as users, ______drizzle_schema_usersRelations as usersRelations, ______drizzle_schema_virtualPortfolios as virtualPortfolios, ______drizzle_schema_virtualPortfoliosRelations as virtualPortfoliosRelations };
 }
 
 declare const appRouter: _trpc_server.TRPCBuiltRouter<{
@@ -4981,6 +5116,7 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                 thumbnailKey: string;
                 price: number;
                 published: boolean;
+                instructorId: string | null;
             }[];
             meta: object;
         }>;
@@ -4999,6 +5135,7 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                 thumbnailKey: string;
                 price: number;
                 published: boolean;
+                instructorId: string | null;
                 lessons: {
                     duration: number | null;
                     id: string;
@@ -5061,6 +5198,74 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                 durationSpent: number;
                 progressPercentage: number | null;
                 completedAt: Date | null;
+            };
+            meta: object;
+        }>;
+        enroll: _trpc_server.TRPCMutationProcedure<{
+            input: {
+                courseId: string;
+                locale?: "vi" | "en" | "zh" | undefined;
+            };
+            output: {
+                success: boolean;
+                alreadyEnrolled: boolean;
+                enrollment: {
+                    id: string;
+                    userId: string;
+                    courseId: string;
+                    completedAt: Date | null;
+                    enrolledAt: Date;
+                    emailSentAt: Date | null;
+                };
+            };
+            meta: object;
+        }>;
+        getRoster: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                courseId: string;
+                page?: number | undefined;
+                limit?: number | undefined;
+                search?: string | undefined;
+                status?: "all" | "completed" | "inProgress" | "notStarted" | undefined;
+                dateFrom?: string | undefined;
+                dateTo?: string | undefined;
+                sortBy?: "name" | "progress" | "enrolledAt" | "lastActivity" | undefined;
+                sortOrder?: "asc" | "desc" | undefined;
+            };
+            output: {
+                courseId: string;
+                courseTitle: string;
+                totalStudents: number;
+                students: {
+                    userId: string;
+                    name: string;
+                    email: string;
+                    enrolledAt: string;
+                    progress: number;
+                    completedLessons: number;
+                    totalLessons: number;
+                    lastActivity: string;
+                    completed: boolean;
+                    status: "completed" | "inProgress" | "notStarted";
+                }[];
+                pagination: {
+                    currentPage: number;
+                    totalPages: number;
+                    limit: number;
+                    totalStudents: number;
+                };
+            };
+            meta: object;
+        }>;
+        exportRosterCsv: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                courseId: string;
+                locale?: "vi" | "en" | "zh" | undefined;
+            };
+            output: {
+                filename: string;
+                content: string;
+                totalStudents: number;
             };
             meta: object;
         }>;
@@ -5364,6 +5569,7 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                     thumbnailKey: string;
                     price: number;
                     published: boolean;
+                    instructorId: string | null;
                 };
             }[];
             meta: object;
@@ -5393,6 +5599,7 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                     thumbnailKey: string;
                     price: number;
                     published: boolean;
+                    instructorId: string | null;
                 };
             } | undefined;
             meta: object;
@@ -5710,6 +5917,7 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                     thumbnailKey: string;
                     price: number;
                     published: boolean;
+                    instructorId: string | null;
                 };
             } | undefined;
             meta: object;
@@ -6101,6 +6309,7 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                     thumbnailKey: string;
                     price: number;
                     published: boolean;
+                    instructorId: string | null;
                 } | null;
             }[];
             meta: object;
@@ -6136,6 +6345,7 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                     thumbnailKey: string;
                     price: number;
                     published: boolean;
+                    instructorId: string | null;
                 } | null;
             } | undefined;
             meta: object;
@@ -6201,6 +6411,41 @@ declare const appRouter: _trpc_server.TRPCBuiltRouter<{
                 failedAt: Date | null;
                 refundedAt: Date | null;
             };
+            meta: object;
+        }>;
+        getRevenueStats: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                totalEarnings: number;
+                thisMonth: number;
+                lastMonth: number;
+                courseCount: number;
+            };
+            meta: object;
+        }>;
+        getRevenueByCourse: _trpc_server.TRPCQueryProcedure<{
+            input: void;
+            output: {
+                courseId: string;
+                courseTitle: unknown;
+                sales: number;
+                revenue: number;
+            }[];
+            meta: object;
+        }>;
+        getRecentTransactions: _trpc_server.TRPCQueryProcedure<{
+            input: {
+                limit?: number | undefined;
+            } | undefined;
+            output: {
+                id: string;
+                courseTitle: unknown;
+                amount: number;
+                currency: string;
+                date: Date | null;
+                studentName: unknown;
+                studentEmail: string;
+            }[];
             meta: object;
         }>;
     }>>;

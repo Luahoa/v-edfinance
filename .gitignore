@@ -13,6 +13,18 @@ node_modules
 .beads/beads.db*
 .beads/bd.sock
 
+# Large binaries (exceed GitHub 100MB limit)
+beads.exe
+bv.exe
+gt.exe
+dcg.exe
+ms.exe
+*.tar.gz
+
+# Google Cloud credentials (sensitive)
+gen-lang-client-*.json
+client_secret_*.json
+
 # ============================================================================
 # SECURITY: Environment Variables & Secrets
 # ============================================================================

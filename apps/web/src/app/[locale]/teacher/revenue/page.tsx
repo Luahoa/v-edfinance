@@ -1,94 +1,40 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { formatAmount } from '@/lib/stripe';
 import { DollarSign, TrendingUp, Calendar, AlertCircle, Download } from 'lucide-react';
+import { trpc } from '@/lib/trpc';
 
-interface RevenueStats {
-  totalEarnings: number;
-  thisMonth: number;
-  lastMonth: number;
+interface LocalizedText {
+  vi?: string;
+  en?: string;
+  zh?: string;
+  [key: string]: string | undefined;
 }
 
-interface CourseRevenue {
-  courseId: string;
-  courseName: string;
-  sales: number;
-  revenue: number;
-}
-
-interface RecentTransaction {
-  id: string;
-  courseName: string;
-  amount: number;
-  date: Date;
-  studentName: string;
+function getLocalizedText(text: LocalizedText | unknown, locale: string): string {
+  if (!text || typeof text !== 'object') return '';
+  const localized = text as LocalizedText;
+  return localized[locale] || localized['vi'] || localized['en'] || '';
 }
 
 export default function RevenueDashboardPage() {
   const t = useTranslations('Revenue');
   const tCommon = useTranslations('Common');
-  const router = useRouter();
+  const locale = useLocale();
 
-  const [stats, setStats] = useState<RevenueStats | null>(null);
-  const [courseRevenue, setCourseRevenue] = useState<CourseRevenue[]>([]);
-  const [recentTransactions, setRecentTransactions] = useState<RecentTransaction[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: stats, isLoading: statsLoading, error: statsError } = trpc.payment.getRevenueStats.useQuery();
+  const { data: courseRevenue, isLoading: courseLoading } = trpc.payment.getRevenueByCourse.useQuery();
+  const { data: recentTransactions, isLoading: txLoading } = trpc.payment.getRecentTransactions.useQuery({ limit: 10 });
 
-  useEffect(() => {
-    const fetchRevenueData = async (): Promise<void> => {
-      try {
-        const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-        const token = localStorage.getItem('token');
+  const isLoading = statsLoading || courseLoading || txLoading;
+  const error = statsError?.message;
 
-        if (!token) {
-          router.push('/auth/login?redirect=/teacher/revenue');
-          return;
-        }
-
-        const [statsRes, courseRevenueRes, transactionsRes] = await Promise.all([
-          fetch(`${API_URL}/revenue/stats`, {
-            headers: { 'Authorization': `Bearer ${token}` },
-          }),
-          fetch(`${API_URL}/revenue/by-course`, {
-            headers: { 'Authorization': `Bearer ${token}` },
-          }),
-          fetch(`${API_URL}/revenue/recent-transactions`, {
-            headers: { 'Authorization': `Bearer ${token}` },
-          }),
-        ]);
-
-        if (!statsRes.ok || !courseRevenueRes.ok || !transactionsRes.ok) {
-          throw new Error('Failed to fetch revenue data');
-        }
-
-        const [statsData, courseData, transactionsData] = await Promise.all([
-          statsRes.json(),
-          courseRevenueRes.json(),
-          transactionsRes.json(),
-        ]);
-
-        setStats(statsData);
-        setCourseRevenue(courseData);
-        setRecentTransactions(transactionsData);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : tCommon('error'));
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRevenueData();
-  }, [router, tCommon]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
         <Skeleton className="h-8 w-48 mb-8" />
@@ -129,7 +75,7 @@ export default function RevenueDashboardPage() {
       <header className="mb-8">
         <h1 className="text-3xl font-bold">{t('title')}</h1>
         <p className="mt-2 text-zinc-600">
-          Track your course earnings and sales performance
+          {t('description')}
         </p>
       </header>
 
@@ -137,7 +83,7 @@ export default function RevenueDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">{t('totalEarnings')}</CardTitle>
-            <DollarSign className="h-4 w-4 text-zinc-500" />
+            <DollarSign aria-hidden="true" className="h-4 w-4 text-zinc-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -149,7 +95,7 @@ export default function RevenueDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">{t('thisMonth')}</CardTitle>
-            <Calendar className="h-4 w-4 text-zinc-500" />
+            <Calendar aria-hidden="true" className="h-4 w-4 text-zinc-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -157,7 +103,7 @@ export default function RevenueDashboardPage() {
             </div>
             {monthlyChange !== 0 && (
               <p className={`text-xs ${monthlyChange > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {monthlyChange > 0 ? '+' : ''}{monthlyChange.toFixed(1)}% from last month
+                {monthlyChange > 0 ? '+' : ''}{monthlyChange.toFixed(1)}% {t('fromLastMonth')}
               </p>
             )}
           </CardContent>
@@ -166,7 +112,7 @@ export default function RevenueDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">{t('lastMonth')}</CardTitle>
-            <TrendingUp className="h-4 w-4 text-zinc-500" />
+            <TrendingUp aria-hidden="true" className="h-4 w-4 text-zinc-500" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -180,17 +126,17 @@ export default function RevenueDashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>{t('earningsByCourse')}</CardTitle>
-            <CardDescription>Revenue breakdown by course</CardDescription>
+            <CardDescription>{t('revenueBreakdown')}</CardDescription>
           </CardHeader>
           <CardContent>
-            {courseRevenue.length === 0 ? (
+            {!courseRevenue || courseRevenue.length === 0 ? (
               <p className="text-sm text-zinc-500">{t('noData')}</p>
             ) : (
               <div className="space-y-4">
                 {courseRevenue.map(course => (
                   <div key={course.courseId} className="flex items-center justify-between">
                     <div className="flex-1">
-                      <p className="font-medium">{course.courseName}</p>
+                      <p className="font-medium">{getLocalizedText(course.courseTitle, locale)}</p>
                       <p className="text-sm text-zinc-500">{course.sales} {t('sales')}</p>
                     </div>
                     <div className="text-right">
@@ -206,23 +152,27 @@ export default function RevenueDashboardPage() {
         <Card>
           <CardHeader>
             <CardTitle>{t('recentTransactions')}</CardTitle>
-            <CardDescription>Latest purchases from students</CardDescription>
+            <CardDescription>{t('latestPurchases')}</CardDescription>
           </CardHeader>
           <CardContent>
-            {recentTransactions.length === 0 ? (
+            {!recentTransactions || recentTransactions.length === 0 ? (
               <p className="text-sm text-zinc-500">{t('noData')}</p>
             ) : (
               <div className="space-y-4">
                 {recentTransactions.map(tx => (
                   <div key={tx.id} className="flex items-center justify-between">
                     <div className="flex-1">
-                      <p className="font-medium">{tx.courseName}</p>
-                      <p className="text-sm text-zinc-500">{tx.studentName}</p>
+                      <p className="font-medium">{getLocalizedText(tx.courseTitle, locale)}</p>
+                      <p className="text-sm text-zinc-500">
+                        {typeof tx.studentName === 'object' 
+                          ? getLocalizedText(tx.studentName, locale) 
+                          : tx.studentEmail}
+                      </p>
                     </div>
                     <div className="text-right">
                       <p className="font-semibold">{formatAmount(tx.amount)}</p>
                       <p className="text-xs text-zinc-500">
-                        {new Date(tx.date).toLocaleDateString()}
+                        {tx.date ? new Date(tx.date).toLocaleDateString(locale) : '-'}
                       </p>
                     </div>
                   </div>
@@ -235,7 +185,7 @@ export default function RevenueDashboardPage() {
 
       <div className="flex justify-end">
         <Button variant="outline">
-          <Download className="mr-2 h-4 w-4" />
+          <Download aria-hidden="true" className="mr-2 h-4 w-4" />
           {t('exportData')}
         </Button>
       </div>

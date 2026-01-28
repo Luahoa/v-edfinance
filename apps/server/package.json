@@ -14,7 +14,10 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
@@ -25,16 +28,19 @@
     "drizzle-orm": "^0.45.1",
     "hono": "^4.6.16",
     "postgres": "^3.4.5",
+    "resend": "4.0.0",
     "superjson": "^2.2.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241230.0",
     "@types/node": "^22.10.5",
+    "@vitest/coverage-v8": "^2.1.9",
     "drizzle-kit": "^0.31.8",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
+    "vitest": "^2.1.9",
     "wrangler": "^3.99.0"
   }
 }

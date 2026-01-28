@@ -6,7 +6,9 @@ import {
   LazySocialFeed, 
   LazyBuddyRecommendations,
   LazyQuickActionsGrid,
-  LazyEngagementAnalytics
+  LazyEngagementAnalytics,
+  LazyCourseProgressList,
+  LazyLearningTrendChart
 } from '@/components/lazy';
 import { 
   StatGridSkeleton, 
@@ -105,6 +107,16 @@ export default async function Dashboard({ params }: { params: Promise<{ locale: 
         <Suspense fallback={<SkeletonGrid cols={4} />}>
           <LazyEngagementAnalytics />
         </Suspense>
+
+        {/* Progress Monitoring Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Suspense fallback={<SkeletonGrid cols={1} />}>
+            <LazyLearningTrendChart />
+          </Suspense>
+          <Suspense fallback={<SkeletonGrid cols={1} />}>
+            <LazyCourseProgressList />
+          </Suspense>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">

@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and, desc, sql, gte, lt, sum, count } from 'drizzle-orm';
 
 import { router, protectedProcedure } from '../trpc';
-import { transactions, courses } from '../../../drizzle/schema';
+import { transactions, courses, users } from '../../../drizzle/schema';
 
 export const paymentRouter = router({
   // List user's transactions
@@ -151,5 +151,165 @@ export const paymentRouter = router({
         .returning();
 
       return updated[0];
+    }),
+
+  // ============================================================================
+  // TEACHER REVENUE DASHBOARD
+  // ============================================================================
+
+  // Get revenue stats for teacher
+  getRevenueStats: protectedProcedure.query(async ({ ctx }) => {
+    const now = new Date();
+    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    // Get courses owned by this teacher
+    const teacherCourses = await ctx.db.query.courses.findMany({
+      where: eq(courses.instructorId, ctx.user.id),
+      columns: { id: true },
+    });
+
+    if (teacherCourses.length === 0) {
+      return {
+        totalEarnings: 0,
+        thisMonth: 0,
+        lastMonth: 0,
+        courseCount: 0,
+      };
+    }
+
+    const courseIds = teacherCourses.map(c => c.id);
+
+    // Total earnings (all time, completed transactions)
+    const totalResult = await ctx.db
+      .select({ total: sum(transactions.amount) })
+      .from(transactions)
+      .where(
+        and(
+          sql`${transactions.courseId} IN ${courseIds}`,
+          eq(transactions.status, 'COMPLETED')
+        )
+      );
+
+    // This month earnings
+    const thisMonthResult = await ctx.db
+      .select({ total: sum(transactions.amount) })
+      .from(transactions)
+      .where(
+        and(
+          sql`${transactions.courseId} IN ${courseIds}`,
+          eq(transactions.status, 'COMPLETED'),
+          gte(transactions.completedAt, thisMonthStart)
+        )
+      );
+
+    // Last month earnings
+    const lastMonthResult = await ctx.db
+      .select({ total: sum(transactions.amount) })
+      .from(transactions)
+      .where(
+        and(
+          sql`${transactions.courseId} IN ${courseIds}`,
+          eq(transactions.status, 'COMPLETED'),
+          gte(transactions.completedAt, lastMonthStart),
+          lt(transactions.completedAt, thisMonthStart)
+        )
+      );
+
+    return {
+      totalEarnings: Number(totalResult[0]?.total) || 0,
+      thisMonth: Number(thisMonthResult[0]?.total) || 0,
+      lastMonth: Number(lastMonthResult[0]?.total) || 0,
+      courseCount: teacherCourses.length,
+    };
+  }),
+
+  // Get revenue by course
+  getRevenueByCourse: protectedProcedure.query(async ({ ctx }) => {
+    const teacherCourses = await ctx.db.query.courses.findMany({
+      where: eq(courses.instructorId, ctx.user.id),
+    });
+
+    if (teacherCourses.length === 0) {
+      return [];
+    }
+
+    const result = await Promise.all(
+      teacherCourses.map(async (course) => {
+        const stats = await ctx.db
+          .select({
+            sales: count(transactions.id),
+            revenue: sum(transactions.amount),
+          })
+          .from(transactions)
+          .where(
+            and(
+              eq(transactions.courseId, course.id),
+              eq(transactions.status, 'COMPLETED')
+            )
+          );
+
+        return {
+          courseId: course.id,
+          courseTitle: course.title,
+          sales: Number(stats[0]?.sales) || 0,
+          revenue: Number(stats[0]?.revenue) || 0,
+        };
+      })
+    );
+
+    return result.sort((a, b) => b.revenue - a.revenue);
+  }),
+
+  // Get recent transactions for teacher's courses
+  getRecentTransactions: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(50).default(10),
+      }).optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const limit = input?.limit ?? 10;
+
+      const teacherCourses = await ctx.db.query.courses.findMany({
+        where: eq(courses.instructorId, ctx.user.id),
+        columns: { id: true },
+      });
+
+      if (teacherCourses.length === 0) {
+        return [];
+      }
+
+      const courseIds = teacherCourses.map(c => c.id);
+
+      const recentTxs = await ctx.db.query.transactions.findMany({
+        where: and(
+          sql`${transactions.courseId} IN ${courseIds}`,
+          eq(transactions.status, 'COMPLETED')
+        ),
+        orderBy: desc(transactions.completedAt),
+        limit,
+        with: {
+          course: true,
+          user: {
+            columns: {
+              id: true,
+              email: true,
+              name: true,
+            },
+          },
+        },
+      });
+
+      return recentTxs.map(tx => ({
+        id: tx.id,
+        courseTitle: tx.course?.title,
+        amount: tx.amount,
+        currency: tx.currency,
+        date: tx.completedAt,
+        studentName: tx.user?.name,
+        studentEmail: tx.user?.email,
+      }));
     }),
 });

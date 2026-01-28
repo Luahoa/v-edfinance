@@ -72,6 +72,8 @@ __export(schema_exports, {
   chatThreadsRelations: () => chatThreadsRelations,
   courses: () => courses,
   coursesRelations: () => coursesRelations,
+  enrollments: () => enrollments,
+  enrollmentsRelations: () => enrollmentsRelations,
   investmentProfiles: () => investmentProfiles,
   investmentProfilesRelations: () => investmentProfilesRelations,
   lessonTypeEnum: () => lessonTypeEnum,
@@ -192,7 +194,8 @@ var usersRelations = relations(users, ({ one, many }) => ({
   followers: many(userRelationships, { relationName: "followers" }),
   quizAttempts: many(quizAttempts),
   certificates: many(certificates),
-  transactions: many(transactions)
+  transactions: many(transactions),
+  enrollments: many(enrollments)
 }));
 var courses = pgTable(
   "Course",
@@ -207,18 +210,51 @@ var courses = pgTable(
     price: integer("price").notNull(),
     level: levelEnum("level").default("BEGINNER").notNull(),
     published: boolean("published").default(false).notNull(),
+    instructorId: uuid("instructorId").references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull()
   },
   (table) => ({
     slugIdx: index("Course_slug_idx").on(table.slug),
-    publishedLevelIdx: index("Course_published_level_idx").on(table.published, table.level)
+    publishedLevelIdx: index("Course_published_level_idx").on(table.published, table.level),
+    instructorIdx: index("Course_instructorId_idx").on(table.instructorId)
   })
 );
-var coursesRelations = relations(courses, ({ many }) => ({
+var coursesRelations = relations(courses, ({ one, many }) => ({
+  instructor: one(users, {
+    fields: [courses.instructorId],
+    references: [users.id]
+  }),
   lessons: many(lessons),
   certificates: many(certificates),
-  transactions: many(transactions)
+  transactions: many(transactions),
+  enrollments: many(enrollments)
+}));
+var enrollments = pgTable(
+  "Enrollment",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("userId").notNull().references(() => users.id, { onDelete: "cascade" }),
+    courseId: uuid("courseId").notNull().references(() => courses.id, { onDelete: "cascade" }),
+    enrolledAt: timestamp("enrolledAt").defaultNow().notNull(),
+    emailSentAt: timestamp("emailSentAt"),
+    completedAt: timestamp("completedAt")
+  },
+  (table) => ({
+    userCourseUnique: uniqueIndex("Enrollment_userId_courseId_key").on(table.userId, table.courseId),
+    userIdx: index("Enrollment_userId_idx").on(table.userId),
+    courseIdx: index("Enrollment_courseId_idx").on(table.courseId)
+  })
+);
+var enrollmentsRelations = relations(enrollments, ({ one }) => ({
+  user: one(users, {
+    fields: [enrollments.userId],
+    references: [users.id]
+  }),
+  course: one(courses, {
+    fields: [enrollments.courseId],
+    references: [courses.id]
+  })
 }));
 var lessons = pgTable(
   "Lesson",
@@ -888,8 +924,8 @@ var userRouter = router({
   // Test database connection
   testDb: publicProcedure.query(async ({ ctx }) => {
     try {
-      const count2 = await ctx.db.select({ count: sql`count(*)` }).from(users);
-      return { success: true, userCount: count2[0]?.count ?? 0 };
+      const count4 = await ctx.db.select({ count: sql`count(*)` }).from(users);
+      return { success: true, userCount: count4[0]?.count ?? 0 };
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : String(error) };
     }
@@ -953,7 +989,106 @@ var userRouter = router({
 
 // src/trpc/routers/course.ts
 import { z as z2 } from "zod";
-import { eq as eq2, and, desc } from "drizzle-orm";
+import { eq as eq2, and, desc, like, or, sql as sql2, count } from "drizzle-orm";
+
+// src/lib/email.ts
+import { Resend } from "resend";
+var resendClient = null;
+function getResendClient() {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error("RESEND_API_KEY is not configured");
+    }
+    resendClient = new Resend(apiKey);
+  }
+  return resendClient;
+}
+var templates = {
+  vi: {
+    subject: (courseName) => `\u{1F389} Ch\xFAc m\u1EEBng b\u1EA1n \u0111\xE3 \u0111\u0103ng k\xFD kh\xF3a h\u1ECDc: ${courseName}`,
+    body: (userName, courseName, courseUrl) => `
+      <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #16a34a;">Xin ch\xE0o ${userName}!</h1>
+        <p>Ch\xFAc m\u1EEBng b\u1EA1n \u0111\xE3 \u0111\u0103ng k\xFD th\xE0nh c\xF4ng kh\xF3a h\u1ECDc <strong>${courseName}</strong>.</p>
+        <p>B\u1EA1n \u0111\xE3 s\u1EB5n s\xE0ng b\u1EAFt \u0111\u1EA7u h\xE0nh tr\xECnh h\u1ECDc t\u1EADp t\xE0i ch\xEDnh c\u1EE7a m\xECnh!</p>
+        <a href="${courseUrl}" style="display: inline-block; background: #16a34a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin-top: 16px;">
+          B\u1EAFt \u0111\u1EA7u h\u1ECDc ngay
+        </a>
+        <p style="margin-top: 24px; color: #666;">
+          Ch\xFAc b\u1EA1n h\u1ECDc t\u1EADp vui v\u1EBB!<br/>
+          \u0110\u1ED9i ng\u0169 V-EdFinance
+        </p>
+      </div>
+    `
+  },
+  en: {
+    subject: (courseName) => `\u{1F389} Welcome! You've enrolled in: ${courseName}`,
+    body: (userName, courseName, courseUrl) => `
+      <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #16a34a;">Hello ${userName}!</h1>
+        <p>Congratulations on enrolling in <strong>${courseName}</strong>.</p>
+        <p>You're ready to start your financial learning journey!</p>
+        <a href="${courseUrl}" style="display: inline-block; background: #16a34a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin-top: 16px;">
+          Start Learning
+        </a>
+        <p style="margin-top: 24px; color: #666;">
+          Happy learning!<br/>
+          The V-EdFinance Team
+        </p>
+      </div>
+    `
+  },
+  zh: {
+    subject: (courseName) => `\u{1F389} \u606D\u559C\u60A8\u6CE8\u518C\u8BFE\u7A0B\uFF1A${courseName}`,
+    body: (userName, courseName, courseUrl) => `
+      <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h1 style="color: #16a34a;">\u60A8\u597D ${userName}!</h1>
+        <p>\u606D\u559C\u60A8\u6210\u529F\u6CE8\u518C<strong>${courseName}</strong>\u8BFE\u7A0B\u3002</p>
+        <p>\u60A8\u5DF2\u51C6\u5907\u597D\u5F00\u59CB\u60A8\u7684\u91D1\u878D\u5B66\u4E60\u4E4B\u65C5\uFF01</p>
+        <a href="${courseUrl}" style="display: inline-block; background: #16a34a; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin-top: 16px;">
+          \u5F00\u59CB\u5B66\u4E60
+        </a>
+        <p style="margin-top: 24px; color: #666;">
+          \u795D\u60A8\u5B66\u4E60\u6109\u5FEB\uFF01<br/>
+          V-EdFinance \u56E2\u961F
+        </p>
+      </div>
+    `
+  }
+};
+async function sendEnrollmentEmail({
+  to,
+  userName,
+  courseName,
+  courseSlug,
+  locale = "vi"
+}) {
+  const template = templates[locale];
+  const baseUrl = process.env.APP_URL || "https://hochcungkhoan.com.vn";
+  const courseUrl = `${baseUrl}/courses/${courseSlug}`;
+  try {
+    const resend = getResendClient();
+    const { data, error } = await resend.emails.send({
+      from: "V-EdFinance <noreply@hochcungkhoan.com.vn>",
+      to: [to],
+      subject: template.subject(courseName),
+      html: template.body(userName, courseName, courseUrl)
+    });
+    if (error) {
+      console.error("[Email] Failed to send enrollment email:", error);
+      return { success: false, error: error.message };
+    }
+    console.log(`[Email] Enrollment email sent to ${to}, id: ${data?.id}`);
+    return { success: true, id: data?.id };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("[Email] Exception sending email:", message);
+    return { success: false, error: message };
+  }
+}
+
+// src/trpc/routers/course.ts
 var courseRouter = router({
   // List published courses
   list: publicProcedure.input(
@@ -1031,6 +1166,212 @@ var courseRouter = router({
       durationSpent: input.durationSpent ?? 0
     }).returning();
     return created[0];
+  }),
+  // Enroll in a course
+  enroll: protectedProcedure.input(
+    z2.object({
+      courseId: z2.string().uuid(),
+      locale: z2.enum(["vi", "en", "zh"]).optional().default("vi")
+    })
+  ).mutation(async ({ ctx, input }) => {
+    const existing = await ctx.db.query.enrollments.findFirst({
+      where: and(
+        eq2(enrollments.userId, ctx.user.id),
+        eq2(enrollments.courseId, input.courseId)
+      )
+    });
+    if (existing) {
+      return { success: true, alreadyEnrolled: true, enrollment: existing };
+    }
+    const course = await ctx.db.query.courses.findFirst({
+      where: eq2(courses.id, input.courseId)
+    });
+    if (!course) {
+      throw new Error("Course not found");
+    }
+    const user = await ctx.db.query.users.findFirst({
+      where: eq2(users.id, ctx.user.id)
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const [enrollment] = await ctx.db.insert(enrollments).values({
+      userId: ctx.user.id,
+      courseId: input.courseId
+    }).returning();
+    const courseTitle = course.title?.[input.locale] || course.title?.vi || "Course";
+    const userName = user.name?.[input.locale] || user.name?.vi || user.email.split("@")[0];
+    sendEnrollmentEmail({
+      to: user.email,
+      userName,
+      courseName: courseTitle,
+      courseSlug: course.slug,
+      locale: input.locale
+    }).then(async (result) => {
+      if (result.success) {
+        await ctx.db.update(enrollments).set({ emailSentAt: /* @__PURE__ */ new Date() }).where(eq2(enrollments.id, enrollment.id));
+      }
+    });
+    return { success: true, alreadyEnrolled: false, enrollment };
+  }),
+  // Get course roster (for teachers/admins)
+  getRoster: protectedProcedure.input(
+    z2.object({
+      courseId: z2.string().uuid(),
+      page: z2.number().min(1).default(1),
+      limit: z2.number().min(1).max(100).default(20),
+      search: z2.string().optional(),
+      status: z2.enum(["all", "completed", "inProgress", "notStarted"]).default("all"),
+      dateFrom: z2.string().optional(),
+      dateTo: z2.string().optional(),
+      sortBy: z2.enum(["enrolledAt", "progress", "lastActivity", "name"]).default("enrolledAt"),
+      sortOrder: z2.enum(["asc", "desc"]).default("desc")
+    })
+  ).query(async ({ ctx, input }) => {
+    const { courseId, page, limit, search, status, dateFrom, dateTo, sortBy, sortOrder } = input;
+    const offset = (page - 1) * limit;
+    const course = await ctx.db.query.courses.findFirst({
+      where: eq2(courses.id, courseId)
+    });
+    if (!course) {
+      throw new Error("Course not found");
+    }
+    const lessonCountResult = await ctx.db.select({ count: count() }).from(lessons).where(eq2(lessons.courseId, courseId));
+    const totalLessons = lessonCountResult[0]?.count || 0;
+    const searchCondition = search ? or(
+      like(users.email, `%${search}%`),
+      sql2`${users.name}->>'vi' ILIKE ${`%${search}%`}`,
+      sql2`${users.name}->>'en' ILIKE ${`%${search}%`}`
+    ) : void 0;
+    const dateConditions = [];
+    if (dateFrom) {
+      dateConditions.push(sql2`${enrollments.enrolledAt} >= ${new Date(dateFrom)}`);
+    }
+    if (dateTo) {
+      dateConditions.push(sql2`${enrollments.enrolledAt} <= ${/* @__PURE__ */ new Date(dateTo + "T23:59:59")}`);
+    }
+    const whereConditions = [eq2(enrollments.courseId, courseId)];
+    if (searchCondition) whereConditions.push(searchCondition);
+    if (dateConditions.length > 0) whereConditions.push(...dateConditions);
+    const enrollmentQuery = ctx.db.select({
+      enrollment: enrollments,
+      user: users
+    }).from(enrollments).innerJoin(users, eq2(enrollments.userId, users.id)).where(and(...whereConditions)).limit(limit).offset(offset);
+    const sortedQuery = sortBy === "enrolledAt" ? enrollmentQuery.orderBy(sortOrder === "desc" ? desc(enrollments.enrolledAt) : enrollments.enrolledAt) : sortBy === "name" ? enrollmentQuery.orderBy(sortOrder === "desc" ? desc(users.email) : users.email) : enrollmentQuery.orderBy(sortOrder === "desc" ? desc(enrollments.enrolledAt) : enrollments.enrolledAt);
+    const results = await sortedQuery;
+    const allStudents = await Promise.all(
+      results.map(async (row) => {
+        const progressResult = await ctx.db.select({
+          completedCount: count(),
+          lastActivity: sql2`max(${userProgress.updatedAt})`
+        }).from(userProgress).innerJoin(lessons, eq2(userProgress.lessonId, lessons.id)).where(
+          and(
+            eq2(userProgress.userId, row.user.id),
+            eq2(lessons.courseId, courseId),
+            eq2(userProgress.status, "COMPLETED")
+          )
+        );
+        const completedLessons = progressResult[0]?.completedCount || 0;
+        const lastActivity = progressResult[0]?.lastActivity || row.enrollment.enrolledAt;
+        const progress = totalLessons > 0 ? Math.round(completedLessons / totalLessons * 100) : 0;
+        const userName = row.user.name?.["vi"] || row.user.name?.["en"] || row.user.email.split("@")[0];
+        const studentStatus = row.enrollment.completedAt !== null ? "completed" : progress > 0 ? "inProgress" : "notStarted";
+        return {
+          userId: row.user.id,
+          name: userName,
+          email: row.user.email,
+          enrolledAt: row.enrollment.enrolledAt.toISOString(),
+          progress,
+          completedLessons,
+          totalLessons,
+          lastActivity: lastActivity instanceof Date ? lastActivity.toISOString() : (/* @__PURE__ */ new Date()).toISOString(),
+          completed: row.enrollment.completedAt !== null,
+          status: studentStatus
+        };
+      })
+    );
+    const students = status === "all" ? allStudents : allStudents.filter((s) => s.status === status);
+    const totalResult = await ctx.db.select({ count: count() }).from(enrollments).innerJoin(users, eq2(enrollments.userId, users.id)).where(and(...whereConditions));
+    const totalStudents = totalResult[0]?.count || 0;
+    const courseTitle = course.title?.["vi"] || course.title?.["en"] || "Untitled";
+    return {
+      courseId,
+      courseTitle,
+      totalStudents,
+      students,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalStudents / limit),
+        limit,
+        totalStudents
+      }
+    };
+  }),
+  // Export roster to CSV
+  exportRosterCsv: protectedProcedure.input(
+    z2.object({
+      courseId: z2.string().uuid(),
+      locale: z2.enum(["vi", "en", "zh"]).default("vi")
+    })
+  ).query(async ({ ctx, input }) => {
+    const { courseId, locale } = input;
+    const course = await ctx.db.query.courses.findFirst({
+      where: eq2(courses.id, courseId)
+    });
+    if (!course) {
+      throw new Error("Course not found");
+    }
+    const lessonCountResult = await ctx.db.select({ count: count() }).from(lessons).where(eq2(lessons.courseId, courseId));
+    const totalLessons = lessonCountResult[0]?.count || 0;
+    const allEnrollments = await ctx.db.select({
+      enrollment: enrollments,
+      user: users
+    }).from(enrollments).innerJoin(users, eq2(enrollments.userId, users.id)).where(eq2(enrollments.courseId, courseId)).orderBy(desc(enrollments.enrolledAt));
+    const headers = {
+      vi: ["T\xEAn", "Email", "Ng\xE0y \u0111\u0103ng k\xFD", "Ti\u1EBFn \u0111\u1ED9 (%)", "B\xE0i h\u1ECDc ho\xE0n th\xE0nh", "T\u1ED5ng b\xE0i h\u1ECDc", "Tr\u1EA1ng th\xE1i"],
+      en: ["Name", "Email", "Enrolled Date", "Progress (%)", "Completed Lessons", "Total Lessons", "Status"],
+      zh: ["\u59D3\u540D", "\u90AE\u7BB1", "\u6CE8\u518C\u65E5\u671F", "\u8FDB\u5EA6 (%)", "\u5B8C\u6210\u8BFE\u7A0B", "\u603B\u8BFE\u7A0B", "\u72B6\u6001"]
+    };
+    const statusLabels = {
+      vi: { completed: "Ho\xE0n th\xE0nh", inProgress: "\u0110ang h\u1ECDc", notStarted: "Ch\u01B0a b\u1EAFt \u0111\u1EA7u" },
+      en: { completed: "Completed", inProgress: "In Progress", notStarted: "Not Started" },
+      zh: { completed: "\u5DF2\u5B8C\u6210", inProgress: "\u8FDB\u884C\u4E2D", notStarted: "\u672A\u5F00\u59CB" }
+    };
+    const rows = [headers[locale]];
+    for (const row of allEnrollments) {
+      const progressResult = await ctx.db.select({ completedCount: count() }).from(userProgress).innerJoin(lessons, eq2(userProgress.lessonId, lessons.id)).where(
+        and(
+          eq2(userProgress.userId, row.user.id),
+          eq2(lessons.courseId, courseId),
+          eq2(userProgress.status, "COMPLETED")
+        )
+      );
+      const completedLessons = progressResult[0]?.completedCount || 0;
+      const progress = totalLessons > 0 ? Math.round(completedLessons / totalLessons * 100) : 0;
+      const userName = row.user.name?.[locale] || row.user.name?.["vi"] || row.user.email.split("@")[0];
+      const status = row.enrollment.completedAt !== null ? statusLabels[locale].completed : progress > 0 ? statusLabels[locale].inProgress : statusLabels[locale].notStarted;
+      rows.push([
+        userName,
+        row.user.email,
+        row.enrollment.enrolledAt.toISOString().split("T")[0],
+        String(progress),
+        String(completedLessons),
+        String(totalLessons),
+        status
+      ]);
+    }
+    const csvContent = rows.map(
+      (row) => row.map((cell) => {
+        const escaped = cell.replace(/"/g, '""');
+        return escaped.includes(",") || escaped.includes('"') ? `"${escaped}"` : escaped;
+      }).join(",")
+    ).join("\n");
+    const courseTitle = course.title?.[locale] || course.title?.["vi"] || "course";
+    return {
+      filename: `roster-${courseTitle.replace(/[^a-zA-Z0-9]/g, "-")}-${(/* @__PURE__ */ new Date()).toISOString().split("T")[0]}.csv`,
+      content: csvContent,
+      totalStudents: allEnrollments.length
+    };
   })
 });
 
@@ -1078,7 +1419,7 @@ var quizRouter = router({
       throw new Error("Quiz not found");
     }
     let score = 0;
-    const totalPoints = quiz.questions.reduce((sum, q) => sum + q.points, 0);
+    const totalPoints = quiz.questions.reduce((sum2, q) => sum2 + q.points, 0);
     for (const question of quiz.questions) {
       const userAnswer = input.answers[question.id];
       if (JSON.stringify(userAnswer) === JSON.stringify(question.correctAnswer)) {
@@ -1111,7 +1452,7 @@ var quizRouter = router({
 
 // src/trpc/routers/gamification.ts
 import { z as z4 } from "zod";
-import { eq as eq4, desc as desc3, sql as sql2 } from "drizzle-orm";
+import { eq as eq4, desc as desc3, sql as sql3 } from "drizzle-orm";
 var gamificationRouter = router({
   // Get leaderboard
   leaderboard: publicProcedure.input(
@@ -1197,7 +1538,7 @@ var gamificationRouter = router({
     })
   ).mutation(async ({ ctx, input }) => {
     const [updated] = await ctx.db.update(users).set({
-      points: sql2`${users.points} + ${input.points}`,
+      points: sql3`${users.points} + ${input.points}`,
       updatedAt: /* @__PURE__ */ new Date()
     }).where(eq4(users.id, ctx.user.id)).returning();
     return updated;
@@ -1748,7 +2089,7 @@ var aiRouter = router({
 
 // src/trpc/routers/payment.ts
 import { z as z10 } from "zod";
-import { eq as eq10, and as and9, desc as desc8 } from "drizzle-orm";
+import { eq as eq10, and as and9, desc as desc8, sql as sql4, gte, lt, sum, count as count2 } from "drizzle-orm";
 var paymentRouter = router({
   // List user's transactions
   listTransactions: protectedProcedure.input(
@@ -1857,6 +2198,128 @@ var paymentRouter = router({
       )
     ).returning();
     return updated[0];
+  }),
+  // ============================================================================
+  // TEACHER REVENUE DASHBOARD
+  // ============================================================================
+  // Get revenue stats for teacher
+  getRevenueStats: protectedProcedure.query(async ({ ctx }) => {
+    const now = /* @__PURE__ */ new Date();
+    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+    const teacherCourses = await ctx.db.query.courses.findMany({
+      where: eq10(courses.instructorId, ctx.user.id),
+      columns: { id: true }
+    });
+    if (teacherCourses.length === 0) {
+      return {
+        totalEarnings: 0,
+        thisMonth: 0,
+        lastMonth: 0,
+        courseCount: 0
+      };
+    }
+    const courseIds = teacherCourses.map((c) => c.id);
+    const totalResult = await ctx.db.select({ total: sum(transactions.amount) }).from(transactions).where(
+      and9(
+        sql4`${transactions.courseId} IN ${courseIds}`,
+        eq10(transactions.status, "COMPLETED")
+      )
+    );
+    const thisMonthResult = await ctx.db.select({ total: sum(transactions.amount) }).from(transactions).where(
+      and9(
+        sql4`${transactions.courseId} IN ${courseIds}`,
+        eq10(transactions.status, "COMPLETED"),
+        gte(transactions.completedAt, thisMonthStart)
+      )
+    );
+    const lastMonthResult = await ctx.db.select({ total: sum(transactions.amount) }).from(transactions).where(
+      and9(
+        sql4`${transactions.courseId} IN ${courseIds}`,
+        eq10(transactions.status, "COMPLETED"),
+        gte(transactions.completedAt, lastMonthStart),
+        lt(transactions.completedAt, thisMonthStart)
+      )
+    );
+    return {
+      totalEarnings: Number(totalResult[0]?.total) || 0,
+      thisMonth: Number(thisMonthResult[0]?.total) || 0,
+      lastMonth: Number(lastMonthResult[0]?.total) || 0,
+      courseCount: teacherCourses.length
+    };
+  }),
+  // Get revenue by course
+  getRevenueByCourse: protectedProcedure.query(async ({ ctx }) => {
+    const teacherCourses = await ctx.db.query.courses.findMany({
+      where: eq10(courses.instructorId, ctx.user.id)
+    });
+    if (teacherCourses.length === 0) {
+      return [];
+    }
+    const result = await Promise.all(
+      teacherCourses.map(async (course) => {
+        const stats = await ctx.db.select({
+          sales: count2(transactions.id),
+          revenue: sum(transactions.amount)
+        }).from(transactions).where(
+          and9(
+            eq10(transactions.courseId, course.id),
+            eq10(transactions.status, "COMPLETED")
+          )
+        );
+        return {
+          courseId: course.id,
+          courseTitle: course.title,
+          sales: Number(stats[0]?.sales) || 0,
+          revenue: Number(stats[0]?.revenue) || 0
+        };
+      })
+    );
+    return result.sort((a, b) => b.revenue - a.revenue);
+  }),
+  // Get recent transactions for teacher's courses
+  getRecentTransactions: protectedProcedure.input(
+    z10.object({
+      limit: z10.number().min(1).max(50).default(10)
+    }).optional()
+  ).query(async ({ ctx, input }) => {
+    const limit = input?.limit ?? 10;
+    const teacherCourses = await ctx.db.query.courses.findMany({
+      where: eq10(courses.instructorId, ctx.user.id),
+      columns: { id: true }
+    });
+    if (teacherCourses.length === 0) {
+      return [];
+    }
+    const courseIds = teacherCourses.map((c) => c.id);
+    const recentTxs = await ctx.db.query.transactions.findMany({
+      where: and9(
+        sql4`${transactions.courseId} IN ${courseIds}`,
+        eq10(transactions.status, "COMPLETED")
+      ),
+      orderBy: desc8(transactions.completedAt),
+      limit,
+      with: {
+        course: true,
+        user: {
+          columns: {
+            id: true,
+            email: true,
+            name: true
+          }
+        }
+      }
+    });
+    return recentTxs.map((tx) => ({
+      id: tx.id,
+      courseTitle: tx.course?.title,
+      amount: tx.amount,
+      currency: tx.currency,
+      date: tx.completedAt,
+      studentName: tx.user?.name,
+      studentEmail: tx.user?.email
+    }));
   })
 });
 
@@ -1883,7 +2346,7 @@ var notificationRouter = router({
 
 // src/trpc/routers/analytics.ts
 import { z as z12 } from "zod";
-import { eq as eq11, and as and10, desc as desc9, gte, sql as sql3, count } from "drizzle-orm";
+import { eq as eq11, and as and10, desc as desc9, gte as gte2, sql as sql5, count as count3 } from "drizzle-orm";
 var analyticsRouter = router({
   // Create behavior log entry
   logEvent: protectedProcedure.input(
@@ -1920,9 +2383,9 @@ var analyticsRouter = router({
   // Get aggregated learning stats
   getLearningStats: protectedProcedure.query(async ({ ctx }) => {
     const progressRows = await ctx.db.select({
-      lessonsCompleted: sql3`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
-      totalTimeSpent: sql3`coalesce(sum(${userProgress.durationSpent}), 0)`,
-      lessonsStarted: sql3`count(*)`
+      lessonsCompleted: sql5`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
+      totalTimeSpent: sql5`coalesce(sum(${userProgress.durationSpent}), 0)`,
+      lessonsStarted: sql5`count(*)`
     }).from(userProgress).where(eq11(userProgress.userId, ctx.user.id));
     const stats = progressRows[0] ?? {
       lessonsCompleted: 0,
@@ -1965,7 +2428,7 @@ var analyticsRouter = router({
       lessonId: userProgress.lessonId,
       lessonTitle: lessons.title,
       courseTitle: courses.title,
-      timeSpent: sql3`coalesce(${userProgress.durationSpent}, 0)`,
+      timeSpent: sql5`coalesce(${userProgress.durationSpent}, 0)`,
       progressPercentage: userProgress.progressPercentage
     }).from(userProgress).innerJoin(lessons, eq11(userProgress.lessonId, lessons.id)).innerJoin(courses, eq11(lessons.courseId, courses.id)).where(eq11(userProgress.userId, ctx.user.id)).orderBy(desc9(userProgress.updatedAt)).limit(limit);
     const results = await query;
@@ -1987,15 +2450,15 @@ var analyticsRouter = router({
     const startDate = /* @__PURE__ */ new Date();
     startDate.setDate(startDate.getDate() - days);
     const results = await ctx.db.select({
-      date: sql3`date_trunc('day', ${userProgress.completedAt})::date`,
-      completedCount: count()
+      date: sql5`date_trunc('day', ${userProgress.completedAt})::date`,
+      completedCount: count3()
     }).from(userProgress).where(
       and10(
         eq11(userProgress.userId, ctx.user.id),
         eq11(userProgress.status, "COMPLETED"),
-        gte(userProgress.completedAt, startDate)
+        gte2(userProgress.completedAt, startDate)
       )
-    ).groupBy(sql3`date_trunc('day', ${userProgress.completedAt})::date`).orderBy(sql3`date_trunc('day', ${userProgress.completedAt})::date`);
+    ).groupBy(sql5`date_trunc('day', ${userProgress.completedAt})::date`).orderBy(sql5`date_trunc('day', ${userProgress.completedAt})::date`);
     const trendData = [];
     const dateMap = new Map(results.map((r) => [r.date, Number(r.completedCount)]));
     for (let i = days - 1; i >= 0; i--) {
@@ -2012,10 +2475,10 @@ var analyticsRouter = router({
   // Get engagement summary (completion rate, avg time, etc.)
   getEngagementSummary: protectedProcedure.query(async ({ ctx }) => {
     const stats = await ctx.db.select({
-      total: count(),
-      completed: sql3`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
-      totalTime: sql3`coalesce(sum(${userProgress.durationSpent}), 0)`,
-      avgProgress: sql3`coalesce(avg(${userProgress.progressPercentage}), 0)`
+      total: count3(),
+      completed: sql5`count(*) filter (where ${userProgress.status} = 'COMPLETED')`,
+      totalTime: sql5`coalesce(sum(${userProgress.durationSpent}), 0)`,
+      avgProgress: sql5`coalesce(avg(${userProgress.progressPercentage}), 0)`
     }).from(userProgress).where(eq11(userProgress.userId, ctx.user.id));
     const result = stats[0] ?? { total: 0, completed: 0, totalTime: 0, avgProgress: 0 };
     const completionRate = result.total > 0 ? Math.round(Number(result.completed) / Number(result.total) * 100) : 0;

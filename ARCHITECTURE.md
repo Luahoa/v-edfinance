@@ -1,8 +1,29 @@
 # Architecture Decision Records (ADR)
 
 **Project:** V-EdFinance  
-**Last Updated:** December 2025  
+**Last Updated:** January 2026  
 **Purpose:** Document key architectural decisions and their rationale for future reference.
+
+---
+
+## Current Stack (Better-T-Stack - January 2026)
+
+| Layer | Technology | Notes |
+|-------|------------|-------|
+| **Frontend** | Next.js 15.1.2 + React 18.3.1 | App Router, Server Components |
+| **Backend** | Hono + tRPC + Drizzle | Cloudflare Workers |
+| **Auth** | better-auth | Google OAuth, sessions |
+| **Database** | PostgreSQL (Neon) | Serverless, Drizzle ORM |
+| **State** | Zustand + TanStack Query | Client state + server cache |
+| **Deploy** | Cloudflare Pages + Workers | Edge-first |
+| **Testing** | Vitest (server) + Playwright (e2e) | 60+ tRPC router tests |
+| **CI/CD** | GitHub Actions | Wrangler deploy |
+
+### Legacy Stack (Deprecated)
+The following was used pre-January 2026 and is being phased out:
+- NestJS backend (`apps/api/`) → migrated to Hono (`apps/server/`)
+- Prisma ORM → migrated to Drizzle
+- Dokploy VPS → migrated to Cloudflare Workers
 
 ---
 
@@ -44,11 +65,11 @@ When upgrading to Next.js 16+ in the future:
 
 ## ADR-002: Turborepo Monorepo Architecture
 
-**Date:** December 2025  
+**Date:** December 2025 (Updated January 2026)  
 **Status:** ✅ Accepted
 
 ### Context
-Need to manage frontend (Next.js) and backend (NestJS) in a single repository with shared code.
+Need to manage frontend (Next.js) and backend (Hono) in a single repository with shared code.
 
 ### Decision
 Use **Turborepo** for monorepo management with pnpm workspaces.
@@ -57,7 +78,8 @@ Use **Turborepo** for monorepo management with pnpm workspaces.
 ```
 apps/
   web/       # Next.js frontend (port 3000)
-  api/       # NestJS backend (port 3001)
+  server/    # Hono + tRPC backend (Cloudflare Workers)
+  api/       # [DEPRECATED] NestJS backend
 packages/
   ui/        # Shared React components (future)
   types/     # Shared TypeScript types (future)
@@ -131,23 +153,23 @@ await prisma.course.create({
 
 ---
 
-## ADR-004: Cloudflare Pages + Dokploy VPS Deployment
+## ADR-004: Cloudflare Pages + Workers Deployment
 
-**Date:** December 2025  
-**Status:** ✅ Accepted
+**Date:** December 2025 (Updated January 2026)  
+**Status:** ✅ Accepted (Supersedes Dokploy VPS)
 
 ### Context
 Need cost-effective, scalable deployment for global audience (Vietnam, China, International).
 
 ### Decision
 **Frontend:** Cloudflare Pages (edge deployment)  
-**Backend:** Dokploy on VPS (Docker orchestration)  
-**Connection:** Cloudflare Tunnel (Argo)
+**Backend:** Cloudflare Workers (serverless edge)  
+**Database:** Neon PostgreSQL (serverless)
 
 ### Architecture
 ```
 User → Cloudflare Pages (Next.js SSR)
-     → Cloudflare Tunnel → Dokploy VPS (NestJS + PostgreSQL)
+     → Cloudflare Workers (Hono + tRPC) → Neon PostgreSQL
 ```
 
 ### Rationale
@@ -157,22 +179,25 @@ User → Cloudflare Pages (Next.js SSR)
 - Automatic HTTPS + DDoS protection
 - Near-instant deployments
 
-**Dokploy VPS:**
-- Cheaper than managed PaaS for backend
-- Full control over PostgreSQL
-- Docker-based for easy scaling
-- One-click GitHub deployments
+**Cloudflare Workers:**
+- Zero cold starts (runs at edge)
+- Cost-effective (pay-per-request)
+- Native Hono support
+- Wrangler CLI for easy deployments
 
-**Cloudflare Tunnel:**
-- Hides VPS IP from public internet (security)
-- No need to open ports
-- Automatic TLS encryption
+**Neon PostgreSQL:**
+- Serverless (scales to zero)
+- Branching for dev/staging
+- Compatible with Drizzle ORM
+
+### Previous Approach (Deprecated)
+- Dokploy VPS with Docker → replaced by Cloudflare Workers
+- Cloudflare Tunnel → no longer needed (Workers are edge-native)
 
 ### Alternatives Considered
 - **Vercel:** More expensive for high traffic
 - **AWS/GCP:** Overkill for MVP, complex billing
 - **Heroku:** Deprecated free tier, expensive scaling
-- **Railway/Render:** Good but less control than Dokploy
 
 ---
 
@@ -219,28 +244,40 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 ---
 
-## ADR-006: Prisma ORM over TypeORM
+## ADR-006: Drizzle ORM (Supersedes Prisma)
 
-**Date:** December 2025  
-**Status:** ✅ Accepted
+**Date:** January 2026  
+**Status:** ✅ Accepted (Supersedes ADR-006 Prisma)
 
 ### Context
-Need type-safe database access with good NestJS integration.
+Migrating from NestJS to Hono on Cloudflare Workers requires edge-compatible ORM.
 
 ### Decision
-Use **Prisma** as the ORM.
+Use **Drizzle ORM** instead of Prisma.
 
 ### Rationale
-- **Type safety:** Auto-generated types from schema
-- **Schema-first:** Declarative, easy to understand
-- **Migrations:** Built-in, reliable
-- **Prisma Studio:** GUI for database inspection
-- **Better DX:** IntelliSense for queries
+- **Edge-compatible:** Works with Cloudflare Workers (Prisma doesn't)
+- **Type-safe:** Full TypeScript inference from schema
+- **SQL-like:** Familiar syntax, no query abstraction overhead
+- **Lightweight:** No heavy client generation
+- **Neon support:** Native `@neondatabase/serverless` driver
 
-### Alternatives Considered
-- **TypeORM:** More features but less type-safe, ActiveRecord pattern
-- **MikroORM:** Good but smaller community
-- **Raw SQL (pg):** Too low-level, no type safety
+### Migration Notes
+```typescript
+// Drizzle schema (apps/server/src/lib/db/schema.ts)
+export const users = pgTable('users', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull().unique(),
+  name: text('name'),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Query example
+const user = await db.select().from(users).where(eq(users.id, id));
+```
+
+### Prisma (Deprecated)
+Prisma is still used in `apps/api/` (legacy NestJS) but not recommended for new development.
 
 ---
 
@@ -297,13 +334,128 @@ Use **Google Gemini 1.5 Pro** API.
 
 ---
 
+## ADR-009: tRPC for Type-Safe API
+
+**Date:** January 2026  
+**Status:** ✅ Accepted
+
+### Context
+Need end-to-end type safety between Next.js frontend and Hono backend.
+
+### Decision
+Use **tRPC v11** with `@trpc/server` and `@trpc/react-query`.
+
+### Rationale
+- **End-to-end types:** No code generation, instant type inference
+- **React Query integration:** Built-in caching, refetching, optimistic updates
+- **Hono adapter:** Native `@hono/trpc-server` integration
+- **Procedures:** Query, mutation, subscription patterns
+- **Superjson:** Date/BigInt serialization out of the box
+
+### Router Structure
+```typescript
+// apps/server/src/trpc/routers/
+├── user.router.ts      # User CRUD, profile
+├── course.router.ts    # Course listing, enrollment
+├── quiz.router.ts      # Quiz attempts, scoring
+├── analytics.router.ts # Progress tracking
+└── gamification.router.ts # Points, achievements
+```
+
+### Client Usage
+```typescript
+// apps/web - auto-complete from server types
+const { data } = trpc.user.getProfile.useQuery();
+const mutation = trpc.course.enroll.useMutation();
+```
+
+---
+
+## ADR-010: better-auth for Authentication
+
+**Date:** January 2026  
+**Status:** ✅ Accepted
+
+### Context
+Need simple, secure authentication with social login support.
+
+### Decision
+Use **better-auth** library with Google OAuth.
+
+### Rationale
+- **Simple setup:** Minimal configuration vs NextAuth
+- **Session-based:** Secure cookies, no JWT complexity
+- **Social providers:** Google, GitHub, etc.
+- **Drizzle adapter:** Native database integration
+- **Edge-compatible:** Works with Cloudflare Workers
+
+### Flow
+```
+User → Google OAuth → better-auth → Session cookie → Protected routes
+```
+
+### Implementation
+```typescript
+// apps/server/src/lib/auth.ts
+export const auth = betterAuth({
+  database: drizzleAdapter(db, { provider: 'pg' }),
+  socialProviders: {
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    },
+  },
+});
+```
+
+---
+
+## ADR-011: Vitest for Server Testing
+
+**Date:** January 2026  
+**Status:** ✅ Accepted
+
+### Context
+Need fast, modern testing framework for Hono + tRPC backend.
+
+### Decision
+Use **Vitest** with `@vitest/coverage-v8`.
+
+### Rationale
+- **Fast:** Native ESM, no transpilation
+- **Compatible:** Jest-compatible API
+- **TypeScript:** First-class support
+- **Coverage:** Built-in V8 coverage
+- **Watch mode:** Instant feedback
+
+### Test Structure
+```
+apps/server/src/trpc/__tests__/
+├── test-helpers.ts     # Shared utilities, mocks
+├── user.router.test.ts
+├── course.router.test.ts
+├── quiz.router.test.ts
+├── analytics.router.test.ts
+└── gamification.router.test.ts
+```
+
+### Commands
+```bash
+pnpm --filter @v-edfinance/server test        # Watch mode
+pnpm --filter @v-edfinance/server test:run    # Single run
+pnpm --filter @v-edfinance/server test:coverage
+```
+
+---
+
 ## Future ADRs to Document
 
-- [ ] ADR-009: Testing Strategy (Jest + Playwright)
-- [ ] ADR-010: Authentication (JWT vs Session)
-- [ ] ADR-011: File Storage (Cloudflare R2)
-- [ ] ADR-012: Real-time Features (WebSockets vs SSE)
-- [ ] ADR-013: Analytics Platform (Mixpanel vs PostHog)
+- [x] ~~ADR-009: Testing Strategy~~ → Documented above
+- [x] ~~ADR-010: Authentication~~ → Documented above
+- [ ] ADR-012: File Storage (Cloudflare R2)
+- [ ] ADR-013: Real-time Features (WebSockets vs SSE)
+- [ ] ADR-014: Analytics Platform (Mixpanel vs PostHog)
+- [ ] ADR-015: E2E Testing (Playwright)
 
 ---
 

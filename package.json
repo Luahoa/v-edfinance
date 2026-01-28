@@ -11,6 +11,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:api": "playwright test --config=playwright.api.config.ts",
     "test:orchestrate": "node scripts/e2b-e2e-orchestrator.js",
     "smoke:local": "API_URL=http://localhost:3001 tsx scripts/smoke-tests/smoke-test.ts",
     "smoke:staging": "API_URL=http://103.54.153.248:3001 tsx scripts/smoke-tests/smoke-test.ts",

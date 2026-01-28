@@ -86,6 +86,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   quizAttempts: many(quizAttempts),
   certificates: many(certificates),
   transactions: many(transactions),
+  enrollments: many(enrollments),
 }));
 
 // ============================================================================
@@ -103,19 +104,62 @@ export const courses = pgTable(
     price: integer('price').notNull(),
     level: levelEnum('level').default('BEGINNER').notNull(),
     published: boolean('published').default(false).notNull(),
+    instructorId: uuid('instructorId').references(() => users.id, { onDelete: 'set null' }),
     createdAt: timestamp('createdAt').defaultNow().notNull(),
     updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   },
   (table) => ({
     slugIdx: index('Course_slug_idx').on(table.slug),
     publishedLevelIdx: index('Course_published_level_idx').on(table.published, table.level),
+    instructorIdx: index('Course_instructorId_idx').on(table.instructorId),
   })
 );
 
-export const coursesRelations = relations(courses, ({ many }) => ({
+export const coursesRelations = relations(courses, ({ one, many }) => ({
+  instructor: one(users, {
+    fields: [courses.instructorId],
+    references: [users.id],
+  }),
   lessons: many(lessons),
   certificates: many(certificates),
   transactions: many(transactions),
+  enrollments: many(enrollments),
+}));
+
+// ============================================================================
+// ENROLLMENTS
+// ============================================================================
+
+export const enrollments = pgTable(
+  'Enrollment',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: uuid('userId')
+      .notNull()
+      .references(() => users.id, { onDelete: 'cascade' }),
+    courseId: uuid('courseId')
+      .notNull()
+      .references(() => courses.id, { onDelete: 'cascade' }),
+    enrolledAt: timestamp('enrolledAt').defaultNow().notNull(),
+    emailSentAt: timestamp('emailSentAt'),
+    completedAt: timestamp('completedAt'),
+  },
+  (table) => ({
+    userCourseUnique: uniqueIndex('Enrollment_userId_courseId_key').on(table.userId, table.courseId),
+    userIdx: index('Enrollment_userId_idx').on(table.userId),
+    courseIdx: index('Enrollment_courseId_idx').on(table.courseId),
+  })
+);
+
+export const enrollmentsRelations = relations(enrollments, ({ one }) => ({
+  user: one(users, {
+    fields: [enrollments.userId],
+    references: [users.id],
+  }),
+  course: one(courses, {
+    fields: [enrollments.courseId],
+    references: [courses.id],
+  }),
 }));
 
 export const lessons = pgTable(

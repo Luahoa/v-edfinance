@@ -71,6 +71,40 @@ export const LazyQuickActionsGrid = dynamic(
   }
 );
 
+export const LazyCourseProgressList = dynamic(
+  () => import('@/components/molecules/CourseProgressList').then(mod => ({ default: mod.CourseProgressList })),
+  {
+    loading: () => (
+      <div className="space-y-3">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800/50 animate-pulse">
+            <div className="h-4 flex-1 bg-zinc-200 dark:bg-zinc-700 rounded" />
+            <div className="h-2 w-20 bg-zinc-200 dark:bg-zinc-700 rounded" />
+          </div>
+        ))}
+      </div>
+    ),
+    ssr: true,
+  }
+);
+
+export const LazyLearningTrendChart = dynamic(
+  () => import('@/components/molecules/LearningTrendChart').then(mod => ({ default: mod.LearningTrendChart })),
+  {
+    loading: () => (
+      <div className="space-y-4">
+        <div className="grid grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 bg-zinc-200 dark:bg-zinc-700 rounded animate-pulse" />
+          ))}
+        </div>
+        <div className="h-32 bg-zinc-200 dark:bg-zinc-700 rounded animate-pulse" />
+      </div>
+    ),
+    ssr: false,
+  }
+);
+
 export const LazyEngagementAnalytics = dynamic(
   () => import('@/components/organisms/EngagementAnalytics'),
   {
