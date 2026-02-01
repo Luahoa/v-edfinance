@@ -81,19 +81,18 @@ interface QuizState {
 }
 
 // ============================================================================
-// API INTEGRATION
+// API INTEGRATION (cookie-based auth via better-auth)
 // ============================================================================
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 /**
  * Fetch quiz for student attempt (no correct answers)
+ * Uses cookie-based auth - credentials: 'include' sends httpOnly cookies
  */
-async function fetchQuiz(quizId: string, token: string): Promise<Quiz> {
+async function fetchQuiz(quizId: string): Promise<Quiz> {
   const response = await fetch(`${API_BASE}/quiz/${quizId}/attempt`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    credentials: 'include', // Send auth cookies
   });
 
   if (!response.ok) {
@@ -106,18 +105,18 @@ async function fetchQuiz(quizId: string, token: string): Promise<Quiz> {
 
 /**
  * Submit quiz attempt
+ * Uses cookie-based auth - credentials: 'include' sends httpOnly cookies
  */
 async function submitQuizAttempt(
   quizId: string,
-  answers: Record<string, any>,
-  token: string
+  answers: Record<string, unknown>
 ): Promise<QuizAttempt> {
   const response = await fetch(`${API_BASE}/quiz/${quizId}/submit`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
     },
+    credentials: 'include', // Send auth cookies
     body: JSON.stringify({
       quizId,
       answers,
@@ -130,14 +129,6 @@ async function submitQuizAttempt(
   }
 
   return response.json();
-}
-
-/**
- * Get auth token from localStorage (adjust based on your auth implementation)
- */
-function getAuthToken(): string | null {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('auth_token');
 }
 
 // ============================================================================
@@ -160,18 +151,12 @@ export const useQuizStore = create<QuizState>()(
       retryCount: 0,
       maxRetries: 3,
 
-      // Fetch Quiz for Attempt
-      fetchQuizForAttempt: async (quizId: string, userId: string) => {
-        const token = getAuthToken();
-        if (!token) {
-          set({ error: 'Not authenticated' });
-          return;
-        }
-
+      // Fetch Quiz for Attempt (cookie-based auth)
+      fetchQuizForAttempt: async (quizId: string, _userId: string) => {
         set({ isLoading: true, error: null });
 
         try {
-          const quiz = await fetchQuiz(quizId, token);
+          const quiz = await fetchQuiz(quizId);
           
           set({
             quiz,
@@ -247,24 +232,18 @@ export const useQuizStore = create<QuizState>()(
         set({ currentQuestionIndex: validIndex });
       },
 
-      // Submit Quiz with Retry Logic
-      submitQuiz: async (userId: string) => {
+      // Submit Quiz with Retry Logic (cookie-based auth)
+      submitQuiz: async (_userId: string) => {
         const { quiz, answers, retryCount, maxRetries } = get();
         if (!quiz) {
           set({ error: 'No quiz loaded' });
           return;
         }
 
-        const token = getAuthToken();
-        if (!token) {
-          set({ error: 'Not authenticated' });
-          return;
-        }
-
         set({ isSubmitting: true, error: null });
 
         try {
-          const attempt = await submitQuizAttempt(quiz.id, answers, token);
+          const attempt = await submitQuizAttempt(quiz.id, answers);
 
           set({
             attempt,

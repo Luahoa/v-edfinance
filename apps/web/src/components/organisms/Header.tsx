@@ -6,13 +6,14 @@ import { useRouter } from '@/i18n/routing';
 import { Link } from '@/i18n/routing';
 import NavLink from '@/components/atoms/NavLink';
 import LocaleSwitcher from '@/components/molecules/LocaleSwitcher';
+import { signOut } from '@/lib/auth-client';
 
 export default function Header() {
   const t = useTranslations('Navigation');
   const router = useRouter();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
+  const handleLogout = async () => {
+    await signOut();
     router.push('/login');
   };
 

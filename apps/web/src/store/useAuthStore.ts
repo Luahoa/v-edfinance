@@ -1,35 +1,42 @@
+/**
+ * Auth Store - Syncs with better-auth session state
+ * 
+ * SECURITY: No token storage in Zustand/localStorage
+ * Authentication state is derived from better-auth useSession hook
+ * This store only caches the session state for convenient access
+ */
+
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 interface User {
   id: string;
   email: string;
   name?: string;
-  role: string;
+  image?: string;
 }
 
 interface AuthState {
   user: User | null;
-  token: string | null;
   isAuthenticated: boolean;
-  setAuth: (user: User, token: string) => void;
-  logout: () => void;
+  isLoading: boolean;
+  setSession: (user: User | null) => void;
+  setLoading: (loading: boolean) => void;
+  clearSession: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      token: null,
-      isAuthenticated: false,
-      setAuth: (user, token) => set({ user, token, isAuthenticated: true }),
-      logout: () => {
-        set({ user: null, token: null, isAuthenticated: false });
-        localStorage.removeItem('token');
-      },
-    }),
-    {
-      name: 'auth-storage',
-    }
-  )
-);
+export const useAuthStore = create<AuthState>()((set) => ({
+  user: null,
+  isAuthenticated: false,
+  isLoading: true,
+  setSession: (user) => set({ 
+    user, 
+    isAuthenticated: !!user,
+    isLoading: false,
+  }),
+  setLoading: (loading) => set({ isLoading: loading }),
+  clearSession: () => set({ 
+    user: null, 
+    isAuthenticated: false,
+    isLoading: false,
+  }),
+}));
