@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:cloudflare": "opennextjs-cloudflare build",
+    "deploy:cloudflare": "wrangler pages deploy .open-next/assets --project-name=vedfinance-web",
     "start": "next start",
     "lint": "eslint",
     "test": "playwright test"
@@ -35,7 +37,7 @@
     "framer-motion": "^12.23.26",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.471.0",
-    "next": "15.1.2",
+    "next": "15.1.12",
     "next-intl": "^3.26.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -60,7 +62,9 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^5.1.2",
     "eslint": "^9",
-    "eslint-config-next": "15.1.2",
+    "eslint-config-next": "15.1.12",
+    "@opennextjs/cloudflare": "^1.16.0",
+    "wrangler": "^4.61.0",
     "tailwindcss": "^4",
     "typescript": "^5.9.3",
     "vitest": "^2.1.9"

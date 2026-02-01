@@ -3,7 +3,6 @@ import { eq, and, desc, like, or, sql, count } from 'drizzle-orm';
 
 import { router, publicProcedure, protectedProcedure } from '../trpc';
 import { courses, lessons, userProgress, enrollments, users } from '../../../drizzle/schema';
-import { sendEnrollmentEmail } from '../../lib/email';
 
 export const courseRouter = router({
   // List published courses
@@ -167,7 +166,7 @@ export const courseRouter = router({
                        (user.name as Record<string, string>)?.vi || 
                        user.email.split('@')[0];
 
-      sendEnrollmentEmail({
+      ctx.email.sendEnrollmentEmail({
         to: user.email,
         userName,
         courseName: courseTitle,
